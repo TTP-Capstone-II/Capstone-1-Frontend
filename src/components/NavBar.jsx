@@ -1,12 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import Dropdown from "./Dropdown.jsx";
 import "./NavBarStyles.css";
 
 const NavBar = ({ user, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <Link to="/">Capstone I</Link>
+        <NavLink to="/">Capstone I</NavLink>
       </div>
 
       <div className="nav-links">
@@ -19,15 +20,16 @@ const NavBar = ({ user, onLogout }) => {
           </div>
         ) : (
           <div className="auth-links">
-            <Link to="/simulation" className="nav-link">
+            <NavLink to="/simulation" className="nav-link">
               Simulation
-            </Link>
-            <Link to="/login" className="nav-link">
+            </NavLink>
+            <Dropdown></Dropdown>
+            <NavLink to="/login" className="nav-link">
               Login
-            </Link>
-            <Link to="/signup" className="nav-link">
+            </NavLink>
+            <NavLink to="/signup" className="nav-link">
               Sign Up
-            </Link>
+            </NavLink>
           </div>
         )}
       </div>
