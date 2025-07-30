@@ -8,6 +8,9 @@ const Simulation = () => {
     const engineRef = useRef(Engine.create()); // Ref to hold the Matter.js engine instance
     const renderRef = useRef(); // Ref to hold the Matter.js renderer instance
     const runnerRef = useRef(); // Ref to hold the Matter.js runner instance
+    const rectRef = useRef(null);
+    const xInputRef = useRef();
+    const yInputRef = useRef();
     const engine = engineRef.current;
     const world = engine.world;
 
@@ -41,11 +44,11 @@ const Simulation = () => {
         // Add a ground body
         World.add(world, Bodies.rectangle(400, 690, 1200, 20, { isStatic: true }));
 
-        const rect = Bodies.rectangle(400, 50, 80, 80);
+        rectRef.current = Bodies.rectangle(400, 50, 80, 80);
 
         // Add some falling boxes
         World.add(world, [
-            rect,
+            rectRef.current,
             Bodies.rectangle(450, 150, 80, 80),
             Bodies.rectangle(480, 60, 60, 60),
         ]);
@@ -78,6 +81,18 @@ const Simulation = () => {
         setupMatter();
     }
 
+    const handlePosition = () => {
+        const rect = rectRef.current;
+        if (!rect) return;
+
+        const x = parseFloat(xInputRef.current.value);
+        const y = parseFloat(yInputRef.current.value);
+
+        if (!isNaN(x) && !isNaN(y)) {
+            Matter.Body.setPosition(rect, { x, y });
+        }
+    }
+
     return (
         <div style={{ display: 'flex', height: '700px' }}>
             <div style={{
@@ -86,11 +101,20 @@ const Simulation = () => {
             }}>
                 <ul style={{ marginTop: '20px' }}>
                     <TextField
-                        id="outlined-uncontrolled"
-                        label="Mass"
-                        defaultValue="rect.position"
+                        inputRef={xInputRef}
+                        label="X Position"
+                        type="number"
+                        defaultValue="400"
+                        style={{ marginBottom: '10px' }}
                     />
-                    <Button >Change Mass</Button>
+                    <TextField
+                        inputRef={yInputRef}
+                        label="Y Position"
+                        type="number"
+                        defaultValue="50"
+                        style={{ marginBottom: '10px' }}
+                    />
+                    <Button onClick={handlePosition}>Change Position</Button>
                 </ul>
             </div>
             <div
