@@ -15,7 +15,7 @@ const BaseInterface = () => {
         const { name, value } = e.target;
         setUserInput({
             ...userInput,
-            [name]: parseFloat(value) || 0 
+            [name]: parseFloat(value) 
         });
     }
 
@@ -42,10 +42,10 @@ const BaseInterface = () => {
         name="gravity"
         value={userInput.gravity}
         variant="outlined"
-        fullWidth
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                endAdornment: <InputAdornment position="end">s</InputAdornment>,
             },
           }}
         onChange={handleInputChange}
@@ -56,11 +56,11 @@ const BaseInterface = () => {
         type="number"
         name="initialVelocity"
         value={userInput.initialVelocity}
-        variant="outlined"
-        fullWidth
+        variant="outlined" 
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
             },
           }}
         onChange={handleInputChange}
@@ -72,10 +72,10 @@ const BaseInterface = () => {
         name="finalVelocity"
         value={userInput.finalVelocity}
         variant="outlined"
-        fullWidth
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
             },
           }}
        onChange={handleInputChange}
@@ -87,10 +87,10 @@ const BaseInterface = () => {
         name="initialPosition"
         value={userInput.initialPosition}
         variant="outlined"
-        fullWidth
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                endAdornment: <InputAdornment position="end">m</InputAdornment>,
             },
           }}
         onChange={handleInputChange}
@@ -102,10 +102,10 @@ const BaseInterface = () => {
         name="finalPosition"
         value={userInput.finalPosition}
         variant="outlined"
-        fullWidth
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                endAdornment: <InputAdornment position="end">m</InputAdornment>,
             },
           }}
         onChange={handleInputChange}
@@ -118,9 +118,10 @@ const BaseInterface = () => {
         value={userInput.time}
         variant="outlined"
         fullWidth
+        inputProps={{ step: "0.01" }} //change soon
         slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                endAdornment: <InputAdornment position="end">s</InputAdornment>,
             },
           }}
         onChange={handleInputChange}
