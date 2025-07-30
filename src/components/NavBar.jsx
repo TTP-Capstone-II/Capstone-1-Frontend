@@ -22,6 +22,9 @@ const NavBar = ({ user, onLogout }) => {
             <Link to="/simulation" className="nav-link">
               Simulation
             </Link>
+            <Link to="/simulations" className="nav-link">
+              Simulations
+            </Link>
             <Link to="/login" className="nav-link">
               Login
             </Link>
