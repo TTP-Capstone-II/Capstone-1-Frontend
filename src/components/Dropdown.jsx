@@ -60,16 +60,16 @@ export default function Dropdown() {
                                 zIndex: 1500,
                             }}
                         >
-                            <MenuItem component={NavLink} to="/FreeFall" onClick={handleMenuItemClick}>
+                            <MenuItem component={NavLink} to="/free-fall" onClick={handleMenuItemClick}>
                                 FreeFall
                             </MenuItem>
-                            <MenuItem component={NavLink} to="/Inertia" onClick={handleMenuItemClick}>
+                            <MenuItem component={NavLink} to="/intertia" onClick={handleMenuItemClick}>
                                 Inertia
                             </MenuItem>
-                            <MenuItem component={NavLink} to="/Projectile-motion" onClick={handleMenuItemClick}>
+                            <MenuItem component={NavLink} to="/projectile-motion" onClick={handleMenuItemClick}>
                                 Projectile motion
                             </MenuItem>
-                            <MenuItem component={NavLink} to="/Friction" onClick={handleMenuItemClick}>
+                            <MenuItem component={NavLink} to="/friction" onClick={handleMenuItemClick}>
                                 Friction
                             </MenuItem>
                         </Paper>
