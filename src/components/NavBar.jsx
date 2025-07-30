@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import Dropdown from "./Dropdown.jsx";
 import "./NavBarStyles.css";
 
@@ -24,6 +24,9 @@ const NavBar = ({ user, onLogout }) => {
               Simulation
             </NavLink>
             <Dropdown></Dropdown>
+            <Link to="/simulations" className="nav-link">
+              Simulations
+            </Link>
             <NavLink to="/login" className="nav-link">
               Login
             </NavLink>
