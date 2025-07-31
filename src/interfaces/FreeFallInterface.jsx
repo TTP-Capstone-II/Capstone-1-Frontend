@@ -1,41 +1,37 @@
-import React, {useState} from "react";
-import { TextField, Button, Paper, Typography, InputAdornment } from "@mui/material";
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Paper,
+  Typography,
+  InputAdornment,
+} from "@mui/material";
 
-const FreeFallInterface = () => {
-    const [userInput, setUserInput] = useState({
-        gravity: "9.81",
-        initialVelocity: "",
-        finalVelocity: "",
-        initialPosition: "",
-        finalPosition: "",
-        time: ""
+const FreeFallInterface = ({ userInput, setUserInput }) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInput({
+      ...userInput,
+      [name]: parseFloat(value),
     });
+  };
 
-    const handleInputChange = (e) => { 
-        const { name, value } = e.target;
-        setUserInput({
-            ...userInput,
-            [name]: parseFloat(value) 
-        });
-    }
-
-    //add function to handle form submission (add info to a prop that goes to where it's needed for calculations)
+  //add function to handle form submission (add info to a prop that goes to where it's needed for calculations)
 
   return (
-    <Paper 
-      elevation={3} 
+    <Paper
+      elevation={3}
       sx={{
         width: 300,
-        height: '100%',
+        height: "100%",
         padding: 3,
         borderRadius: 2,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 2,
-        overflowY: 'auto'
+        overflowY: "auto",
       }}
     >
-      
       <TextField
         label="Acceleration due to gravity (g)"
         type="number"
@@ -44,10 +40,10 @@ const FreeFallInterface = () => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -56,13 +52,13 @@ const FreeFallInterface = () => {
         type="number"
         name="initialVelocity"
         value={userInput.initialVelocity}
-        variant="outlined" 
+        variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -74,11 +70,11 @@ const FreeFallInterface = () => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-            },
-          }}
-       onChange={handleInputChange}
+          input: {
+            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
       />
 
       <TextField
@@ -89,10 +85,10 @@ const FreeFallInterface = () => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -104,10 +100,10 @@ const FreeFallInterface = () => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -120,18 +116,14 @@ const FreeFallInterface = () => {
         fullWidth
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
-      <Button 
-        variant="contained" 
-        color="primary"
-        sx={{ mt: 2 }}
-      >
+      <Button variant="contained" color="primary" sx={{ mt: 2 }}>
         Enter
       </Button>
     </Paper>

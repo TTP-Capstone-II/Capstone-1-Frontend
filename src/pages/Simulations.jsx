@@ -4,14 +4,11 @@ import BaseInterface from "../components/BaseInterface";
 import { Button } from "@mui/material";
 
 const Simulations = () => {
-
-    return (
-        <div className="simulation-page">
-            <BaseSimulation />
-            <BaseInterface />
-           
-        </div>
-    );
-}
+  return (
+    <div className="simulation-page">
+      <BaseSimulation />
+    </div>
+  );
+};
 
 export default Simulations;
