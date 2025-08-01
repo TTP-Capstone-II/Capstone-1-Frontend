@@ -1,34 +1,61 @@
-import React, {useState} from "react";
-import { TextField, Button, Paper, Select, InputAdornment, InputLabel, MenuItem } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Paper,
+  Select,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+import { ProjectileMotion } from "../topics/ProjectileMotion";
 
-const ProjectileMotionInterface = ({userInput, setUserInput}) => {
+const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
+  const [results, setResults] = useState(null);
 
-    const handleInputChange = (e) => { 
-        const { name, value } = e.target;
-        setUserInput({
-            ...userInput,
-            [name]: parseFloat(value) 
-        });
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInput({
+      ...userInput,
+      [name]: parseFloat(value),
+    });
+  };
 
-    //add function to handle form submission (add info to a prop that goes to where it's needed for calculations)
+  useEffect(() => {
+    if (!userInput.target) return;
+
+    const calculations = ProjectileMotion({
+      gravity: userInput.gravity,
+      initialVelocity: userInput.initialVelocity,
+      launchAngle: userInput.launchAngle,
+      initialHeight: userInput.initialHeight,
+      target: userInput.target,
+    });
+    setResults(calculations);
+  }, [
+    userInput.target,
+    userInput.gravity,
+    userInput.initialVelocity,
+    userInput.launchAngle,
+    userInput.initialHeight,
+  ]);
 
   return (
-    <Paper 
-      elevation={3} 
+    <Paper
+      elevation={3}
       sx={{
         marginTop: 7,
         width: 300,
-        height: '100%',
+        height: "100%",
         padding: 3,
         borderRadius: 2,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 2,
-        overflowY: 'auto'
+        overflowY: "auto",
       }}
     >
-      
       <TextField
         label="Acceleration due to gravity (g)"
         type="number"
@@ -37,10 +64,10 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -49,13 +76,13 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
         type="number"
         name="initialVelocity"
         value={userInput.initialVelocity}
-        variant="outlined" 
+        variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -67,29 +94,29 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">°</InputAdornment>,
-            },
-          }}
-       onChange={handleInputChange}
+          input: {
+            endAdornment: <InputAdornment position="end">°</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
       />
 
       <TextField
         label="Initial height"
         type="number"
         name="initialHeight"
-        value={userInput.initialheight}
+        value={userInput.initialHeight}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
-     {/*  <TextField
+      {/*  <TextField
         label="Final position"
         type="number"
         name="finalPosition"
@@ -128,12 +155,11 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
       </Button>
       */}
       <InputLabel id="target-label">Calculate</InputLabel>
-       <Select
+      <Select
         label="Calculate"
         name="target"
         value={userInput.target}
-        onChange={(e) =>
-            setUserInput({ ...userInput, target: e.target.value })}
+        onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
         sx={{ mt: 2 }}
@@ -142,9 +168,26 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
         <MenuItem value="timeOfFlight">Time of Flight</MenuItem>
         <MenuItem value="maxHeight">Maximum Height</MenuItem>
         <MenuItem value="velocityComponents">Velocity Components</MenuItem>
-        <MenuItem value="All">All</MenuItem>    
-      </Select> 
-      
+        <MenuItem value="All">All</MenuItem>
+      </Select>
+
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Results:
+      </Typography>
+      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+        {results
+          ? JSON.stringify(
+              results,
+              (key, value) => {
+                if (typeof value === "number") {
+                  return Number(value.toFixed(2));
+                }
+                return value;
+              },
+              2
+            )
+          : "No results yet"}
+      </pre>
     </Paper>
   );
 };
