@@ -25,9 +25,25 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
   useEffect(() => {
     if (!userInput.target) return;
 
-    const calculations = Torque({});
+    const calculations = Torque({
+      torque: userInput.torque,
+      inertia: userInput.inertia,
+      angularAcceleration: userInput.angularAcceleration,
+      distanceFromPivot: userInput.distanceFromPivot,
+      angle: userInput.angle,
+      force: userInput.force,
+      target: userInput.target,
+    });
     setResults(calculations);
-  }, []);
+  }, [
+    userInput.torque,
+    userInput.inertia,
+    userInput.angularAcceleration,
+    userInput.distanceFromPivot,
+    userInput.angle,
+    userInput.force,
+    userInput.target,
+  ]);
 
   return (
     <Paper
@@ -60,15 +76,17 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
       />
 
       <TextField
-        label="Angular velocity"
+        label="Inertia"
         type="number"
-        name="angularVelocity"
-        value={userInput.angularVelocity}
+        name="inertia"
+        value={userInput.inertia}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+            endAdornment: (
+              <InputAdornment position="end">kg*m^2</InputAdornment>
+            ),
           },
         }}
         onChange={handleInputChange}
@@ -84,6 +102,21 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m/s^2</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
+
+      <TextField
+        label="Distance from Pivot"
+        type="number"
+        name="distanceFromPivot"
+        value={userInput.distanceFromPivot}
+        variant="outlined"
+        inputProps={{ step: "0.01" }} //change soon
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
@@ -129,10 +162,12 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         fullWidth
         sx={{ mt: 2 }}
       >
-        <MenuItem value="range">Range</MenuItem>
-        <MenuItem value="timeOfFlight">Time of Flight</MenuItem>
-        <MenuItem value="maxHeight">Maximum Height</MenuItem>
-        <MenuItem value="velocityComponents">Velocity Components</MenuItem>
+        <MenuItem value="torque">Torque</MenuItem>
+        <MenuItem value="inertia">Inertia</MenuItem>
+        <MenuItem value="angularAcceleration">Angular Acceleration</MenuItem>
+        <MenuItem value="distanceFromPivot">Distance from Pivot</MenuItem>
+        <MenuItem value="angle">Angle</MenuItem>
+        <MenuItem value="force">Force</MenuItem>
         <MenuItem value="All">All</MenuItem>
       </Select>
 
