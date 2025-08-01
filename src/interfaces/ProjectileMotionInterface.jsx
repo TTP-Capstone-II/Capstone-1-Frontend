@@ -119,7 +119,7 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
           }}
         onChange={handleInputChange}
       />*/}
-
+        
       <Button 
         variant="contained" 
         color="primary"
