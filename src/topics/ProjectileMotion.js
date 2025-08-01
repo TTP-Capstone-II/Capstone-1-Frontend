@@ -1,8 +1,8 @@
 import { calcRange, calcTimeOfFlight, calcVelocityComponents, calcMaxHeight } from "../../utils/formulas";
 
-export function ProjectileMotion ({ gravity, intialVelocity, launchAngle, initialHeight,target }) {
+export function ProjectileMotion ({ gravity, initialVelocity, launchAngle, initialHeight,target }) {
     const gravityVal = Number(gravity) || 9.81;
-    const velocity = Number(intialVelocity) || 0;
+    const velocity = Number(initialVelocity) || 0;
     const angle = Number(launchAngle) || 0;
     const initialHeightVal = Number(initialHeight) || 0;
 
