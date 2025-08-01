@@ -4,6 +4,7 @@ import TorqueInterface from "../interfaces/TorqueInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Constraint, Body } from "matter-js";
 import { Button } from "@mui/material";
+import { toRadians } from "../../utils/formulas";
 
 const Torque = () => {
   const [userInput, setUserInput] = useState({
@@ -11,7 +12,7 @@ const Torque = () => {
     inertia: "",
     angularAcceleration: "",
     distanceFromPivot: 300,
-    angle: "",
+    angle: 90,
     force: "",
     target: "",
   });
@@ -22,7 +23,7 @@ const Torque = () => {
   const handleEngineReady = (engine, world) => {
     //const pivot = Bodies.polygon(500, 300, 5, 30);
     const nail = { x: 400, y: 300 };
-    const lever = Bodies.rectangle(600, 300, 300, 30, {
+    const lever = Bodies.rectangle(600, 300, userInput.distanceFromPivot, 30, {
       density: 0.01,
       frictionAir: 1,
     });
