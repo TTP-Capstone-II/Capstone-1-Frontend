@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BaseSimulation from "../components/BaseSimulation";
 import ProjectileMotionInterface from "../interfaces/ProjectileMotionInterface";
 import Matter from "matter-js";
-import { Engine, Render, Bodies, World, Constraint } from "matter-js";
+import { Engine, Render, Bodies, World, Constraint, Body } from "matter-js";
 import { Button } from "@mui/material";
 
 const Torque = () => {
@@ -19,22 +19,24 @@ const Torque = () => {
   const angularAcceleration = Number(userInput.angularAcceleration);
 
   const handleEngineReady = (engine, world) => {
-    const pivot = Bodies.polygon(500, 300, 5, 30, { isStatic: true });
+    //const pivot = Bodies.polygon(500, 300, 5, 30);
+    const nail = { x: 400, y: 300 };
+    const lever = Bodies.rectangle(600, 300, 300, 30, {
+      density: 0.01,
+      frictionAir: 1,
+    });
 
-    const lever = Bodies.rectangle(600, 300, 300, 30);
-
-    var options = {
-      bodyA: pivot,
+    const pivot = Constraint.create({
+      pointA: nail,
       bodyB: lever,
-      length: 20,
-      pointA: { x: 0, y: 0 },
       pointB: { x: -150, y: 0 },
       stiffness: 1,
-    };
+      length: 0,
+    });
 
-    var constraint = Constraint.create(options);
+    engine.world.gravity.y = 0;
 
-    World.add(world, [pivot, lever, constraint]);
+    World.add(world, [pivot, lever, nail]);
   };
 
   return (
