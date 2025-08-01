@@ -92,7 +92,7 @@ export function calcTorque({radius, force, angle = 90, inertia, angularAccelerat
      return torque;
   }
 
-   // τ = r * F * sin(θ)
+   // τ = I * α
   else if (inertia !== undefined && angularAcceleration !== undefined) {
     return inertia * angularAcceleration;
   }
