@@ -10,13 +10,14 @@ const FreeFall = () => {
         gravity: "9.81",
         initialVelocity: "0",
         finalVelocity: "",
-        initialPosition: "",
-        finalPosition: "0",
-        time: ""
+        initialHeight: "",
+        finalHeight: "0",
+        time: "",
+        target: "",
     });
 
     const handleEngineReady = (engine, world) => {
-        const square = Matter.Bodies.rectangle(200, userInput.initialPosition, 50, 50);
+        const square = Matter.Bodies.rectangle(200, userInput.initialHeight, 50, 50);
 
         
         World.add(world, square);
