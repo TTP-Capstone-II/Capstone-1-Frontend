@@ -8,14 +8,16 @@ import { Button } from "@mui/material";
 const Torque = () => {
   const [userInput, setUserInput] = useState({
     torque: "",
+    inertia: "",
     angularAcceleration: "",
-    distanceFromPivot: "",
+    distanceFromPivot: 300,
     angle: "",
     force: "",
+    target: "",
   });
 
-  const angle = Number(userInput.angle) * (Math.PI / 180);
-  const angularAcceleration = Number(userInput.angularAcceleration);
+  //const angle = Number(userInput.angle) * (Math.PI / 180);
+  //const angularAcceleration = Number(userInput.angularAcceleration);
 
   const handleEngineReady = (engine, world) => {
     //const pivot = Bodies.polygon(500, 300, 5, 30);
