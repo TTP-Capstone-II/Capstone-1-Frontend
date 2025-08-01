@@ -14,17 +14,17 @@
   */
 
   //final velocity
-  function calcFinalVelocity(u, a, t) {
+  export function calcFinalVelocity(u, a, t) {
     return u + a * t;
   }
   
   //final position
-  function calcFinalPosition(y0, u, t, a) {
+  export function calcFinalPosition(y0, u, t, a) {
     return y0 + u * t + 0.5 * a * t * t;
   }
 
   //final velocity squared
-  function calcFinalVelocitySquared(u, a, y0, y) {
+  export function calcFinalVelocitySquared(u, a, y0, y) {
     return u * u + 2 * a * (y - y0);
   }
 
@@ -40,27 +40,33 @@ export function toRadians(degrees) {
   return degrees * degreesToRad;
 }
 
-// Horizontal range: R = (v^2 * sin(2θ)) / g
+// Horizontal range: v * cosθ * t
 
-export function calcRange({ velocity, angle, gravity = 9.81 }) {
+export function calcRange({ velocity, angle, gravity = 9.81, initialHeight = 0 }) {
   if (!velocity || !angle) return null;
   const thetaRad = toRadians(angle);
-  return (Math.pow(velocity, 2) * Math.sin(2 * thetaRad)) / gravity;
+  const vx = velocity * Math.cos(thetaRad);
+  const time = calcTimeOfFlight({ velocity, angle, gravity, initialHeight });
+  return vx * time;
 }
 
-//Time of flight: t = (2 * v * sin(θ)) / g
-export function calcTimeOfFlight({ velocity, angle, gravity = 9.81 }) {
-  if (!velocity || !angle) return null;
-  const thetaRad = toRadians(angle);
-  return (2 * velocity * Math.sin(thetaRad)) / gravity;
-}
+//Time of flight: t = [v * sinθ + √( (v * sinθ)² + 2 * g * y₀ )] / g
+export function calcTimeOfFlight({ velocity, angle, gravity = 9.81, initialHeight = 0 }) {
+    if (!velocity || !angle) return null;
+    const thetaRad = toRadians(angle);
+    const vy = velocity * Math.sin(thetaRad);
+    
+    // Quadratic equation solution for time when y = 0
+    return (vy + Math.sqrt(vy*vy + 2 * gravity * initialHeight)) / gravity;
+  }
 
 
- //Maximum height: H = (v^2 * sin^2(θ)) / (2 * g)
-export function calcMaxHeight({ velocity, angle, gravity = 9.81 }) {
+ //Maximum height: H = y₀ + (v² * sin²θ) / (2g)
+export function calcMaxHeight({ velocity, angle, gravity = 9.81, initialHeight = 0 }) {
   if (!velocity || !angle) return null;
   const thetaRad = toRadians(angle);
-  return (Math.pow(velocity * Math.sin(thetaRad), 2)) / (2 * gravity);
+  const vy = velocity * Math.sin(thetaRad);
+  return initialHeight + (vy * vy) / (2 * gravity);
 }
 
 
