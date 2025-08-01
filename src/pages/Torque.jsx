@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BaseSimulation from "../components/BaseSimulation";
-import ProjectileMotionInterface from "../interfaces/ProjectileMotionInterface";
+import TorqueInterface from "../interfaces/TorqueInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Constraint, Body } from "matter-js";
 import { Button } from "@mui/material";
@@ -8,11 +8,11 @@ import { Button } from "@mui/material";
 const Torque = () => {
   const [userInput, setUserInput] = useState({
     Torque: "",
+    angularVelocity: "",
     angularAcceleration: "",
     distanceFromPivot: "",
     angle: "",
     force: "",
-    momentOfInertia: "",
   });
 
   const angle = Number(userInput.angle) * (Math.PI / 180);
@@ -44,6 +44,7 @@ const Torque = () => {
       className="simulation-page"
       style={{ display: "flex", height: "700px" }}
     >
+      <TorqueInterface userInput={userInput} setUserInput={setUserInput} />
       <BaseSimulation onEngineReady={handleEngineReady} />
     </div>
   );
