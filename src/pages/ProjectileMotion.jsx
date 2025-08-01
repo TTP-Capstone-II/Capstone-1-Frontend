@@ -19,6 +19,7 @@ const ProjectileMotion = () => {
     initialVelocity: "",
     launchAngle: "",
     initialHeight: "",
+    target: "",
   });
 
   //console.log("Initial Velocity Input:", userInput.initialVelocity);

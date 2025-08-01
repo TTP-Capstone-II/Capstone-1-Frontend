@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { TextField, Button, Paper, Typography, InputAdornment } from "@mui/material";
+import { TextField, Button, Paper, Select, InputAdornment, InputLabel, MenuItem } from "@mui/material";
 
 const ProjectileMotionInterface = ({userInput, setUserInput}) => {
 
@@ -118,8 +118,7 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
             },
           }}
         onChange={handleInputChange}
-      />*/}
-        
+      />
       <Button 
         variant="contained" 
         color="primary"
@@ -127,6 +126,25 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
       >
         Enter
       </Button>
+      */}
+      <InputLabel id="target-label">Calculate</InputLabel>
+       <Select
+        label="Calculate"
+        name="target"
+        value={userInput.target}
+        onChange={(e) =>
+            setUserInput({ ...userInput, target: e.target.value })}
+        variant="outlined"
+        fullWidth
+        sx={{ mt: 2 }}
+      >
+        <MenuItem value="range">Range</MenuItem>
+        <MenuItem value="timeOfFlight">Time of Flight</MenuItem>
+        <MenuItem value="maxHeight">Maximum Height</MenuItem>
+        <MenuItem value="velocityComponents">Velocity Components</MenuItem>
+        <MenuItem value="All">All</MenuItem>    
+      </Select> 
+      
     </Paper>
   );
 };
