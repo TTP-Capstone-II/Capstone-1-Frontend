@@ -79,3 +79,25 @@ export function calcVelocityComponents({ velocity, angle }) {
     vy: velocity * Math.sin(thetaRad)
   };
 }
+
+// Torque
+//----------------------------------
+export function calcTorque({radius, force, angle = 90, inertia, angularAcceleration}) {
+
+  if (radius !== undefined && force !== undefined) {
+    const thetaRad = toRadians(angle);
+
+    // τ = r * F * sin(θ)
+     const torque = radius * force * Math.sin(thetaRad);
+     return torque;
+  }
+
+   // τ = r * F * sin(θ)
+  else if (inertia !== undefined && angularAcceleration !== undefined) {
+    return inertia * angularAcceleration;
+  }
+
+  else {
+    console.log("Invalid parameters for Torque");
+  }
+}
