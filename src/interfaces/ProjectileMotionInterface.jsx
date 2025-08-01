@@ -89,7 +89,7 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
         onChange={handleInputChange}
       />
 
-      <TextField
+     {/*  <TextField
         label="Final position"
         type="number"
         name="finalPosition"
@@ -118,7 +118,7 @@ const ProjectileMotionInterface = ({userInput, setUserInput}) => {
             },
           }}
         onChange={handleInputChange}
-      />
+      />*/}
 
       <Button 
         variant="contained" 
