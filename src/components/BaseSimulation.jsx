@@ -1,17 +1,95 @@
-import React, { useCallback, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
-import { Engine, Render, World, Runner } from "matter-js";
+import { Engine, Render, Bodies, World, Runner } from "matter-js";
 import { Button } from "@mui/material";
 
-const BaseSimulation = () => {
+const Simulation = ({ onEngineReady }) => {
+    const canvasRef = useRef(null);
+    const engineRef = useRef(Engine.create());
+    const renderRef = useRef();
+    const runnerRef = useRef();
+
+    const engine = engineRef.current;
+    const world = engine.world;
+
+    const setupMatter = useCallback(() => {
+        if (runnerRef.current) Matter.Runner.stop(runnerRef.current);
+        if (renderRef.current) Matter.Render.stop(renderRef.current);
+        if (engineRef.current) Matter.Engine.clear(engineRef.current);
+
+        if (renderRef.current && renderRef.current.canvas) {
+            renderRef.current.canvas.remove();
+            renderRef.current.canvas = null;
+            renderRef.current.context = null;
+            renderRef.current.textures = {};
+        }
+
+        World.clear(world, false);
+
+        // Create a new renderer
+        renderRef.current = Render.create({
+            element: canvasRef.current,
+            engine: engine,
+            options: {
+                width: 1000,
+                height: 700,
+                wireframes: false,
+                background: '#f0f0f0',
+            },
+        });
+
+        // Add ground
+        World.add(world, Bodies.rectangle(500, 690, 1200, 20, { isStatic: true }));
+
+        // Run renderer and engine
+        Render.run(renderRef.current);
+        runnerRef.current = Runner.create();
+        Runner.run(runnerRef.current, engine);
+
+        // Expose engine/world to parent
+        if (onEngineReady) {
+            onEngineReady(engine, world);
+        }
+    }, [engine, world, onEngineReady]);
+
+    useEffect(() => {
+        setupMatter();
+        return () => {
+            if (runnerRef.current) Runner.stop(runnerRef.current);
+            if (renderRef.current) Render.stop(renderRef.current);
+            if (engineRef.current) Engine.clear(engineRef.current);
+            if (renderRef.current?.canvas) renderRef.current.canvas.remove();
+            World.clear(world);
+        };
+    }, [setupMatter, world]);
+
     return (
-        <div className="base-simulation">
-            <h2>Base Simulation</h2>
-            <p>This is a placeholder for the base simulation component.</p>
-            <p>It will render the simulation canvas and controls.</p>
+        <div style={{ display: 'flex', height: '700px' }}>
+            <div
+                style={{
+                    width: '1000px',
+                    height: '700px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    marginLeft: '20px',
+                }}
+            >
+                <div style={{ width: 'auto', margin: '10px auto' }}>
+                    <Button onClick={setupMatter}>Reset Simulation</Button>
+                </div>
+
+                <div
+                    ref={canvasRef}
+                    style={{
+                        flex: 1,
+                        backgroundColor: '#f0f0f0',
+                        width: '100%',
+                    }}
+                />
+            </div>
         </div>
     );
-}
-    
+};
 
-export default BaseSimulation;
+export default Simulation;
