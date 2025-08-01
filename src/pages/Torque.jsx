@@ -7,8 +7,7 @@ import { Button } from "@mui/material";
 
 const Torque = () => {
   const [userInput, setUserInput] = useState({
-    Torque: "",
-    angularVelocity: "",
+    torque: "",
     angularAcceleration: "",
     distanceFromPivot: "",
     angle: "",
