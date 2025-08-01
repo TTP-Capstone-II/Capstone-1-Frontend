@@ -10,6 +10,8 @@ import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 import Simulation from "./components/Simulation";
 import Simulations from "./pages/Simulations";
+import FreeFall from "./pages/FreeFall";
+import ProjectileMotion from "./pages/ProjectileMotion";
 import { API_URL } from "./shared";
 
 const App = () => {
@@ -57,6 +59,8 @@ const App = () => {
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/simulation" element={<Simulation setUser={setUser} />} />
           <Route path="/simulations" element={<Simulations />} />
+          <Route path="/free-fall" element={<FreeFall />} />
+          <Route path="/projectile-motion" element={<ProjectileMotion />} />
           <Route exact path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

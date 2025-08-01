@@ -1,15 +1,8 @@
 import React, {useState} from "react";
 import { TextField, Button, Paper, Typography, InputAdornment } from "@mui/material";
 
-const FreeFallInterface = () => {
-    const [userInput, setUserInput] = useState({
-        gravity: "9.81",
-        initialVelocity: "",
-        finalVelocity: "",
-        initialPosition: "",
-        finalPosition: "",
-        time: ""
-    });
+const FreeFallInterface = ({userInput, setUserInput}) => {
+
 
     const handleInputChange = (e) => { 
         const { name, value } = e.target;
@@ -25,6 +18,7 @@ const FreeFallInterface = () => {
     <Paper 
       elevation={3} 
       sx={{
+        marginTop: 7,
         width: 300,
         height: '100%',
         padding: 3,
