@@ -82,22 +82,23 @@ export function calcVelocityComponents({ velocity, angle }) {
 
 // Torque
 //----------------------------------
-export function calcTorque({radius, force, angle = 90, inertia, angularAcceleration}) {
-
-  if (radius !== undefined && force !== undefined) {
+export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcceleration}) {
+  let torque;
+  if (distanceFromPivot !== undefined && force !== undefined) {
     const thetaRad = toRadians(angle);
 
     // τ = r * F * sin(θ)
-     const torque = radius * force * Math.sin(thetaRad);
-     return torque;
+     torque = distanceFromPivot * force * Math.sin(thetaRad);
   }
 
    // τ = I * α
   else if (inertia !== undefined && angularAcceleration !== undefined) {
-    return inertia * angularAcceleration;
+    torque = inertia * angularAcceleration;
   }
 
   else {
     console.log("Invalid parameters for Torque");
   }
+
+  return torque;
 }
