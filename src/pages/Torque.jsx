@@ -19,21 +19,22 @@ const Torque = () => {
   const angularAcceleration = Number(userInput.angularAcceleration);
 
   const handleEngineReady = (engine, world) => {
-    const pivot = Bodies.polygon(50, 390, 5, 10, { isStatic: true });
-    Matter.Body.setPosition(pivot, { x: 30, y: 30 });
+    const pivot = Bodies.polygon(500, 300, 5, 30, { isStatic: true });
 
-    const lever = Bodies.rectangle(Bodies.rectangle(400, 690, 600, 20), {});
-    Matter.Body.setPosition(pivot, { x: 30, y: 30 });
+    const lever = Bodies.rectangle(600, 300, 300, 30);
 
     var options = {
-      bodyA: pivot.body,
-      bodyB: lever.body,
+      bodyA: pivot,
+      bodyB: lever,
       length: 20,
+      pointA: { x: 0, y: 0 },
+      pointB: { x: -150, y: 0 },
+      stiffness: 1,
     };
 
     var constraint = Constraint.create(options);
 
-    World.add(world, constraint);
+    World.add(world, [pivot, lever, constraint]);
   };
 
   return (
@@ -41,10 +42,6 @@ const Torque = () => {
       className="simulation-page"
       style={{ display: "flex", height: "700px" }}
     >
-      <ProjectileMotionInterface
-        userInput={userInput}
-        setUserInput={setUserInput}
-      />
       <BaseSimulation onEngineReady={handleEngineReady} />
     </div>
   );
