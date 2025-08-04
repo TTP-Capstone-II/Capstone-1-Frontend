@@ -28,3 +28,5 @@ const ThreadCard = ({ thread }) => {
     </Card>
   );
 }
+
+export default ThreadCard;
