@@ -20,7 +20,7 @@ const PostCard = ({ post }) => {
           {post.title}
         </Typography>
         <Typography color="text.secondary">
-          {post.author} - {new Date(post.createdAt).toLocaleDateString()}
+        {post.user?.username} - {new Date(post.createdAt).toLocaleDateString()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {post.likes} likes
