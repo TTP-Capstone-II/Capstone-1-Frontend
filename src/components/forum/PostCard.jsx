@@ -4,6 +4,10 @@ import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 
 const PostCard = ({ post }) => {
     const navigate = useNavigate();
+    const handleClick = () => {
+      const postId = post.id;
+      navigate(`/forum/:forumId/posts/${postId}`);
+    }
   return (
     <Card
       sx={{
@@ -13,7 +17,7 @@ const PostCard = ({ post }) => {
           boxShadow: 3,
         },
       }}
-      onClick={() => navigate(`/forum/post/${post.id}`)}
+      onClick={handleClick}
     >
       <CardContent>
         <Typography variant="h6" component="div">
