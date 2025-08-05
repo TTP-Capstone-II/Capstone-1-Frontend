@@ -27,7 +27,7 @@ const NavBar = ({ user, onLogout }) => {
             <NavLink to="/signup" className="nav-link">
               Sign Up
             </NavLink>
-            <NavLink to="/forum/:forumId/posts" className="nav-link">
+            <NavLink to="/forum" className="nav-link">
               Forum
             </NavLink>
           </div>

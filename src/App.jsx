@@ -12,7 +12,8 @@ import Simulation from "./components/Simulation";
 import Simulations from "./pages/Simulations";
 import FreeFall from "./pages/FreeFall";
 import ProjectileMotion from "./pages/ProjectileMotion";
-import ForumPage from "./pages/IndividualForum";
+import IndividualForum from "./pages/IndividualForum";
+import HomeForum from "./pages/HomeForum";
 import PostPage from "./pages/PostPage";
 import Friction from "./pages/Friction";
 import Inertia from "./pages/Inertia";
@@ -68,7 +69,8 @@ const App = () => {
           <Route path="/friction" element={<Friction />} />
           <Route path="/inertia" element={<Inertia />} />
           <Route exact path="/" element={<Home />} />
-          <Route path="/forum/:forumId/posts" element={<ForumPage />} />
+          <Route path="/forum" element={<HomeForum />} />
+          <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
           <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
