@@ -12,6 +12,7 @@ import Simulation from "./components/Simulation";
 import Simulations from "./pages/Simulations";
 import FreeFall from "./pages/FreeFall";
 import ProjectileMotion from "./pages/ProjectileMotion";
+import ForumPage from "./pages/ForumPage";
 import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 
@@ -67,6 +68,7 @@ const App = () => {
           <Route path="/projectile-motion" element={<ProjectileMotion />} />
           <Route path="/torque" element={<Torque />} />
           <Route exact path="/" element={<Home />} />
+          <Route path="/forum/:forumId/posts" element={<ForumPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
