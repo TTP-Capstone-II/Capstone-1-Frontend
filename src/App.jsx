@@ -15,6 +15,7 @@ import ProjectileMotion from "./pages/ProjectileMotion";
 import IndividualForum from "./pages/IndividualForum";
 import HomeForum from "./pages/HomeForum";
 import PostPage from "./pages/PostPage";
+import NewPostPage from "./pages/NewPostPage";
 import Friction from "./pages/Friction";
 import Inertia from "./pages/Inertia";
 import { API_URL } from "./shared";
@@ -72,6 +73,7 @@ const App = () => {
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
           <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
+          <Route path="/new-post" element={<NewPostPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
