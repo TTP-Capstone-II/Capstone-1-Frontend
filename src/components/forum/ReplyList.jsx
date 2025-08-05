@@ -2,6 +2,7 @@ import React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ReplyCard from "./ReplyCard";
+import { Box } from "@mui/material";
 
 const ReplyList = () => {
   const replies = [
@@ -26,17 +27,16 @@ const ReplyList = () => {
   ];
 
   return (
-    <List>
+    <Box>
       {replies.map((reply) => (
-        <ListItem key={reply.id}>
-          <ReplyCard
-            author={reply?.author}
-            content={reply?.content}
-            createdAt={reply?.createdAt}
-          />
-        </ListItem>
+        <ReplyCard
+          key={reply.id}
+          author={reply?.author}
+          content={reply?.content}
+          createdAt={reply?.createdAt}
+        />
       ))}
-    </List>
+    </Box>
   );
 };
 
