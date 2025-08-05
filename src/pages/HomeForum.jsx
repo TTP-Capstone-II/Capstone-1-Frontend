@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import PostCard from "../components/forum/PostCard";
 import { API_URL } from "../shared";
 
 const HomeForum = () => {
-    const [posts, setPosts] = useState([]);
-    const forumId = 1;
-    const fetchPosts = async () => {
+    const [forums, setForums] = useState([]);
+
+    const fetchForums = async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/forum/`);
-            setPosts(response.data);
+            const response = await axios.get(`${API_URL}/api/forum`);
+            setForums(response.data);
+            console.log("Fetched forums:", response.data);
         } catch (error) {
-            console.error("Error fetching posts:", error);
+            console.error("Error fetching forums:", error);
         }
     };
 
 
     useEffect(() => {
-        fetchPosts();
+        fetchForums();
     }, []);
 
     return (
         <div className="forum-page">
-            <h1>Forum Posts</h1>
-            <div className="post-list">
-                {posts.map((post) => (
-                    <PostCard key={post.id} post={post} />
+            <h1>All Forums</h1>
+             <div className="forum-list">
+                {forums.map((forum) => (
+                    <Link to={`/forum/${forum.id}/posts`} key={forum.id} className="forum-card">
+                        <h2>{forum.name}</h2>
+                    </Link>
                 ))}
             </div>
         </div>

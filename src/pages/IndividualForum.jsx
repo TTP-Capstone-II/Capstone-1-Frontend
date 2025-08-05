@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import PostCard from "../components/forum/PostCard"; 
 import { API_URL } from "../shared"; 
 
-const ForumPage = () => {
+const IndividualForum = () => {
+  const {forumId} = useParams();
   const [posts, setPosts] = useState([]);
-  const forumId = 1;
+
+
   const fetchPosts = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/forum/${forumId}/posts`);
@@ -17,7 +20,7 @@ const ForumPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [forumId]);
 
   return (
     <div className="forum-page">
@@ -31,4 +34,4 @@ const ForumPage = () => {
   );
 };
 
-export default ForumPage;
+export default IndividualForum;
