@@ -15,6 +15,7 @@ import ProjectileMotion from "./pages/ProjectileMotion";
 import ForumPage from "./pages/ForumPage";
 import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
+import ReplyList from "./components/forum/ReplyList";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -69,6 +70,7 @@ const App = () => {
           <Route path="/torque" element={<Torque />} />
           <Route exact path="/" element={<Home />} />
           <Route path="/forum/:forumId/posts" element={<ForumPage />} />
+          <Route path="/replies" element={<ReplyList />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

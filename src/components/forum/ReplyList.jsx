@@ -4,16 +4,16 @@ import ListItem from "@mui/material/ListItem";
 import ReplyCard from "./ReplyCard";
 
 const ReplyList = () => {
-  const data = [
+  const replies = [
     {
       id: 1,
-      author: "example title",
+      author: "example",
       content: "example content",
       createdAt: "example created at",
     },
     {
       id: 2,
-      author: "example title",
+      author: "title",
       content: "example content",
       createdAt: "example created at",
     },
@@ -27,16 +27,15 @@ const ReplyList = () => {
 
   return (
     <List>
-      <ListItem>
-        {data.map((reply) => (
+      {replies.map((reply) => (
+        <ListItem key={reply.id}>
           <ReplyCard
-            key={reply.id}
-            author={reply.author}
-            content={reply.content}
-            createdAt={reply.createdAt}
+            author={reply?.author}
+            content={reply?.content}
+            createdAt={reply?.createdAt}
           />
-        ))}
-      </ListItem>
+        </ListItem>
+      ))}
     </List>
   );
 };
