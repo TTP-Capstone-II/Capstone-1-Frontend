@@ -8,26 +8,31 @@ const ReplyList = () => {
   const replies = [
     {
       id: 1,
-      author: "example",
-      content: "example content",
-      createdAt: "example created at",
+      author: "Joyous",
+      content: "Worst poster ever!",
+      createdAt: "1-5-2025",
     },
     {
       id: 2,
-      author: "title",
-      content: "example content",
-      createdAt: "example created at",
+      author: "Johnny",
+      content: "Bad post. Delete it now",
+      createdAt: "8-5-2025",
     },
     {
       id: 3,
-      author: "example title",
-      content: "example content",
-      createdAt: "example created at",
+      author: "Marsack",
+      content: "I hate this",
+      createdAt: "9-5-2025",
     },
   ];
 
   return (
-    <Box>
+    <Box
+      sx={{
+        width: 700,
+        borderRadius: 1,
+      }}
+    >
       {replies.map((reply) => (
         <ReplyCard
           key={reply.id}
