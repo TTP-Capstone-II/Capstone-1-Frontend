@@ -12,7 +12,10 @@ import Simulation from "./components/Simulation";
 import Simulations from "./pages/Simulations";
 import FreeFall from "./pages/FreeFall";
 import ProjectileMotion from "./pages/ProjectileMotion";
-import ForumPage from "./pages/ForumPage";
+import ForumPage from "./pages/IndividualForum";
+import PostPage from "./pages/PostPage";
+import Friction from "./pages/Friction";
+import Inertia from "./pages/Inertia";
 import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 
@@ -59,16 +62,14 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
-          <Route
-            path="/simulation"
-            element={<Simulation setUser={setUser} />}
-          />
-          <Route path="/simulations" element={<Simulations />} />
           <Route path="/free-fall" element={<FreeFall />} />
           <Route path="/projectile-motion" element={<ProjectileMotion />} />
           <Route path="/torque" element={<Torque />} />
+          <Route path="/friction" element={<Friction />} />
+          <Route path="/inertia" element={<Inertia />} />
           <Route exact path="/" element={<Home />} />
           <Route path="/forum/:forumId/posts" element={<ForumPage />} />
+          <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -6,9 +6,7 @@ import { API_URL } from "../shared";
 const ForumPage = () => {
   const [posts, setPosts] = useState([]);
   const forumId = 1;
-
-  useEffect(() => {
-    const fetchPosts = async () => {
+  const fetchPosts = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/forum/${forumId}/posts`);
         setPosts(response.data);
@@ -17,6 +15,7 @@ const ForumPage = () => {
       }
     };
 
+  useEffect(() => {
     fetchPosts();
   }, []);
 
