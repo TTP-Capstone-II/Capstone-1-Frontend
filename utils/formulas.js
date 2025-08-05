@@ -86,7 +86,6 @@ export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcc
   let torque;
   if (distanceFromPivot !== undefined && force !== undefined) {
     const thetaRad = toRadians(angle);
-
     // τ = r * F * sin(θ)
      torque = distanceFromPivot * force * Math.sin(thetaRad);
   }
