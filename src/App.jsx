@@ -71,7 +71,6 @@ const App = () => {
           <Route path="/friction" element={<Friction />} />
           <Route path="/inertia" element={<Inertia />} />
           <Route exact path="/" element={<Home />} />
-          <Route path="/replies" element={<ReplyList />} /> {/*to be deleted*/}
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
           <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
