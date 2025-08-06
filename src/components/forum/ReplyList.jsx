@@ -54,7 +54,7 @@ const ReplyList = ({ postId }) => {
       {replies.map((reply) => (
         <ReplyCard
           key={reply.id}
-          author={reply?.author}
+          author={reply?.user.username}
           content={reply?.content}
           createdAt={reply?.createdAt}
         />
