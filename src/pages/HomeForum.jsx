@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import PostCard from "../components/forum/PostCard";
+import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import { API_URL } from "../shared";
 
 const HomeForum = () => {

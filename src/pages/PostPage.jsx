@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PostCard from "../components/forum/PostCard";
 import { useParams } from "react-router";
 import { API_URL } from "../shared";
 
 const PostPage = () => {
     const [post, setPost] = useState([]);
-    const forumId = 1;
+    const {forumId} = useParams();
     let params = useParams();
      const fetchPost = async () => {
             try {
