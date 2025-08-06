@@ -50,7 +50,7 @@ const ReplyForm = () => {
         >
           <Box>
             <TextareaAutosize
-              minRows={5}
+              minRows={2}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               style={{
