@@ -46,7 +46,7 @@ const ReplyList = ({ postId }) => {
         borderRadius: 1,
       }}
     >
-      {sampleReplies.map((reply) => (
+      {replies.map((reply) => (
         <ReplyCard
           key={reply.id}
           author={reply?.author}
