@@ -57,6 +57,7 @@ const ReplyList = ({ postId }) => {
           author={reply?.user.username}
           content={reply?.content}
           createdAt={reply?.createdAt}
+          postId={postId}
         />
       ))}
     </Box>
