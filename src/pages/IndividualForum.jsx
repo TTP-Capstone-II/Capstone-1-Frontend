@@ -13,7 +13,7 @@ const IndividualForum = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/new-post`);
+    navigate(`/forum/${forumId}/posts/new-post`);
   }
 
   const fetchPosts = async () => {

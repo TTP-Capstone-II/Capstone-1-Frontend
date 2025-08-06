@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import axios from "axios";
+import { API_URL } from "../../shared";
+
 
 const PostCard = ({ post }) => {
   const {forumId} = useParams();
+  const [forums, setForums] = useState([]);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const fetchForums = async () => {
