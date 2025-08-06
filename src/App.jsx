@@ -20,6 +20,7 @@ import Friction from "./pages/Friction";
 import Inertia from "./pages/Inertia";
 import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
+import ReplyList from "./components/forum/ReplyList";
 
 const App = () => {
   const [user, setUser] = useState(null);
