@@ -31,7 +31,7 @@ const PostPage = () => {
       <div>{post.title}</div>
       <div>{post.content}</div>
       <ReplyList postId={post.id} />
-      <ReplyForm />
+      <ReplyForm postId={post.id} />
     </div>
   );
 };

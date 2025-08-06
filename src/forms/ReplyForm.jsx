@@ -17,7 +17,6 @@ const ReplyForm = ({ postId }) => {
     postId: postId,
     likes: 0,
   });
-  const [content, setContent] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,8 +47,10 @@ const ReplyForm = ({ postId }) => {
           <Box>
             <TextareaAutosize
               minRows={2}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={replyData.content}
+              onChange={(e) =>
+                setReplyData({ ...replyData, content: e.target.value })
+              }
               style={{
                 width: "100%",
                 fontSize: "1rem",
