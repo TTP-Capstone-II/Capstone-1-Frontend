@@ -9,18 +9,15 @@ import {
 import React, { useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
 
-const ReplyForm = () => {
+const ReplyForm = ({ postId }) => {
   const [replyData, setReplyData] = useState({
     content: "",
     userId: "",
-    postId: "",
+    postId: postId,
     likes: 0,
   });
   const [content, setContent] = useState("");
-  const navigate = useNavigate();
-  const { postId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
