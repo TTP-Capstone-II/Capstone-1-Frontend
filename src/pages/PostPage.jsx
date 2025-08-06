@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router";
 import { API_URL } from "../shared";
 import ReplyList from "../components/forum/ReplyList";
+import ReplyForm from "../forms/ReplyForm";
 
 const PostPage = () => {
   const [post, setPost] = useState([]);
@@ -29,8 +30,8 @@ const PostPage = () => {
       <h1>Post</h1>
       <div>{post.title}</div>
       <div>{post.content}</div>
-      <h3>Replies</h3>
       <ReplyList postId={post.id} />
+      <ReplyForm />
     </div>
   );
 };

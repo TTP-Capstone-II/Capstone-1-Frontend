@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,8 +21,6 @@ const ReplyForm = () => {
   const [content, setContent] = useState("");
   const navigate = useNavigate();
   const { postId } = useParams();
-
-  useEffect(() => {}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +37,6 @@ const ReplyForm = () => {
 
   return (
     <div className="reply-page">
-      <h1>New Reply</h1>
       <FormControl>
         <Box
           component="form"
@@ -52,9 +49,6 @@ const ReplyForm = () => {
           }}
         >
           <Box>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Content
-            </Typography>
             <TextareaAutosize
               minRows={5}
               value={content}
@@ -70,7 +64,7 @@ const ReplyForm = () => {
             />
           </Box>
           <Button type="submit" variant="contained" color="primary">
-            Submit
+            Reply
           </Button>
         </Box>
       </FormControl>
