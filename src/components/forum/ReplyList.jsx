@@ -12,7 +12,7 @@ const ReplyList = ({ postId }) => {
   useEffect(() => {
     const fetchReplies = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/post/1/reply`);
+        const response = await axios.get(`${API_URL}/api/post/${postId}/reply`);
         setReplies(response.data);
         console.log(response.data);
       } catch (error) {
