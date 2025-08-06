@@ -73,8 +73,14 @@ const App = () => {
           <Route exact path="/" element={<Home />} />
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
-          <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
-          <Route path="/forum/:forumId/posts/new-post" element={<NewPostPage user={user}/>} />
+          <Route
+            path="/forum/:forumId/posts/:postId"
+            element={<PostPage user={user} />}
+          />
+          <Route
+            path="/forum/:forumId/posts/new-post"
+            element={<NewPostPage user={user} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

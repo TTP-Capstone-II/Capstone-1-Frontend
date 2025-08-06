@@ -6,15 +6,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
 
-const ReplyForm = ({ postId }) => {
+const ReplyForm = ({ postId, userId }) => {
   const [replyData, setReplyData] = useState({
     content: "",
     userId: "",
-    postId: postId,
+    postId: "",
     likes: 0,
   });
 
@@ -30,6 +30,16 @@ const ReplyForm = ({ postId }) => {
       console.error("error posting reply", error);
     }
   };
+
+  useEffect(() => {
+    if (userId && postId) {
+      setReplyData((prev) => ({
+        ...prev,
+        userId,
+        postId,
+      }));
+    }
+  }, [userId, postId]);
 
   return (
     <div className="reply-page">
