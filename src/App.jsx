@@ -74,7 +74,7 @@ const App = () => {
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
           <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
-          <Route path="/new-post" element={<NewPostPage />} />
+          <Route path="/forum/:forumId/posts/new-post" element={<NewPostPage user={user}/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -14,21 +14,21 @@ const NavBar = ({ user, onLogout }) => {
         {user ? (
           <div className="user-section">
             <span className="username">Welcome, {user.username}!</span>
+            <Dropdown></Dropdown>
+            <NavLink to="/forum" className="nav-link">
+              Forum
+            </NavLink>
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>
           </div>
         ) : (
           <div className="auth-links">
-            <Dropdown></Dropdown>
             <NavLink to="/login" className="nav-link">
               Login
             </NavLink>
             <NavLink to="/signup" className="nav-link">
               Sign Up
-            </NavLink>
-            <NavLink to="/forum" className="nav-link">
-              Forum
             </NavLink>
           </div>
         )}
