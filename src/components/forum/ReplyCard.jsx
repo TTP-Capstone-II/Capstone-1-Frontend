@@ -1,7 +1,8 @@
 import React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 const ReplyCard = ({ author, content, createdAt }) => {
   return (
@@ -20,6 +21,9 @@ const ReplyCard = ({ author, content, createdAt }) => {
         </Typography>
         {content}
       </CardContent>
+      <IconButton aria-label="ThumbUp">
+        <ThumbUpIcon></ThumbUpIcon>
+      </IconButton>
     </Card>
   );
 };
