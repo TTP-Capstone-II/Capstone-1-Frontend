@@ -36,8 +36,8 @@ const ProjectileMotion = () => {
 
   const handleEngineReady = (engine, world) => {
     const ball = Bodies.circle(50, 390, 30, {
-      friction: 0.1,
-      frictionAir: 0.01,
+      friction: 0.005,
+      frictionAir: 0.001,
       restitution: 0.2,
     });
     Matter.Body.setVelocity(ball, {
