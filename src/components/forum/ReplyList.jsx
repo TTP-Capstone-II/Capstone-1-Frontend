@@ -22,19 +22,19 @@ const ReplyList = ({ postId }) => {
     {
       id: 1,
       author: "Joyous",
-      content: "Worst poster ever!",
+      content: "Best poster ever!",
       createdAt: "1-5-2025",
     },
     {
       id: 2,
       author: "Johnny",
-      content: "Bad post. Delete it now",
+      content: "Good post. Delete it now",
       createdAt: "8-5-2025",
     },
     {
       id: 3,
       author: "Marsack",
-      content: "I hate this",
+      content: "I",
       createdAt: "9-5-2025",
     },
   ];
