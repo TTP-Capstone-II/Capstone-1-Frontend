@@ -6,12 +6,12 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
 
-const ReplyList = () => {
+const ReplyList = ({ postId }) => {
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
     const fetchReplies = () => {
-      const response = axios.await(`${API_URL}/api/post/reply`);
+      const response = axios.await(`${API_URL}/api/post/${postId}/reply`);
       setReplies(response.data);
     };
 
