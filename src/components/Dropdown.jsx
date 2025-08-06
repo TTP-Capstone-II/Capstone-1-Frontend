@@ -69,7 +69,7 @@ export default function Dropdown() {
               </MenuItem>
               <MenuItem
                 component={NavLink}
-                to="/intertia"
+                to="/inertia"
                 onClick={handleMenuItemClick}
               >
                 Inertia

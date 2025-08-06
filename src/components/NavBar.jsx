@@ -20,20 +20,14 @@ const NavBar = ({ user, onLogout }) => {
           </div>
         ) : (
           <div className="auth-links">
-            <NavLink to="/simulation" className="nav-link">
-              Simulation
-            </NavLink>
             <Dropdown></Dropdown>
-            <Link to="/simulations" className="nav-link">
-              Simulations
-            </Link>
             <NavLink to="/login" className="nav-link">
               Login
             </NavLink>
             <NavLink to="/signup" className="nav-link">
               Sign Up
             </NavLink>
-            <NavLink to="/forum/:forumId/posts" className="nav-link">
+            <NavLink to="/forum" className="nav-link">
               Forum
             </NavLink>
           </div>
