@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ReplyCard from "./ReplyCard";
 import { Box } from "@mui/material";
+import axios from "axios";
+import { API_URL } from "../../shared";
 
 const ReplyList = () => {
-  const replies = [
+  const [replies, setReplies] = useState([]);
+
+  useEffect(() => {
+    const fetchReplies = () => {
+      const response = axios.await(`${API_URL}/api/post/reply`);
+      setReplies(response.data);
+    };
+
+    fetchReplies;
+  }, []);
+
+  const sampleReplies = [
     {
       id: 1,
       author: "Joyous",
@@ -33,7 +46,7 @@ const ReplyList = () => {
         borderRadius: 1,
       }}
     >
-      {replies.map((reply) => (
+      {sampleReplies.map((reply) => (
         <ReplyCard
           key={reply.id}
           author={reply?.author}
