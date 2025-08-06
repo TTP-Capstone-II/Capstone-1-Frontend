@@ -67,6 +67,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         value={userInput.gravity}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "gravity"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">s</InputAdornment>,
@@ -82,6 +83,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         value={userInput.initialVelocity}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "initialVelocity"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
@@ -97,6 +99,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         value={userInput.finalVelocity}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "finalVelocity"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
@@ -112,6 +115,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         value={userInput.initialHeight}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "initialHeight"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m</InputAdornment>,
@@ -127,6 +131,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         value={userInput.finalHeight}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "finalHeight"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m</InputAdornment>,
@@ -143,6 +148,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         variant="outlined"
         fullWidth
         inputProps={{ step: "0.01" }} //change soon
+        disabled={userInput.target === "time"}
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">s</InputAdornment>,
