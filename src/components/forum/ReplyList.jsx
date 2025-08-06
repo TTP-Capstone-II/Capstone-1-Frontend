@@ -10,13 +10,18 @@ const ReplyList = ({ postId }) => {
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
-    const fetchReplies = () => {
-      const response = axios.await(`${API_URL}/api/post/${postId}/reply`);
-      setReplies(response.data);
+    const fetchReplies = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/post/1/reply`);
+        setReplies(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
-    fetchReplies;
-  }, []);
+    fetchReplies();
+  }, [postId]);
 
   const sampleReplies = [
     {
