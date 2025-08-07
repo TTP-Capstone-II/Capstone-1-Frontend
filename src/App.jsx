@@ -21,6 +21,7 @@ import Inertia from "./pages/Inertia";
 import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 import ReplyList from "./components/forum/ReplyList";
+import WhiteboardRoom from "./pages/WhiteboardRoom";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -81,6 +82,7 @@ const App = () => {
             path="/forum/:forumId/posts/new-post"
             element={<NewPostPage user={user} />}
           />
+          <Route path="/whiteboard" element={<WhiteboardRoom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
