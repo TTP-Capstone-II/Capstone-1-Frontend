@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import socket from "../socket";
+import { useParams } from "react-router-dom";
 
-const WhiteBoard = () => {
+const WhiteBoard = ({roomId}) => {
   const canvasRef = useRef(null); // Reference to the canvas element
   const contextRef = useRef(null); // Reference to the canvas context
   const isDrawing = useRef(false); // Use a ref to track drawing state
@@ -23,8 +24,10 @@ const WhiteBoard = () => {
 
     contextRef.current = context;
 
-    // Join a room placeholder
-    socket.emit("join-room", "default-room");
+    // Join a room 
+    if (roomId) {
+        socket.emit("join-room", roomId);
+      }      
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
@@ -51,6 +54,7 @@ const WhiteBoard = () => {
     socket.emit("draw", {
       x: offsetX,
       y: offsetY,
+      roomId,
     }); // Emit the drawing event to the server
   };
 

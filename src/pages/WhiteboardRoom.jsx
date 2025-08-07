@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import WhiteBoard from "../components/WhiteBoard";
 
 const WhiteboardRoom = () => {
-    //const { forumId, roomId } = useParams();
+    const { roomId } = useParams();
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -14,7 +14,7 @@ const WhiteboardRoom = () => {
       </Link>
 
       <div >
-        <WhiteBoard />
+        <WhiteBoard roomId={roomId}/>
       </div>
     </div>
   );

@@ -90,7 +90,7 @@ const App = () => {
             path="/forum/:forumId/posts/new-post"
             element={<NewPostPage user={user} />}
           />
-          <Route path="/whiteboard" element={<WhiteboardRoom />} />
+          <Route path="/whiteboard/:roomId" element={<WhiteboardRoom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
