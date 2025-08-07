@@ -30,7 +30,7 @@ const PostPage = ({ user }) => {
       <h1>Post</h1>
       <div>{post.title}</div>
       <div>{post.content}</div>
-      <ReplyList postId={post.id} />
+      <ReplyList postId={post.id} userId={user?.id} />
       <ReplyForm postId={post.id} userId={user?.id} />
     </div>
   );
