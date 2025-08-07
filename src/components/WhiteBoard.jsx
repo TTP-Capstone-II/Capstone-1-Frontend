@@ -37,6 +37,11 @@ const WhiteBoard = () => {
         contextRef.current.closePath(); // Close the current path
     }
 
+    const clearCanvas = () => {
+        contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height); 
+    }
+
+
     return (
         <div>
             <canvas
@@ -47,6 +52,7 @@ const WhiteBoard = () => {
                 onMouseLeave={stopDrawing} 
                 style={{border: "1px solid black", cursor: "crosshair"}} 
             />
+            <button onClick={clearCanvas}>Clear Canvas</button>
         </div>
     );
 }
