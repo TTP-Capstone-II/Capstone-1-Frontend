@@ -2,10 +2,13 @@ import React, { useEffect, useRef } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 
+
 const WhiteBoard = ({roomId}) => {
   const canvasRef = useRef(null); // Reference to the canvas element
   const contextRef = useRef(null); // Reference to the canvas context
   const isDrawing = useRef(false); // Use a ref to track drawing state
+  const prevPoint = useRef({ x: 0, y: 0 });
+
 
   const handleDraw = ({ x, y }) => {
     contextRef.current.lineTo(x, y);
@@ -87,4 +90,18 @@ const WhiteBoard = ({roomId}) => {
   );
 };
 
+function throttle(callback, delay) {
+    let previousCall = 0;
+    return (...args) => {
+      const now = new Date().getTime();
+      if (now - previousCall >= delay) {
+        previousCall = now;
+        callback(...args);
+      }
+    };
+  }
+  
+
+
 export default WhiteBoard;
+
