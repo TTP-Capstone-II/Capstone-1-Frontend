@@ -16,6 +16,27 @@ const WhiteBoard = () => {
 
         contextRef.current = context;
     }, []);
+
+    let isDrawing = false;
+
+    const startDrawing = ({nativeEvent}) => {
+        isDrawing = true;
+        const {offsetX, offsetY} = nativeEvent; // Get the mouse position relative to the canvas
+        contextRef.current.beginPath(); // Start a new path
+        contextRef.current.moveTo(offsetX, offsetY); // Move the path to the starting point
+    }
+
+    const draw = ({nativeEvent}) => {
+        if (!isDrawing) return; 
+        const {offsetX, offsetY} = nativeEvent; 
+        contextRef.current.lineTo(offsetX, offsetY); // Draw a line to the current mouse position
+        contextRef.current.stroke(); // Render the stroke
+    }
+
+    const stopDrawing = () => {
+        isDrawing = false;
+        contextRef.current.closePath(); // Close the current path
+    }
 }
 
 export default WhiteBoard;
