@@ -2,13 +2,11 @@ import React, { useEffect, useRef } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 
-
-const WhiteBoard = ({roomId}) => {
+const WhiteBoard = ({ roomId }) => {
   const canvasRef = useRef(null); // Reference to the canvas element
   const contextRef = useRef(null); // Reference to the canvas context
   const isDrawing = useRef(false); // Use a ref to track drawing state
   const prevPoint = useRef({ x: 0, y: 0 });
-
 
   const handleDraw = ({ x, y }) => {
     contextRef.current.lineTo(x, y);
@@ -27,17 +25,16 @@ const WhiteBoard = ({roomId}) => {
 
     contextRef.current = context;
 
-    // Join a room 
+    // Join a room
     if (roomId) {
-        socket.emit("join-room", roomId);
-      }      
+      socket.emit("join-room", roomId);
+    }
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
     return () => {
       socket.off("draw", handleDraw);
     };
-
   }, []);
 
   const startDrawing = ({ nativeEvent }) => {
@@ -45,21 +42,29 @@ const WhiteBoard = ({roomId}) => {
     const { offsetX, offsetY } = nativeEvent; // Get the mouse position relative to the canvas
     contextRef.current.beginPath(); // Start a new path
     contextRef.current.moveTo(offsetX, offsetY); // Move the path to the starting point
+    prevPoint.current = { x: offsetX, y: offsetY }; // Store the starting point
   };
 
-  const draw = ({ nativeEvent }) => {
+  const draw = throttle(({ nativeEvent }) => {
     if (!isDrawing.current) return;
     const { offsetX, offsetY } = nativeEvent;
+    const { x: x0, y: y0 } = prevPoint.current;
+    const x1 = offsetX;
+    const y1 = offsetY;
 
-    contextRef.current.lineTo(offsetX, offsetY); // Draw a line to the current mouse position
+    contextRef.current.lineTo(x1, y1); // Draw a line to the current mouse position
     contextRef.current.stroke(); // Render the stroke
 
     socket.emit("draw", {
-      x: offsetX,
-      y: offsetY,
+      x0,
+      y0,
+      x1,
+      y1,
       roomId,
     }); // Emit the drawing event to the server
-  };
+
+    prevPoint.current = { x: offsetX, y: offsetY }; // Update the previous point
+  },10);
 
   const stopDrawing = () => {
     isDrawing.current = false;
@@ -91,17 +96,14 @@ const WhiteBoard = ({roomId}) => {
 };
 
 function throttle(callback, delay) {
-    let previousCall = 0;
-    return (...args) => {
-      const now = new Date().getTime();
-      if (now - previousCall >= delay) {
-        previousCall = now;
-        callback(...args);
-      }
-    };
-  }
-  
-
+  let previousCall = 0;
+  return (...args) => {
+    const now = new Date().getTime();
+    if (now - previousCall >= delay) {
+      previousCall = now;
+      callback(...args);
+    }
+  };
+}
 
 export default WhiteBoard;
-
