@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from "react";
+import socket from "../socket";
 
 const WhiteBoard = () => {
     const canvasRef = useRef(null); // Reference to the canvas element

@@ -22,6 +22,8 @@ import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 import ReplyList from "./components/forum/ReplyList";
 import WhiteboardRoom from "./pages/WhiteboardRoom";
+import socket from "./socket";
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -37,6 +39,12 @@ const App = () => {
       setUser(null);
     }
   };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("🔗 Connected to socket");
+    });
+  }, []);
 
   // Check authentication status on app load
   useEffect(() => {
