@@ -1,35 +1,65 @@
-import React, {useState} from "react";
-import { TextField, Button, Paper, Typography, InputAdornment } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Paper,
+  Typography,
+  InputAdornment,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { FreeFallMotion } from "../topics/FreeFall";
 
-const FreeFallInterface = ({userInput, setUserInput}) => {
+const FreeFallInterface = ({ userInput, setUserInput }) => {
+  const [results, setResults] = useState(null);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInput({
+      ...userInput,
+      [name]: parseFloat(value),
+    });
+  };
 
-    const handleInputChange = (e) => { 
-        const { name, value } = e.target;
-        setUserInput({
-            ...userInput,
-            [name]: parseFloat(value) 
-        });
-    }
+  useEffect(() => {
+    if (!userInput.target) return;
 
-    //add function to handle form submission (add info to a prop that goes to where it's needed for calculations)
+    const calculations = FreeFallMotion({
+      gravity: userInput.gravity,
+      initialVelocity: userInput.initialVelocity,
+      finalVelocity: userInput.finalVelocity,
+      initialHeight: userInput.initialHeight,
+      finalHeight: userInput.finalHeight,
+      time: userInput.time,
+      target: userInput.target,
+    });
+    setResults(calculations);
+  }, [
+    userInput.target,
+    userInput.gravity,
+    userInput.initialVelocity,
+    userInput.finalVelocity,
+    userInput.initialHeight,
+    userInput.finalHeight,
+    userInput.time,
+  ]);
 
   return (
-    <Paper 
-      elevation={3} 
+    <Paper
+      elevation={3}
       sx={{
         marginTop: 7,
         width: 300,
-        height: '100%',
+        height: "100%",
         padding: 3,
         borderRadius: 2,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 2,
-        overflowY: 'auto'
+        overflowY: "auto",
       }}
     >
-      
       <TextField
         label="Acceleration due to gravity (g)"
         type="number"
@@ -38,10 +68,10 @@ const FreeFallInterface = ({userInput, setUserInput}) => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -50,13 +80,13 @@ const FreeFallInterface = ({userInput, setUserInput}) => {
         type="number"
         name="initialVelocity"
         value={userInput.initialVelocity}
-        variant="outlined" 
+        variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -68,40 +98,40 @@ const FreeFallInterface = ({userInput, setUserInput}) => {
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-            },
-          }}
-       onChange={handleInputChange}
-      />
-
-      <TextField
-        label="Initial position"
-        type="number"
-        name="initialPosition"
-        value={userInput.initialPosition}
-        variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
       <TextField
-        label="Final position"
+        label="Initial height"
         type="number"
-        name="finalPosition"
-        value={userInput.finalPosition}
+        name="initialHeight"
+        value={userInput.initialHeight}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
+
+      <TextField
+        label="Final height"
+        type="number"
+        name="finalHeight"
+        value={userInput.finalHeight}
+        variant="outlined"
+        inputProps={{ step: "0.01" }} //change soon
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
@@ -114,20 +144,60 @@ const FreeFallInterface = ({userInput, setUserInput}) => {
         fullWidth
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
         onChange={handleInputChange}
       />
 
-      <Button 
+      {/*<Button 
         variant="contained" 
         color="primary"
         sx={{ mt: 2 }}
       >
         Enter
-      </Button>
+      </Button> */}
+
+      <InputLabel id="target-label" sx={{ mt: 2 }}>
+        Calculate
+      </InputLabel>
+      <Select
+        labelId="target-label"
+        label="Calculate"
+        name="target"
+        value={userInput.target || ""}
+        onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
+        variant="outlined"
+        fullWidth
+        sx={{ mb: 2 }}
+      >
+        <MenuItem value="finalVelocity">Final Velocity</MenuItem>
+        <MenuItem value="finalHeight">Final Height</MenuItem>
+        <MenuItem value="time">Fall Time</MenuItem>
+        <MenuItem value="initialVelocity">Start Velocity</MenuItem>
+        <MenuItem value="initialHeight">Start Height</MenuItem>
+        <MenuItem value="gravity">Gravity</MenuItem>
+        <MenuItem value="All">All</MenuItem>
+      </Select>
+
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Results:
+      </Typography>
+      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+        {results
+          ? JSON.stringify(
+              results,
+              (key, value) => {
+                if (typeof value === "number") {
+                  return Number(value.toFixed(2));
+                }
+                return value;
+              },
+              2
+            )
+          : "No results yet"}
+      </pre>
     </Paper>
   );
 };
