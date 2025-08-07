@@ -37,6 +37,19 @@ const WhiteBoard = () => {
         isDrawing = false;
         contextRef.current.closePath(); // Close the current path
     }
+
+    return (
+        <div>
+            <canvas
+                ref={canvasRef} // Reference to the canvas element
+                onMouseDown={startDrawing} 
+                onMouseMove={draw} 
+                onMouseUp={stopDrawing} 
+                onMouseLeave={stopDrawing} 
+                style={{border: "1px solid black", cursor: "crosshair"}} 
+            />
+        </div>
+    );
 }
 
 export default WhiteBoard;
