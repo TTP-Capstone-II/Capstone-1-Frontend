@@ -8,9 +8,14 @@ const WhiteBoard = ({ roomId }) => {
   const isDrawing = useRef(false); // Use a ref to track drawing state
   const prevPoint = useRef({ x: 0, y: 0 });
 
-  const handleDraw = ({ x, y }) => {
-    contextRef.current.lineTo(x, y);
+  const handleDraw = ({ x0, y0, x1, y1 }) => {
+    if (!contextRef.current) return; 
+
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(x0, y0); // Move to the starting point
+    contextRef.current.lineTo(x1, y1); // Draw a line to the end point
     contextRef.current.stroke();
+    contextRef.current.closePath(); 
   };
 
   useEffect(() => {
