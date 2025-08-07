@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FreeFallMotion } from "../topics/FreeFall";
 
-const FreeFallInterface = ({ userInput, setUserInput }) => {
+const FreeFallInterface = ({ userInput, setUserInput, runSimulation }) => {
   const [results, setResults] = useState(null);
 
   const handleInputChange = (e) => {
@@ -22,8 +22,103 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
     });
   };
 
-  useEffect(() => {
-    if (!userInput.target) return;
+  const validateInputs = () => {
+    const {
+      gravity,
+      initialVelocity,
+      finalVelocity,
+      initialHeight,
+      finalHeight,
+      time,
+      target,
+    } = userInput;
+
+    if (!target) return "Please select a value to calculate.";
+
+    // Common helper
+    const isNum = (val) => typeof val === "number" && !isNaN(val);
+
+    // Validation per target
+    switch (target) {
+      case "finalVelocity":
+        if (
+          !isNum(gravity) ||
+          !isNum(initialVelocity) ||
+          (!isNum(time) && !isNum(initialHeight) && !isNum(finalHeight))
+        ) {
+          return "To calculate final velocity, you need gravity, initial velocity, and either time OR both heights.";
+        }
+        break;
+
+      case "time":
+        if (
+          !isNum(gravity) ||
+          !isNum(initialVelocity) ||
+          (!isNum(finalVelocity) &&
+            (!isNum(initialHeight) || !isNum(finalHeight)))
+        ) {
+          return "To calculate time, you need gravity, initial velocity, and either final velocity OR both heights.";
+        }
+        break;
+
+      case "finalHeight":
+        if (
+          !isNum(initialHeight) ||
+          !isNum(initialVelocity) ||
+          !isNum(time) ||
+          !isNum(gravity)
+        ) {
+          return "To calculate final height, you need initial height, initial velocity, gravity, and time.";
+        }
+        break;
+
+      case "initialVelocity":
+        if (!isNum(finalVelocity) || !isNum(gravity) || !isNum(time)) {
+          return "To calculate initial velocity, you need final velocity, gravity, and time.";
+        }
+        break;
+
+      case "initialHeight":
+        if (
+          !isNum(finalHeight) ||
+          !isNum(initialVelocity) ||
+          !isNum(time) ||
+          !isNum(gravity)
+        ) {
+          return "To calculate initial height, you need final height, initial velocity, gravity, and time.";
+        }
+        break;
+
+      case "gravity":
+        if (!isNum(finalVelocity) || !isNum(initialVelocity) || !isNum(time)) {
+          return "To calculate gravity, you need initial velocity, final velocity, and time.";
+        }
+        break;
+
+      case "All":
+        return null; // Assume calculation handles missing values
+    }
+
+    return null; // ✅ Valid
+  };
+
+  const runSimulation = () => {
+    const error = validateInputs();
+    if (error) {
+      setResults(error); // Show error in the result box
+      return;
+    }
+
+    const handleStart = () => {
+      const error = validateInputs();
+      if (error) {
+        setResults(error);
+        return;
+      }
+
+      const result = runSimulation(); // 🔁 Call parent to compute & trigger simulation
+      setResults(result);
+    };
 
     const calculations = FreeFallMotion({
       gravity: userInput.gravity,
@@ -34,16 +129,9 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
       time: userInput.time,
       target: userInput.target,
     });
+
     setResults(calculations);
-  }, [
-    userInput.target,
-    userInput.gravity,
-    userInput.initialVelocity,
-    userInput.finalVelocity,
-    userInput.initialHeight,
-    userInput.finalHeight,
-    userInput.time,
-  ]);
+  };
 
   return (
     <Paper
@@ -75,7 +163,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Initial velocity"
         type="number"
@@ -91,7 +178,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Final velocity"
         type="number"
@@ -107,7 +193,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Initial height"
         type="number"
@@ -123,7 +208,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Final height"
         type="number"
@@ -139,7 +223,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Time"
         type="number"
@@ -156,15 +239,6 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
-      {/*<Button 
-        variant="contained" 
-        color="primary"
-        sx={{ mt: 2 }}
-      >
-        Enter
-      </Button> */}
-
       <InputLabel id="target-label" sx={{ mt: 2 }}>
         Calculate
       </InputLabel>
@@ -186,7 +260,15 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         <MenuItem value="gravity">Gravity</MenuItem>
         <MenuItem value="All">All</MenuItem>
       </Select>
-
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleStart}
+        sx={{ mt: 2 }}
+      >
+        Start Simulation
+      </Button>
+      ;
       <Typography variant="h6" sx={{ mt: 2 }}>
         Results:
       </Typography>

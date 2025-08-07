@@ -2,39 +2,76 @@ import React, { useState } from "react";
 import BaseSimulation from "../components/BaseSimulation";
 import FreeFallInterface from "../interfaces/FreeFallInterface";
 import Matter from "matter-js";
-import { Engine, Render, Bodies, World, Runner, Mouse, MouseConstraint } from "matter-js";
-import { Button } from "@mui/material";
+import { World } from "matter-js";
+import { FreeFallMotion } from "../topics/FreeFall";
 
 const FreeFall = () => {
-    const [userInput, setUserInput] = useState({
-        gravity: "9.81",
-        initialVelocity: "0",
-        finalVelocity: "",
-        initialHeight: "50",
-        finalHeight: "0",
-        time: "",
-        target: "",
+  const [userInput, setUserInput] = useState({
+    gravity: "9.81",
+    initialVelocity: "0",
+    finalVelocity: "",
+    initialHeight: "700",
+    finalHeight: "0",
+    time: "",
+    target: "",
+  });
+
+  const [calculatedInput, setCalculatedInput] = useState(null); // 🔁 Used to trigger simulation
+
+  const pixelsToMeterRatio = 2;
+
+  const handleEngineReady = (engine, world) => {
+    if (!calculatedInput) return;
+
+    const square = Matter.Bodies.rectangle(
+      500,
+      650 - calculatedInput.initialHeight,
+      50,
+      50
+    );
+
+    Matter.Body.setVelocity(square, {
+      x: 0,
+      y: calculatedInput.initialVelocity * pixelsToMeterRatio,
     });
 
-    const handleEngineReady = (engine, world) => {
-        const square = Matter.Bodies.rectangle(500, 650 - userInput.initialHeight, 50, 50);
+    engine.world.gravity.y =
+      (Number(calculatedInput.gravity) / 9.81) * pixelsToMeterRatio;
 
-        Matter.Body.setVelocity(square, {
-            x: 0,
-            y: userInput.initialVelocity,
-        });
+    World.add(world, square);
+  };
 
-        engine.world.gravity.y = Number(userInput.gravity) / 9.81;
-        World.add(world, square);
+  // 🔁 Run simulation from interface button
+  const runSimulation = () => {
+    const result = FreeFallMotion({
+      gravity: userInput.gravity,
+      initialVelocity: userInput.initialVelocity,
+      finalVelocity: userInput.finalVelocity,
+      initialHeight: userInput.initialHeight,
+      finalHeight: userInput.finalHeight,
+      time: userInput.time,
+      target: userInput.target,
+    });
 
-    };
+    if (typeof result === "string") {
+      // Error string from validation
+      return result;
+    }
 
-    return (
-        <div className="simulation-page" style={{ display: 'flex', height: '700px' }}>
-            <FreeFallInterface userInput={userInput} setUserInput={setUserInput} />
-            <BaseSimulation onEngineReady={handleEngineReady} />
-        </div>
-    );
+    setCalculatedInput(result); // ✅ This will be used in simulation
+    return result;
+  };
+
+  return (
+    <div className="simulation-page" style={{ display: "flex", height: "700px" }}>
+      <FreeFallInterface
+        userInput={userInput}
+        setUserInput={setUserInput}
+        runSimulation={runSimulation} // Pass simulation trigger
+      />
+      <BaseSimulation onEngineReady={handleEngineReady} />
+    </div>
+  );
 };
 
 export default FreeFall;
