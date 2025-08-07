@@ -3,6 +3,7 @@ import React, {useEffect, useRef} from "react";
 const WhiteBoard = () => {
     const canvasRef = useRef(null); // Reference to the canvas element
     const contextRef = useRef(null); // Reference to the canvas context
+    const isDrawing = useRef(false); // Use a ref to track drawing state
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -17,24 +18,22 @@ const WhiteBoard = () => {
         contextRef.current = context;
     }, []);
 
-    let isDrawing = false;
-
     const startDrawing = ({nativeEvent}) => {
-        isDrawing = true;
+        isDrawing.current = true;
         const {offsetX, offsetY} = nativeEvent; // Get the mouse position relative to the canvas
         contextRef.current.beginPath(); // Start a new path
         contextRef.current.moveTo(offsetX, offsetY); // Move the path to the starting point
     }
 
     const draw = ({nativeEvent}) => {
-        if (!isDrawing) return; 
+        if (!isDrawing.current) return; 
         const {offsetX, offsetY} = nativeEvent; 
         contextRef.current.lineTo(offsetX, offsetY); // Draw a line to the current mouse position
         contextRef.current.stroke(); // Render the stroke
     }
 
     const stopDrawing = () => {
-        isDrawing = false;
+        isDrawing.current = false;
         contextRef.current.closePath(); // Close the current path
     }
 
