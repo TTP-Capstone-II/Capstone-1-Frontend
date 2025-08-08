@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 
 const VoiceChannel = () => {
@@ -20,14 +20,6 @@ const VoiceChannel = () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     return devices.filter((device) => device.kind === "audioinput");
   };
-
-  useEffect(() => {
-    getAudioStream().then(async () => {
-      const devices = await getAudioDevices();
-      setAudioDevices(devices);
-      console.log("Audio found:", devices);
-    });
-  }, []);
 
   const handleJoinAudio = async () => {
     try {
