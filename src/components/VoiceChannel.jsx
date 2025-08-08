@@ -5,17 +5,28 @@ const VoiceChannel = () => {
     const [isConnected, setIsConnected] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
 
-
+    const handleJoinAudio = () => {
+        // Logic to join audio channel
+        setIsConnected(true);
+    }
+    const handleDisconnectAudio = () => {
+        // Logic to disconnect audio channel
+        setIsConnected(false);
+    }
+    const handleMute = () => {
+        // Logic to mute/unmute audio
+        setIsMuted(!isMuted);
+    }
     return (
         <div className="voice-channel">
             {isConnected ? ( 
                 <div className="connected">
-                    <Button >Mute</Button>
-                    <Button >Disconnect Audio</Button>
+                    <Button onClick={handleMute}>Mute</Button>
+                    <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
                 </div>
             ) : (
                 <div className="disconnected">
-                    <Button >Join Audio</Button>
+                    <Button onClick={handleJoinAudio}>Join Audio</Button>
                 </div>
             )}
         </div>
