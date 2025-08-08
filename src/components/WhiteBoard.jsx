@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 
@@ -7,6 +7,22 @@ const WhiteBoard = ({ roomId }) => {
   const contextRef = useRef(null); // Reference to the canvas context
   const isDrawing = useRef(false); // Use a ref to track drawing state
   const prevPoint = useRef({ x: 0, y: 0 });
+  const [inviteLink, setInviteLink] = useState("");
+
+  useEffect(() => {
+    const link = `${window.location.origin}/whiteboard/${roomId}`;
+    setInviteLink(link); // Set the invite link for the whiteboard room
+  }, []);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(inviteLink) // Copy the invite link to clipboard
+      .then(() => {
+        alert("Invite link copied to clipboard!"); 
+      })
+      .catch((err) => {
+        console.error("Failed to copy link: ", err); 
+      });
+  };
 
   const handleDraw = ({ x0, y0, x1, y1 }) => {
     if (!contextRef.current) return; 
@@ -84,6 +100,9 @@ const WhiteBoard = ({ roomId }) => {
 
   return (
     <div>
+        <h2>Whiteboard Room: {roomId}</h2>
+      <button onClick={handleCopyLink}>Copy Invite Link</button>
+      <p>Invite Link: {inviteLink}</p>
       <canvas
         ref={canvasRef} // Reference to the canvas element
         onMouseDown={startDrawing}
