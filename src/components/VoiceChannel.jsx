@@ -7,6 +7,9 @@ const VoiceChannel = () => {
   const [stream, setStream] = useState();
   const [audioDevices, setAudioDevices] = useState();
 
+  const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+  const peerConnection = new RTCPeerConnection(configuration);
+
   const getAudioStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
