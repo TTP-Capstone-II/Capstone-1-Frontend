@@ -55,6 +55,7 @@ const WhiteBoard = ({ roomId }) => {
 
     return () => {
       socket.off("draw", handleDraw);
+      socket.off("join-room", roomId); // Clean up the socket listeners
     };
   }, []);
 
