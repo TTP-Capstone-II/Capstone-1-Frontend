@@ -13,6 +13,13 @@ const VoiceChannel = () => {
     peerConnection.addTrack(track, stream);
   }
   );
+  peerConnection.ontrack = (event) => { // Handle incoming tracks from the remote peer
+    const remoteStream = event.streams[0];
+    const audioElement = document.createElement("audio");
+    audioElement.srcObject = remoteStream;
+    audioElement.autoplay = true; // Automatically play the audio when it starts
+    document.body.appendChild(audioElement); // Append the audio element to the body
+  };
 
   const getAudioStream = async () => {
     try {
