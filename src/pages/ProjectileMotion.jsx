@@ -44,7 +44,7 @@ const ProjectileMotion = () => {
       x: initialVelocityX,
       y: -initialVelocityY,
     });
-    Matter.Body.setPosition(ball, { x: 50, y: userInput.initialHeight });
+    Matter.Body.setPosition(ball, { x: 50, y: 635||userInput.initialHeight });
 
     // Add gravity
     engine.world.gravity.y = Number(userInput.gravity) / 9.81;
