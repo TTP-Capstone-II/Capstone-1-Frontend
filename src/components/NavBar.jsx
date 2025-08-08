@@ -7,26 +7,26 @@ const NavBar = ({ user, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <NavLink to="/">Capstone I</NavLink>
+        <NavLink to="/">Capstone II</NavLink>
       </div>
 
       <div className="nav-links">
         {user ? (
           <div className="user-section">
             <span className="username">Welcome, {user.username}!</span>
+            <Dropdown></Dropdown>
+            <NavLink to="/whiteboard" className="nav-link">
+              Whiteboard
+            </NavLink>
+            <NavLink to="/forum" className="nav-link">
+              Forum
+            </NavLink>
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>
           </div>
         ) : (
           <div className="auth-links">
-            <NavLink to="/simulation" className="nav-link">
-              Simulation
-            </NavLink>
-            <Dropdown></Dropdown>
-            <Link to="/simulations" className="nav-link">
-              Simulations
-            </Link>
             <NavLink to="/login" className="nav-link">
               Login
             </NavLink>
