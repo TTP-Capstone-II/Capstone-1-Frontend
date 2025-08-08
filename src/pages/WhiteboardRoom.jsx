@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import WhiteBoard from "../components/WhiteBoard";
 
-const WhiteboardRoom = () => {
+const WhiteboardRoom = ({user}) => {
     const { roomId } = useParams();
 
   return (
@@ -14,7 +14,7 @@ const WhiteboardRoom = () => {
       </Link>
 
       <div >
-        <WhiteBoard roomId={roomId}/>
+        <WhiteBoard roomId={roomId} user={user}/>
       </div>
     </div>
   );

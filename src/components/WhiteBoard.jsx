@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef, use } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 
-const WhiteBoard = ({ roomId }) => {
+const WhiteBoard = ({ roomId, user }) => {
   const canvasRef = useRef(null); // Reference to the canvas element
   const contextRef = useRef(null); // Reference to the canvas context
   const isDrawing = useRef(false); // Use a ref to track drawing state
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
+  const [joinMessage, setJoinMessage] = useState("");
+
+  const username = user.username; 
 
   useEffect(() => {
     const link = `${window.location.origin}/whiteboard/${roomId}`;
@@ -47,15 +50,21 @@ const WhiteBoard = ({ roomId }) => {
     contextRef.current = context;
 
     // Join a room
-    if (roomId) {
-      socket.emit("join-room", roomId);
+    if (roomId && username) {
+      socket.emit("join-room", {roomId, username} );
     }
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
+    socket.on("user-joined", (joinedUsername) => {
+        setJoinMessage(`${joinedUsername} has joined the room`);
+        setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
+      });
+
     return () => {
       socket.off("draw", handleDraw);
       socket.off("join-room", roomId); // Clean up the socket listeners
+      socket.off("user-joined");
     };
   }, []);
 
@@ -104,6 +113,7 @@ const WhiteBoard = ({ roomId }) => {
         <h2>Whiteboard Room: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
       <p>Invite Link: {inviteLink}</p>
+      {joinMessage && <p>{joinMessage}</p>} 
       <canvas
         ref={canvasRef} // Reference to the canvas element
         onMouseDown={startDrawing}
