@@ -61,11 +61,8 @@ const WhiteBoard = ({ roomId }) => {
     contextRef.current.stroke(); // Render the stroke
 
     socket.emit("draw", {
-      x0,
-      y0,
-      x1,
-      y1,
-      roomId,
+        roomId,
+        line: { x0, y0, x1, y1 },
     }); // Emit the drawing event to the server
 
     prevPoint.current = { x: offsetX, y: offsetY }; // Update the previous point
