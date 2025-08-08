@@ -16,17 +16,18 @@ const VoiceChannel = () => {
     }
   };
 
-  const getAudioDevices = async () => {
+  // In case you want to access the devices programmatically. Otherwise, it's unnecessary.
+  /*  const getAudioDevices = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     return devices.filter((device) => device.kind === "audioinput");
-  };
+  };*/
 
   const handleJoinAudio = async () => {
     try {
       await getAudioStream();
-      const devices = await getAudioDevices();
-      setAudioDevices(devices);
-      console.log("Audio found:", devices);
+      //const devices = await getAudioDevices();
+      //setAudioDevices(devices);
+      //console.log("Audio found:", devices);
       setIsConnected(true);
     } catch (error) {
       console.log(error);
