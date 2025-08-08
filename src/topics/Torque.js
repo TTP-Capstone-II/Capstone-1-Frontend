@@ -1,10 +1,10 @@
-import { calcTorque } from "../../utils/formulas";
+import { calcTorque, calcAngularAcceleration } from "../../utils/formulas";
 
 export function Torque ({ torque, angularAcceleration, distanceFromPivot, angle, inertia, force, target}) {
 
     // calculate all 
     const torqueValue = calcTorque({ distanceFromPivot, force, angle, inertia, angularAcceleration });
-    const angularAccelerationValue = calcAngularAcceleration({ });
+    const angularAccelerationValue = calcAngularAcceleration({distanceFromPivot, force, angle, inertia, torque});
 
     const results = {
         torque: torqueValue,
