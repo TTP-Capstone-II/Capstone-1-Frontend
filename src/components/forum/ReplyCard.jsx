@@ -1,11 +1,3 @@
-<<<<<<< Updated upstream
-import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { Typography } from "@mui/material";
-
-const ReplyCard = ({ author, content, createdAt }) => {
-=======
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -53,7 +45,6 @@ const ReplyCard = ({ id, userId, author, content, createdAt, numOflikes }) => {
     fetchReplyLikeCheck();
   }, []);
 
->>>>>>> Stashed changes
   return (
     <Card
       sx={{
@@ -70,13 +61,10 @@ const ReplyCard = ({ id, userId, author, content, createdAt, numOflikes }) => {
         </Typography>
         {content}
       </CardContent>
-<<<<<<< Updated upstream
-=======
       <IconButton aria-label="ThumbUp" onClick={handleClick}>
         <ThumbUpIcon></ThumbUpIcon>
         <Typography color="text.secondary">{likes}</Typography>
       </IconButton>
->>>>>>> Stashed changes
     </Card>
   );
 };

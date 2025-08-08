@@ -8,14 +8,9 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
-import Simulation from "./components/Simulation";
-import Simulations from "./pages/Simulations";
-<<<<<<< Updated upstream
-=======
 import { API_URL, SOCKETS_URL, NODE_ENV } from "./shared";
 import { io } from "socket.io-client";
 import socket from "./socket";
->>>>>>> Stashed changes
 import FreeFall from "./pages/FreeFall";
 import ProjectileMotion from "./pages/ProjectileMotion";
 import IndividualForum from "./pages/IndividualForum";
@@ -24,18 +19,12 @@ import PostPage from "./pages/PostPage";
 import NewPostPage from "./pages/NewPostPage";
 import Friction from "./pages/Friction";
 import Inertia from "./pages/Inertia";
-<<<<<<< Updated upstream
-import { API_URL } from "./shared";
-import Torque from "./pages/Torque";
-import ReplyList from "./components/forum/ReplyList";
-=======
 import Torque from "./pages/Torque";
 import ReplyList from "./components/forum/ReplyList";
 import WhiteboardRoom from "./pages/WhiteboardRoom";
 import WhiteboardLanding from "./pages/WhiteboardLanding";
 
 
->>>>>>> Stashed changes
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -94,10 +83,6 @@ const App = () => {
           <Route exact path="/" element={<Home />} />
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
-<<<<<<< Updated upstream
-          <Route path="/forum/:forumId/posts/:postId" element={<PostPage />} />
-          <Route path="/forum/:forumId/posts/new-post" element={<NewPostPage user={user}/>} />
-=======
           <Route
             path="/forum/:forumId/posts/:postId"
             element={<PostPage user={user} />}
@@ -108,7 +93,6 @@ const App = () => {
           />
           <Route path="/whiteboard" element={<WhiteboardLanding />} />
           <Route path="/whiteboard/:roomId" element={<WhiteboardRoom  user={user}/>} />
->>>>>>> Stashed changes
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

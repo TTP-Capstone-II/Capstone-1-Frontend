@@ -6,11 +6,7 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
 
-<<<<<<< Updated upstream
-const ReplyList = ({ postId }) => {
-=======
 const ReplyList = ({ postId, userId }) => {
->>>>>>> Stashed changes
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
@@ -58,18 +54,12 @@ const ReplyList = ({ postId, userId }) => {
       {replies.map((reply) => (
         <ReplyCard
           key={reply.id}
-<<<<<<< Updated upstream
-          author={reply?.user.username}
-          content={reply?.content}
-          createdAt={reply?.createdAt}
-=======
           id={reply.id}
           userId={userId}
           author={reply?.user.username}
           content={reply?.content}
           createdAt={reply?.createdAt}
           numOflikes={reply?.likes}
->>>>>>> Stashed changes
         />
       ))}
     </Box>

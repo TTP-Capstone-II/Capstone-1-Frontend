@@ -27,11 +27,7 @@ const IndividualForum = () => {
 
   useEffect(() => {
     fetchPosts();
-<<<<<<< Updated upstream
-  }, [forumId]);
-=======
   }, []);
->>>>>>> Stashed changes
 
   return (
     <div className="forum-page">
