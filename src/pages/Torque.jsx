@@ -11,7 +11,8 @@ const Torque = () => {
     torque: undefined,
     inertia: undefined,
     angularAcceleration: undefined,
-    distanceFromPivot: 300,
+    distanceFromPivot: undefined,
+    length: 300,
     angle: 90,
     force: undefined,
     target: undefined,
@@ -19,14 +20,14 @@ const Torque = () => {
 
   const handleEngineReady = (engine, world) => {
     var group = Body.nextGroup(true),
-      length = userInput.distanceFromPivot,
+      length = userInput.length,
       height = 30;
 
     const nail = { x: 400, y: 300 };
     const lever = Bodies.rectangle(
-      nail.x + userInput.distanceFromPivot / 2,
+      nail.x + userInput.length / 2,
       nail.y,
-      userInput.distanceFromPivot,
+      userInput.length,
       height,
       {
         density: 0.01,
@@ -38,7 +39,7 @@ const Torque = () => {
     const nailToLeverPivot = Constraint.create({
       pointA: nail,
       bodyB: lever,
-      pointB: { x: -userInput.distanceFromPivot / 2, y: 0 },
+      pointB: { x: -userInput.length / 2, y: 0 },
       stiffness: 1,
       length: 0,
     });

@@ -40,6 +40,7 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
     userInput.inertia,
     userInput.angularAcceleration,
     userInput.distanceFromPivot,
+    userInput.length,
     userInput.angle,
     userInput.force,
     userInput.target,
@@ -112,6 +113,21 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         type="number"
         name="distanceFromPivot"
         value={userInput.distanceFromPivot}
+        variant="outlined"
+        inputProps={{ step: "0.01" }} //change soon
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
+
+      <TextField
+        label="Length"
+        type="number"
+        name="length"
+        value={userInput.length}
         variant="outlined"
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
