@@ -7,7 +7,7 @@ const NavBar = ({ user, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <NavLink to="/">Capstone I</NavLink>
+        <NavLink to="/">Capstone II</NavLink>
       </div>
 
       <div className="nav-links">
@@ -15,6 +15,9 @@ const NavBar = ({ user, onLogout }) => {
           <div className="user-section">
             <span className="username">Welcome, {user.username}!</span>
             <Dropdown></Dropdown>
+            <NavLink to="/whiteboard" className="nav-link">
+              Whiteboard
+            </NavLink>
             <NavLink to="/forum" className="nav-link">
               Forum
             </NavLink>
