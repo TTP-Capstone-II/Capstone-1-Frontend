@@ -22,6 +22,7 @@ import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 import ReplyList from "./components/forum/ReplyList";
 import WhiteboardRoom from "./pages/WhiteboardRoom";
+import WhiteboardLanding from "./pages/WhiteboardLanding";
 import socket from "./socket";
 
 
@@ -90,6 +91,7 @@ const App = () => {
             path="/forum/:forumId/posts/new-post"
             element={<NewPostPage user={user} />}
           />
+          <Route path="/whiteboard" element={<WhiteboardLanding />} />
           <Route path="/whiteboard/:roomId" element={<WhiteboardRoom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
