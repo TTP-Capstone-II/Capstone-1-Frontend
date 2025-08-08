@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Matter from "matter-js";
+import Matter, { Events, Vector } from "matter-js";
 import {
   Engine,
   Render,
@@ -11,7 +11,7 @@ import {
 } from "matter-js";
 import { Button } from "@mui/material";
 
-const Simulation = ({ onEngineReady }) => {
+const Simulation = ({ onEngineReady, topic }) => {
   const canvasRef = useRef(null);
   const engineRef = useRef(Engine.create());
   const renderRef = useRef();
@@ -60,6 +60,56 @@ const Simulation = ({ onEngineReady }) => {
         },
       },
     });
+
+    let isDrawing = false;
+    let startPoint = null; // Matter.Vector
+    let currentPoint = null;
+
+    if (topic === "torque") {
+      renderRef.current.canvas.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;
+        isDrawing = true;
+
+        startPoint = Vector.clone(mouse.position);
+        currentPoint = Vector.clone(mouse.position);
+      });
+
+      renderRef.current.canvas.addEventListener("mousemove", (e) => {
+        if (!isDrawing) return;
+        currentPoint = Vector.clone(mouse.position);
+      });
+
+      renderRef.current.canvas.addEventListener("mouseup", (e) => {
+        if (e.button !== 0) return;
+        if (!isDrawing) return;
+        isDrawing = false;
+
+        startPoint = null;
+        currentPoint = null;
+      });
+
+      Events.on(renderRef.current, "afterRender", () => {
+        const ctx = renderRef.current.context;
+        if (isDrawing && startPoint && currentPoint) {
+          ctx.beginPath();
+          ctx.moveTo(startPoint.x, startPoint.y);
+          ctx.lineTo(currentPoint.x, currentPoint.y);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "rgba(59,130,246,0.95)"; // blue-ish
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(startPoint.x, startPoint.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(99,102,241,0.95)";
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(currentPoint.x, currentPoint.y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(34,197,94,0.95)";
+          ctx.fill();
+        }
+      });
+    }
 
     World.add(world, mouseConstraint);
 
