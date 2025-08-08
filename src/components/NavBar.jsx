@@ -7,7 +7,11 @@ const NavBar = ({ user, onLogout }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
+<<<<<<< Updated upstream
         <NavLink to="/">Capstone I</NavLink>
+=======
+        <NavLink to="/">Capstone II</NavLink>
+>>>>>>> Stashed changes
       </div>
 
       <div className="nav-links">
@@ -15,6 +19,12 @@ const NavBar = ({ user, onLogout }) => {
           <div className="user-section">
             <span className="username">Welcome, {user.username}!</span>
             <Dropdown></Dropdown>
+<<<<<<< Updated upstream
+=======
+            <NavLink to="/whiteboard" className="nav-link">
+              Whiteboard
+            </NavLink>
+>>>>>>> Stashed changes
             <NavLink to="/forum" className="nav-link">
               Forum
             </NavLink>
