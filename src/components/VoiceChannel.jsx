@@ -1,35 +1,60 @@
-import React, { useState } from 'react';
-import { Button } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
 
 const VoiceChannel = () => {
-    const [isConnected, setIsConnected] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [stream, setStream] = useState();
+  const [audioDevices, setAudioDevices] = useState();
 
-    const handleJoinAudio = () => {
-        // Logic to join audio channel
-        setIsConnected(true);
+  const getAudioStream = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setStream(stream);
+    } catch (error) {
+      console.log("Cannot get audio stream", error);
     }
-    const handleDisconnectAudio = () => {
-        // Logic to disconnect audio channel
-        setIsConnected(false);
-    }
-    const handleMute = () => {
-        // Logic to mute/unmute audio
-        setIsMuted(!isMuted);
-    }
-    return (
-        <div className="voice-channel">
-            {isConnected ? ( 
-                <div className="connected">
-                    <Button onClick={handleMute}>Mute</Button>
-                    <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
-                </div>
-            ) : (
-                <div className="disconnected">
-                    <Button onClick={handleJoinAudio}>Join Audio</Button>
-                </div>
-            )}
+  };
+
+  const getAudioDevices = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((device) => device.kind === "audioinput");
+  };
+
+  useEffect(() => {
+    getAudioStream().then(async () => {
+      const devices = await getAudioDevices();
+      setAudioDevices(devices);
+      console.log("Audio found:", devices);
+    });
+  }, []);
+
+  const handleJoinAudio = () => {
+    getAudioStream();
+
+    setIsConnected(true);
+  };
+  const handleDisconnectAudio = () => {
+    // Logic to disconnect audio channel
+    setIsConnected(false);
+  };
+  const handleMute = () => {
+    // Logic to mute/unmute audio
+    setIsMuted(!isMuted);
+  };
+  return (
+    <div className="voice-channel">
+      {isConnected ? (
+        <div className="connected">
+          <Button onClick={handleMute}>Mute</Button>
+          <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
         </div>
-    );
-}
+      ) : (
+        <div className="disconnected">
+          <Button onClick={handleJoinAudio}>Join Audio</Button>
+        </div>
+      )}
+    </div>
+  );
+};
 export default VoiceChannel;
