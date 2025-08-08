@@ -29,10 +29,16 @@ const VoiceChannel = () => {
     });
   }, []);
 
-  const handleJoinAudio = () => {
-    getAudioStream();
-
-    setIsConnected(true);
+  const handleJoinAudio = async () => {
+    try {
+      await getAudioStream();
+      const devices = await getAudioDevices();
+      setAudioDevices(devices);
+      console.log("Audio found:", devices);
+      setIsConnected(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleDisconnectAudio = () => {
     // Logic to disconnect audio channel
