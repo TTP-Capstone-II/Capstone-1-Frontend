@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, use } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
+import VoiceChannel from "./VoiceChannel";
 
 const WhiteBoard = ({ roomId, user }) => {
   const canvasRef = useRef(null); // Reference to the canvas element
@@ -112,6 +113,7 @@ const WhiteBoard = ({ roomId, user }) => {
     <div>
         <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
+        <VoiceChannel />
       {joinMessage && <p>{joinMessage}</p>} 
       <canvas
         ref={canvasRef} // Reference to the canvas element
