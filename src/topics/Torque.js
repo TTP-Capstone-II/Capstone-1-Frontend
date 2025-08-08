@@ -4,8 +4,11 @@ export function Torque ({ torque, angularAcceleration, distanceFromPivot, angle,
 
     // calculate all 
     const torqueValue = calcTorque({ distanceFromPivot, force, angle, inertia, angularAcceleration });
+    const angularAccelerationValue = calcAngularAcceleration({ });
+
     const results = {
-        torque: torqueValue
+        torque: torqueValue,
+        angularAcceleration: angularAccelerationValue
       };
 
       // Return only what the user asked for
@@ -13,7 +16,7 @@ export function Torque ({ torque, angularAcceleration, distanceFromPivot, angle,
     case "torque":
       return results.torque;
     case "angularAcceleration":
-      return results.torque;
+      return results.angularAcceleration;
     case "distanceFromPivot":
       return results.torque;
     case "angle":

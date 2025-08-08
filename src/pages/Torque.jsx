@@ -17,9 +17,6 @@ const Torque = () => {
     target: undefined,
   });
 
-  //const angle = Number(userInput.angle) * (Math.PI / 180);
-  //const angularAcceleration = Number(userInput.angularAcceleration);
-
   const handleEngineReady = (engine, world) => {
     var group = Body.nextGroup(true),
       length = userInput.distanceFromPivot,

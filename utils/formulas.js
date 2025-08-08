@@ -236,3 +236,22 @@ export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcc
 
   return torque;
 }
+
+export function calcAngularAcceleration({distanceFromPivot, force, angle, inertia, torque}) {
+  let angularAcceleration;
+
+  if (!inertia) {
+    return;
+  }
+
+    if (torque) {
+    // α = τ / I 
+     angularAcceleration = torque / inertia;
+    }
+    else if (distanceFromPivot && force && angle) {
+      const thetaRad = toRadians(angle);
+      angularAcceleration = (distanceFromPivot * force * Math.sin(thetaRad)) / inertia;
+
+    }
+  return angularAcceleration;
+}
