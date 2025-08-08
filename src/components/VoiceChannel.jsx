@@ -8,7 +8,11 @@ const VoiceChannel = () => {
   const [audioDevices, setAudioDevices] = useState();
 
   const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
-  const peerConnection = new RTCPeerConnection(configuration);
+  const peerConnection = new RTCPeerConnection(configuration);// Create a new RTCPeerConnection instance with STUN server configuration
+  stream.getTracks().forEach((track) => { // Add each track from the stream to the peer connection
+    peerConnection.addTrack(track, stream);
+  }
+  );
 
   const getAudioStream = async () => {
     try {
