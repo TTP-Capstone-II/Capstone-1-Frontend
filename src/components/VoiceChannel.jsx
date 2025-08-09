@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import socket from "../socket";
 
 const VoiceChannel = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -42,6 +43,11 @@ const VoiceChannel = () => {
     } catch (error) {
       console.log(error);
     }
+    /*
+  useEffect(() => {
+    socket.emit("voice-offer", handleJoinAudio);
+  }, []);
+  */
   };
   const handleDisconnectAudio = () => {
     // Logic to disconnect audio channel
