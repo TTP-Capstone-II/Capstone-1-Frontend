@@ -62,7 +62,7 @@ const Simulation = ({ onEngineReady, topic }) => {
     });
 
     let isDrawing = false;
-    let startPoint = null; // Matter.Vector
+    let startPoint = null;
     let currentPoint = null;
 
     if (topic === "torque") {

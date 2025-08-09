@@ -31,7 +31,7 @@ const Torque = () => {
       height,
       {
         density: 0.01,
-        frictionAir: 1,
+        frictionAir: 0.001,
         collisionFilter: { group: group },
       }
     );
@@ -117,6 +117,22 @@ const Torque = () => {
     engine.world.gravity.y = 0;
 
     World.add(world, [lever, arrowBody, nailToLeverPivot, secondPivot]);
+
+    Matter.Events.on(engine, "beforeUpdate", () => {
+      const forceMagnitude = 0.01;
+
+      const forcePoint = {
+        x: lever.position.x + (userInput.length / 2) * Math.cos(lever.angle),
+        y: lever.position.y + (userInput.length / 2) * Math.sin(lever.angle),
+      };
+
+      const forceVector = {
+        x: forceMagnitude * Math.cos(lever.angle + Math.PI / 2),
+        y: forceMagnitude * Math.sin(lever.angle + Math.PI / 2),
+      };
+
+      Matter.Body.applyForce(lever, forcePoint, forceVector);
+    });
   };
 
   const topic = "torque";
