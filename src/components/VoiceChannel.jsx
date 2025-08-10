@@ -1,31 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
-import socket from "../socket";
 
 const VoiceChannel = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [stream, setStream] = useState();
-  const [audioDevices, setAudioDevices] = useState();
+  const [localStream, setLocalStream] = useState();
 
   const configuration = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
   };
-  const peerConnection = new RTCPeerConnection(configuration); // Create a new RTCPeerConnection instance with STUN server configuration
 
-  peerConnection.ontrack = (event) => {
-    // Handle incoming tracks from the remote peer
-    const remoteStream = event.streams[0];
-    const audioElement = document.createElement("audio");
-    audioElement.srcObject = remoteStream;
-    audioElement.autoplay = true; // Automatically play the audio when it starts
-    document.body.appendChild(audioElement); // Append the audio element to the body
+  const createOffer = () => {
+    const peerConnection = new RTCPeerConnection(configuration); // Create a new RTCPeerConnection instance with STUN server configuration
+
+    peerConnection.ontrack = (event) => {
+      // Handle incoming tracks from the remote peer
+      const remoteStream = event.streams[0];
+      const audioElement = document.createElement("audio");
+      audioElement.srcObject = remoteStream;
+      audioElement.autoplay = true; // Automatically play the audio when it starts
+      document.body.appendChild(audioElement); // Append the audio element to the body
+    };
   };
 
   const getAudioStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setStream(stream);
+      setLocalStream(stream);
 
       stream.getTracks().forEach((track) => {
         // Add each track from the stream to the peer connection
@@ -43,12 +44,14 @@ const VoiceChannel = () => {
     } catch (error) {
       console.log(error);
     }
-    /*
+  };
+
+  /*
   useEffect(() => {
     socket.emit("voice-offer", handleJoinAudio);
   }, []);
   */
-  };
+
   const handleDisconnectAudio = () => {
     // Logic to disconnect audio channel
     setIsConnected(false);
@@ -57,6 +60,7 @@ const VoiceChannel = () => {
     // Logic to mute/unmute audio
     setIsMuted(!isMuted);
   };
+
   return (
     <div className="voice-channel">
       {isConnected ? (
