@@ -1,37 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import socket from "../socket";
+import { useRef } from "react";
 
 const VoiceChannel = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [localStream, setLocalStream] = useState();
+  const localStreamRef = useRef(null);
+  const peerConnectionRef = useRef(null);
 
   const configuration = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
   };
 
-  const createOffer = () => {
-    const peerConnection = new RTCPeerConnection(configuration); // Create a new RTCPeerConnection instance with STUN server configuration
+  const createPeerConnection = () => {
+    peerConnectionRef.current = new RTCPeerConnection(configuration);
 
-    peerConnection.ontrack = (event) => {
-      // Handle incoming tracks from the remote peer
+    // Send ice candidates
+    peerConnectionRef.current.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("ice-candidate", { candidate: event.candidate });
+      }
+    };
+
+    // Play Remote Audio
+    peerConnectionRef.current.ontrack = (event) => {
       const remoteStream = event.streams[0];
       const audioElement = document.createElement("audio");
       audioElement.srcObject = remoteStream;
-      audioElement.autoplay = true; // Automatically play the audio when it starts
-      document.body.appendChild(audioElement); // Append the audio element to the body
+      audioElement.autoplay = true;
+      document.body.appendChild(audioElement);
     };
+
+    // Add local tracks
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => {
+        peerConnectionRef.current.addTrack(track, localStreamRef.current);
+      });
+    }
   };
 
   const getAudioStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setLocalStream(stream);
-
-      stream.getTracks().forEach((track) => {
-        // Add each track from the stream to the peer connection
-        peerConnection.addTrack(track, stream);
-      });
+      localStreamRef.current = stream;
+      return stream;
     } catch (error) {
       console.log("Cannot get audio stream", error);
     }
@@ -40,17 +53,17 @@ const VoiceChannel = () => {
   const handleJoinAudio = async () => {
     try {
       await getAudioStream();
+      createPeerConnection();
+
+      const offer = await peerConnectionRef.current.createOffer();
+      await peerConnectionRef.current.setLocalDescription(offer);
+
+      socket.emit("voice-offer", { offer });
       setIsConnected(true);
     } catch (error) {
       console.log(error);
     }
   };
-
-  /*
-  useEffect(() => {
-    socket.emit("voice-offer", handleJoinAudio);
-  }, []);
-  */
 
   const handleDisconnectAudio = () => {
     // Logic to disconnect audio channel
@@ -60,6 +73,47 @@ const VoiceChannel = () => {
     // Logic to mute/unmute audio
     setIsMuted(!isMuted);
   };
+
+  useEffect(() => {
+    // Receiving offer
+    socket.on("voice-offer", async (data) => {
+      await getAudioStream();
+      if (!peerConnectionRef.current) createPeerConnection();
+
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(data.offer)
+      );
+      const answer = await peerConnectionRef.current.createAnswer();
+      await peerConnectionRef.current.setLocalDescription(answer);
+
+      socket.emit("voice-answer", { answer });
+      setIsConnected(true);
+    });
+
+    // Receiving answer
+    socket.on("voice-answer", async (data) => {
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(data.transfer)
+      );
+    });
+
+    // Receiving ice candidates
+    socket.on("ice-candidate", async ({ candidate }) => {
+      try {
+        await peerConnectionRef.current?.addIceCandidate(
+          new RTCIceCandidate(candidate)
+        );
+      } catch (error) {
+        console.error("Error adding ICE candidate", error);
+      }
+    });
+
+    return () => {
+      socket.off("voice-offer");
+      socket.off("voice-answer");
+      socket.off("ice-candidate");
+    };
+  }, []);
 
   return (
     <div className="voice-channel">
