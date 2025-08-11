@@ -113,7 +113,7 @@ const WhiteBoard = ({ roomId, user }) => {
     <div>
         <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
-        <VoiceChannel />
+        <VoiceChannel roomId={roomId} />
       {joinMessage && <p>{joinMessage}</p>} 
       <canvas
         ref={canvasRef} // Reference to the canvas element

@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
 
-const VoiceChannel = () => {
+const VoiceChannel = ({roomId}) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const localStreamRef = useRef(null);
@@ -32,7 +32,7 @@ const VoiceChannel = () => {
 
   const handleICECandidateEvent = (event) => {
     if (event.candidate) {
-      socket.emit("new-ice-candidate", { candidate: event.candidate });
+      socket.emit("new-ice-candidate", { roomId, candidate: event.candidate });
     }
   };
 
@@ -40,7 +40,7 @@ const VoiceChannel = () => {
     const offer = await peerConnectionRef.current.createOffer(); // Create SDP
     await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
-    socket.emit("voice-offer", { offer });
+    socket.emit("voice-offer", { roomId, offer });
   };
 
   const getAudioStream = async () => {
@@ -105,7 +105,7 @@ const VoiceChannel = () => {
 
   useEffect(() => {
     // Receiving offer
-    socket.on("voice-offer", async ({ offer }) => {
+    socket.on("voice-offer", async ({ roomId, offer }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
       await peerConnectionRef.current.setRemoteDescription(
@@ -122,12 +122,12 @@ const VoiceChannel = () => {
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
-      socket.emit("voice-answer", { answer });
+      socket.emit("voice-answer", { roomId, answer });
       setIsConnected(true);
     });
 
     // Receiving answer
-    socket.on("voice-answer", async ({ answer }) => {
+    socket.on("voice-answer", async ({ roomId, answer }) => {
       try {
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(answer)
@@ -138,7 +138,7 @@ const VoiceChannel = () => {
     });
 
     // Receiving ice candidates
-    socket.on("new-ice-candidate", async ({ candidate }) => {
+    socket.on("new-ice-candidate", async ({ roomId, candidate }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
       peerConnectionRef.current
@@ -157,7 +157,7 @@ const VoiceChannel = () => {
     <div className="voice-channel">
       {isConnected ? (
         <div className="connected">
-          <Button onClick={handleMute}>${isMuted ? "UnMute" : "Mute"}</Button>
+          <Button onClick={handleMute}>{isMuted ? "UnMute" : "Mute"}</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
         </div>
       ) : (
