@@ -60,7 +60,7 @@ const WhiteBoard = ({ roomId, user }) => {
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
     socket.on("user-joined", (data) => {
-      console.log(data);
+      console.log("data: ", data);
       setJoinMessage(`${data.username} has joined the room`);
       setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
       setSocketID(data.id);
