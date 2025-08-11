@@ -10,8 +10,9 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
+  const [socketID, setSocketID] = useState("");
 
-  const username = user.username; 
+  const username = user.username;
 
   useEffect(() => {
     const link = `${window.location.origin}/whiteboard/${roomId}`;
@@ -19,23 +20,24 @@ const WhiteBoard = ({ roomId, user }) => {
   }, []);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(inviteLink) // Copy the invite link to clipboard
+    navigator.clipboard
+      .writeText(inviteLink) // Copy the invite link to clipboard
       .then(() => {
-        alert("Invite link copied to clipboard!"); 
+        alert("Invite link copied to clipboard!");
       })
       .catch((err) => {
-        console.error("Failed to copy link: ", err); 
+        console.error("Failed to copy link: ", err);
       });
   };
 
   const handleDraw = ({ x0, y0, x1, y1 }) => {
-    if (!contextRef.current) return; 
+    if (!contextRef.current) return;
 
     contextRef.current.beginPath();
     contextRef.current.moveTo(x0, y0); // Move to the starting point
     contextRef.current.lineTo(x1, y1); // Draw a line to the end point
     contextRef.current.stroke();
-    contextRef.current.closePath(); 
+    contextRef.current.closePath();
   };
 
   useEffect(() => {
@@ -52,15 +54,16 @@ const WhiteBoard = ({ roomId, user }) => {
 
     // Join a room
     if (roomId && username) {
-      socket.emit("join-room", {roomId, username} );
+      socket.emit("join-room", { roomId, username });
     }
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
-    socket.on("user-joined", (joinedUsername) => {
-        setJoinMessage(`${joinedUsername} has joined the room`);
-        setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
-      });
+    socket.on("user-joined", ({ id, username }) => {
+      setJoinMessage(`${username} has joined the room`);
+      setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
+      setSocketID(id);
+    });
 
     return () => {
       socket.off("draw", handleDraw);
@@ -88,12 +91,12 @@ const WhiteBoard = ({ roomId, user }) => {
     contextRef.current.stroke(); // Render the stroke
 
     socket.emit("draw", {
-        roomId,
-        line: { x0, y0, x1, y1 },
+      roomId,
+      line: { x0, y0, x1, y1 },
     }); // Emit the drawing event to the server
 
     prevPoint.current = { x: offsetX, y: offsetY }; // Update the previous point
-  },10);
+  }, 10);
 
   const stopDrawing = () => {
     isDrawing.current = false;
@@ -111,10 +114,10 @@ const WhiteBoard = ({ roomId, user }) => {
 
   return (
     <div>
-        <h2>Room Code: {roomId}</h2>
+      <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
-        <VoiceChannel />
-      {joinMessage && <p>{joinMessage}</p>} 
+      <VoiceChannel socketID={socketID} />
+      {joinMessage && <p>{joinMessage}</p>}
       <canvas
         ref={canvasRef} // Reference to the canvas element
         onMouseDown={startDrawing}
