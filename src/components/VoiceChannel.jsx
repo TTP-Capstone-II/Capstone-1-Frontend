@@ -55,8 +55,8 @@ const VoiceChannel = () => {
       await getAudioStream();
       createPeerConnection();
 
-      const offer = await peerConnectionRef.current.createOffer();
-      await peerConnectionRef.current.setLocalDescription(offer);
+      const offer = await peerConnectionRef.current.createOffer(); // Create SDP
+      await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
       socket.emit("voice-offer", { offer });
       setIsConnected(true);
@@ -91,9 +91,9 @@ const VoiceChannel = () => {
     });
 
     // Receiving answer
-    socket.on("voice-answer", async (data) => {
+    socket.on("voice-answer", async ({ answer }) => {
       await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(data.transfer)
+        new RTCSessionDescription(answer)
       );
     });
 
