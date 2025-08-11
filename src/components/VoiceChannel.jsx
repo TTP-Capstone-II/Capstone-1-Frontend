@@ -88,17 +88,17 @@ const VoiceChannel = () => {
     setIsConnected(false);
   };
   const handleMute = () => {
-    setIsMuted(!isMuted);
-    if (localStreamRef.current) {
-      localStreamRef.current.getAudioTracks().forEach((track) => {
-        track.enabled = !isMuted; // Toggle mute
-      });
-      if (isMuted) {
-        console.log("Unmuted");
-      } else {
-        console.log("Muted");
+    setIsMuted(prevMuted => {
+      const newMuted = !prevMuted;
+      if (localStreamRef.current) {
+        localStreamRef.current.getAudioTracks().forEach((track) => {
+          track.enabled = !newMuted; // Mute or unmute the audio track
+        });
       }
-    }
+      console.log(`Audio is now ${newMuted ? "muted" : "unmuted"}`);
+      return newMuted;
+    });
+    
   };
 
   useEffect(() => {
