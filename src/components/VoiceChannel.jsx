@@ -155,7 +155,7 @@ const VoiceChannel = () => {
     <div className="voice-channel">
       {isConnected ? (
         <div className="connected">
-          <Button onClick={handleMute}>Mute</Button>
+          <Button onClick={handleMute}>${isMuted ? "UnMute" : "Mute"}</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
         </div>
       ) : (
