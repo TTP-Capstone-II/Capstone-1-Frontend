@@ -8,6 +8,7 @@ const VoiceChannel = () => {
   const [isMuted, setIsMuted] = useState(false);
   const localStreamRef = useRef(null);
   const peerConnectionRef = useRef(null);
+  const remoteAudioRef = useRef(null);
 
   const configuration = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -24,10 +25,9 @@ const VoiceChannel = () => {
   const handleOnTrackEvent = (event) => {
     // Play Remote Audio
     const remoteStream = event.streams[0];
-    const audioElement = document.createElement("audio");
-    audioElement.srcObject = remoteStream;
-    audioElement.autoplay = true;
-    document.body.appendChild(audioElement);
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = remoteStream;
+    }
   };
 
   const handleICECandidateEvent = (event) => {
@@ -135,6 +135,7 @@ const VoiceChannel = () => {
         <div className="connected">
           <Button onClick={handleMute}>Mute</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
+          <audio ref={remoteAudioRef} autoPlay />
         </div>
       ) : (
         <div className="disconnected">
