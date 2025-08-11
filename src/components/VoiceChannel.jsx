@@ -17,7 +17,8 @@ const VoiceChannel = () => {
   const createPeerConnection = () => {
     peerConnectionRef.current = new RTCPeerConnection(configuration);
 
-    peerConnectionRef.current.negotiationneeded = handleNegotiationNeededEvent;
+    peerConnectionRef.current.onnegotiationneeded =
+      handleNegotiationNeededEvent;
     peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
     peerConnectionRef.current.ontrack = handleOnTrackEvent;
   };
