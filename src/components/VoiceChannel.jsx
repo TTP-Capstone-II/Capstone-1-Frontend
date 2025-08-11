@@ -79,16 +79,19 @@ const VoiceChannel = () => {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
       localStreamRef.current = null;
     }
-    
+
     const audioElements = document.querySelectorAll("audio");
     audioElements.forEach((audio) => {
       audio.remove();
-    }
-    );
+    });
     setIsConnected(false);
+    socket.off("voice-offer");
+    socket.off("voice-answer");
+    socket.off("new-ice-candidate");
+    console.log("Audio disconnected");
   };
   const handleMute = () => {
-    setIsMuted(prevMuted => {
+    setIsMuted((prevMuted) => {
       const newMuted = !prevMuted;
       if (localStreamRef.current) {
         localStreamRef.current.getAudioTracks().forEach((track) => {
@@ -98,7 +101,6 @@ const VoiceChannel = () => {
       console.log(`Audio is now ${newMuted ? "muted" : "unmuted"}`);
       return newMuted;
     });
-    
   };
 
   useEffect(() => {
