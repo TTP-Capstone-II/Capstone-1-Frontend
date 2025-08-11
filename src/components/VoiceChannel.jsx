@@ -75,8 +75,17 @@ const VoiceChannel = () => {
     setIsConnected(false);
   };
   const handleMute = () => {
-    // Logic to mute/unmute audio
     setIsMuted(!isMuted);
+    if (localStreamRef.current) {
+      localStreamRef.current.getAudioTracks().forEach((track) => {
+        track.enabled = !isMuted; // Toggle mute
+      });
+      if (isMuted) {
+        console.log("Unmuted");
+      } else {
+        console.log("Muted");
+      }
+    }
   };
 
   useEffect(() => {
