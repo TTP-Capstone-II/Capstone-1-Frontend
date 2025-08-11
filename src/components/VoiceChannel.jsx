@@ -16,29 +16,31 @@ const VoiceChannel = () => {
   const createPeerConnection = () => {
     peerConnectionRef.current = new RTCPeerConnection(configuration);
 
-    // Play Remote Audio
-    peerConnectionRef.current.ontrack = (event) => {
-      const remoteStream = event.streams[0];
-      const audioElement = document.createElement("audio");
-      audioElement.srcObject = remoteStream;
-      audioElement.autoplay = true;
-      document.body.appendChild(audioElement);
-    };
+    peerConnectionRef.current.negotiationneeded = handleNegotiationNeededEvent;
+    peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
+    peerConnectionRef.current.ontrack = handleOnTrackEvent;
+  };
 
-    // Add local tracks
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach((track) => {
-        peerConnectionRef.current.addTrack(track, localStreamRef.current);
-      });
+  const handleOnTrackEvent = (event) => {
+    // Play Remote Audio
+    const remoteStream = event.streams[0];
+    const audioElement = document.createElement("audio");
+    audioElement.srcObject = remoteStream;
+    audioElement.autoplay = true;
+    document.body.appendChild(audioElement);
+  };
+
+  const handleICECandidateEvent = (event) => {
+    if (event.candidate) {
+      socket.emit("new-ice-candidate", { candidate: event.candidate });
     }
   };
 
-  const sendICECandidates = () => {
-    peerConnectionRef.current.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.emit("ice-candidate", { candidate: event.candidate });
-      }
-    };
+  const handleNegotiationNeededEvent = async () => {
+    const offer = await peerConnectionRef.current.createOffer(); // Create SDP
+    await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
+
+    socket.emit("voice-offer", { offer });
   };
 
   const getAudioStream = async () => {
@@ -53,14 +55,15 @@ const VoiceChannel = () => {
 
   const handleJoinAudio = async () => {
     try {
-      await getAudioStream();
       createPeerConnection();
-      sendICECandidates();
+      await getAudioStream();
+      // Add local tracks
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => {
+          peerConnectionRef.current.addTrack(track, localStreamRef.current);
+        });
+      }
 
-      const offer = await peerConnectionRef.current.createOffer(); // Create SDP
-      await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
-
-      socket.emit("voice-offer", { offer });
       setIsConnected(true);
     } catch (error) {
       console.log(error);
@@ -78,13 +81,20 @@ const VoiceChannel = () => {
 
   useEffect(() => {
     // Receiving offer
-    socket.on("voice-offer", async (data) => {
-      await getAudioStream();
+    socket.on("voice-offer", async ({ offer }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
       await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(data.offer)
+        new RTCSessionDescription(offer)
       );
+      await getAudioStream();
+
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => {
+          peerConnectionRef.current.addTrack(track, localStreamRef.current);
+        });
+      }
+
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
@@ -94,26 +104,28 @@ const VoiceChannel = () => {
 
     // Receiving answer
     socket.on("voice-answer", async ({ answer }) => {
-      await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(answer)
-      );
+      try {
+        await peerConnectionRef.current.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        );
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     // Receiving ice candidates
-    socket.on("ice-candidate", async ({ candidate }) => {
-      try {
-        await peerConnectionRef.current?.addIceCandidate(
-          new RTCIceCandidate(candidate)
-        );
-      } catch (error) {
-        console.error("Error adding ICE candidate", error);
-      }
+    socket.on("new-ice-candidate", async ({ candidate }) => {
+      const newCandidate = new RTCIceCandidate(candidate);
+
+      peerConnectionRef.current
+        .addIceCandidate(newCandidate)
+        .catch(window.reportError);
     });
 
     return () => {
       socket.off("voice-offer");
       socket.off("voice-answer");
-      socket.off("ice-candidate");
+      socket.off("new-ice-candidate");
     };
   }, []);
 
