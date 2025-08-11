@@ -71,7 +71,20 @@ const VoiceChannel = () => {
   };
 
   const handleDisconnectAudio = () => {
-    // Logic to disconnect audio channel
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close();
+      peerConnectionRef.current = null;
+    }
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
+      localStreamRef.current = null;
+    }
+    
+    const audioElements = document.querySelectorAll("audio");
+    audioElements.forEach((audio) => {
+      audio.remove();
+    }
+    );
     setIsConnected(false);
   };
   const handleMute = () => {
