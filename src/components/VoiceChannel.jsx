@@ -16,13 +16,6 @@ const VoiceChannel = () => {
   const createPeerConnection = () => {
     peerConnectionRef.current = new RTCPeerConnection(configuration);
 
-    // Send ice candidates
-    peerConnectionRef.current.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.emit("ice-candidate", { candidate: event.candidate });
-      }
-    };
-
     // Play Remote Audio
     peerConnectionRef.current.ontrack = (event) => {
       const remoteStream = event.streams[0];
@@ -40,6 +33,14 @@ const VoiceChannel = () => {
     }
   };
 
+  const sendICECandidates = () => {
+    peerConnectionRef.current.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("ice-candidate", { candidate: event.candidate });
+      }
+    };
+  };
+
   const getAudioStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -54,6 +55,7 @@ const VoiceChannel = () => {
     try {
       await getAudioStream();
       createPeerConnection();
+      sendICECandidates();
 
       const offer = await peerConnectionRef.current.createOffer(); // Create SDP
       await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
