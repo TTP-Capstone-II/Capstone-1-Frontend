@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
 
-const VoiceChannel = () => {
+const VoiceChannel = ({ socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const localStreamRef = useRef(null);
@@ -33,7 +33,10 @@ const VoiceChannel = () => {
 
   const handleICECandidateEvent = (event) => {
     if (event.candidate) {
-      socket.emit("new-ice-candidate", { candidate: event.candidate });
+      socket.emit("new-ice-candidate", {
+        candidate: event.candidate,
+        to: socketID,
+      });
     }
   };
 
@@ -41,7 +44,7 @@ const VoiceChannel = () => {
     const offer = await peerConnectionRef.current.createOffer(); // Create SDP
     await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
-    socket.emit("voice-offer", { offer });
+    socket.emit("voice-offer", { offer, to: socketID });
   };
 
   const getAudioStream = async () => {
@@ -82,7 +85,7 @@ const VoiceChannel = () => {
 
   useEffect(() => {
     // Receiving offer
-    socket.on("voice-offer", async ({ offer }) => {
+    socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
       await peerConnectionRef.current.setRemoteDescription(
@@ -99,7 +102,7 @@ const VoiceChannel = () => {
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
-      socket.emit("voice-answer", { answer });
+      socket.emit("voice-answer", { answer, to: from });
       setIsConnected(true);
     });
 
@@ -115,7 +118,7 @@ const VoiceChannel = () => {
     });
 
     // Receiving ice candidates
-    socket.on("new-ice-candidate", async ({ candidate }) => {
+    socket.on("new-ice-candidate", async ({ candidate, from }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
       peerConnectionRef.current
