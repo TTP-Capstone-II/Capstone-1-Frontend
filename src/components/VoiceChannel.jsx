@@ -1,54 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
+import socket from "../socket";
+import { useRef } from "react";
 
 const VoiceChannel = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [stream, setStream] = useState();
-  const [audioDevices, setAudioDevices] = useState();
+  const localStreamRef = useRef(null);
+  const peerConnectionRef = useRef(null);
+  const remoteAudioRef = useRef(null);
 
-  const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
-  const peerConnection = new RTCPeerConnection(configuration);// Create a new RTCPeerConnection instance with STUN server configuration
-  
-  peerConnection.ontrack = (event) => { // Handle incoming tracks from the remote peer
+  const configuration = {
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  };
+
+  const createPeerConnection = () => {
+    peerConnectionRef.current = new RTCPeerConnection(configuration);
+
+    peerConnectionRef.current.negotiationneeded = handleNegotiationNeededEvent;
+    peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
+    peerConnectionRef.current.ontrack = handleOnTrackEvent;
+  };
+
+  const handleOnTrackEvent = (event) => {
+    // Play Remote Audio
     const remoteStream = event.streams[0];
-    const audioElement = document.createElement("audio");
-    audioElement.srcObject = remoteStream;
-    audioElement.autoplay = true; // Automatically play the audio when it starts
-    document.body.appendChild(audioElement); // Append the audio element to the body
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = remoteStream;
+    }
+  };
+
+  const handleICECandidateEvent = (event) => {
+    if (event.candidate) {
+      socket.emit("new-ice-candidate", { candidate: event.candidate });
+    }
+  };
+
+  const handleNegotiationNeededEvent = async () => {
+    const offer = await peerConnectionRef.current.createOffer(); // Create SDP
+    await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
+
+    socket.emit("voice-offer", { offer });
   };
 
   const getAudioStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setStream(stream);
-      
-      stream.getTracks().forEach((track) => { // Add each track from the stream to the peer connection
-        peerConnection.addTrack(track, stream);
-      }
-      );
+      localStreamRef.current = stream;
+      return stream;
     } catch (error) {
       console.log("Cannot get audio stream", error);
     }
   };
 
-  // In case you want to access the devices programmatically. Otherwise, it's unnecessary.
-  /*  const getAudioDevices = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.filter((device) => device.kind === "audioinput");
-  };*/
-
   const handleJoinAudio = async () => {
     try {
+      createPeerConnection();
       await getAudioStream();
-      //const devices = await getAudioDevices();
-      //setAudioDevices(devices);
-      //console.log("Audio found:", devices);
+      // Add local tracks
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => {
+          peerConnectionRef.current.addTrack(track, localStreamRef.current);
+        });
+      }
+
       setIsConnected(true);
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleDisconnectAudio = () => {
     // Logic to disconnect audio channel
     setIsConnected(false);
@@ -57,12 +78,64 @@ const VoiceChannel = () => {
     // Logic to mute/unmute audio
     setIsMuted(!isMuted);
   };
+
+  useEffect(() => {
+    // Receiving offer
+    socket.on("voice-offer", async ({ offer }) => {
+      if (!peerConnectionRef.current) createPeerConnection();
+
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(offer)
+      );
+      await getAudioStream();
+
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => {
+          peerConnectionRef.current.addTrack(track, localStreamRef.current);
+        });
+      }
+
+      const answer = await peerConnectionRef.current.createAnswer();
+      await peerConnectionRef.current.setLocalDescription(answer);
+
+      socket.emit("voice-answer", { answer });
+      setIsConnected(true);
+    });
+
+    // Receiving answer
+    socket.on("voice-answer", async ({ answer }) => {
+      try {
+        await peerConnectionRef.current.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    // Receiving ice candidates
+    socket.on("new-ice-candidate", async ({ candidate }) => {
+      const newCandidate = new RTCIceCandidate(candidate);
+
+      peerConnectionRef.current
+        .addIceCandidate(newCandidate)
+        .catch(window.reportError);
+    });
+
+    return () => {
+      socket.off("voice-offer");
+      socket.off("voice-answer");
+      socket.off("new-ice-candidate");
+    };
+  }, []);
+
   return (
     <div className="voice-channel">
       {isConnected ? (
         <div className="connected">
           <Button onClick={handleMute}>Mute</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
+          <audio ref={remoteAudioRef} autoPlay />
         </div>
       ) : (
         <div className="disconnected">
