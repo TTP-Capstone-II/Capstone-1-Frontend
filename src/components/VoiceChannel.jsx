@@ -65,6 +65,9 @@ const VoiceChannel = ({roomId}) => {
       }
 
       setIsConnected(true);
+      socket.emit("voice-join", { roomId });
+      console.log("Audio connected");
+
     } catch (error) {
       console.log(error);
     }
@@ -85,9 +88,13 @@ const VoiceChannel = ({roomId}) => {
       audio.remove();
     });
     setIsConnected(false);
+
     socket.off("voice-offer");
     socket.off("voice-answer");
     socket.off("new-ice-candidate");
+
+    socket.emit("voice-leave", { roomId });
+
     console.log("Audio disconnected");
   };
   const handleMute = () => {
