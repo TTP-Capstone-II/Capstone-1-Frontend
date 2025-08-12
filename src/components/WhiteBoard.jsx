@@ -10,6 +10,9 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
+  const [penColor, setPenColor] = useState("black"); 
+  const [penSize, setPenSize] = useState(3); 
+  const [isErasing, setIsErasing] = useState(false); 
 
   const username = user.username; 
 
@@ -45,8 +48,8 @@ const WhiteBoard = ({ roomId, user }) => {
 
     const context = canvas.getContext("2d");
     context.lineCap = "round";
-    context.strokeStyle = "black";
-    context.lineWidth = 3;
+    context.strokeStyle = penColor;
+    context.lineWidth = penSize;
 
     contextRef.current = context;
 
@@ -109,12 +112,51 @@ const WhiteBoard = ({ roomId, user }) => {
     );
   };
 
+  const erase = () => {
+    if (isErasing) {
+      setIsErasing(false);
+      contextRef.current.globalCompositeOperation = 'source-over'; // Reset to normal drawing
+    }
+    else {
+      setIsErasing(true);
+    contextRef.current.globalCompositeOperation = 'destination-out'
+   }
+  }
+
   return (
     <div>
         <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
         <VoiceChannel />
       {joinMessage && <p>{joinMessage}</p>} 
+      <div className="ColorPicker">
+        <label>Pen Color: </label>
+        <input
+          type="color"
+          id="penColor"
+          value={penColor}
+          onChange={(e) => {
+            setPenColor(e.target.value);
+            contextRef.current.strokeStyle = e.target.value; // Update the stroke color
+          }}
+        />
+      </div>
+      <div className="PenSizePicker">
+        <label>Pen Size: </label>
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={penSize}
+          onChange={(e) => {
+            setPenSize(e.target.value);
+            contextRef.current.lineWidth = e.target.value; // Update the line width
+          }}
+        />
+      </div>
+      <div className="EraseButton">
+        <button onClick={erase}>{isErasing ? "Eraser : on" : "Eraser : off"}</button>
+      </div>
       <canvas
         ref={canvasRef} // Reference to the canvas element
         onMouseDown={startDrawing}
