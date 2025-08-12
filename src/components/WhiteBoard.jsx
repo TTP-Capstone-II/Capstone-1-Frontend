@@ -10,11 +10,11 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
-  const [penColor, setPenColor] = useState("black"); 
-  const [penSize, setPenSize] = useState(3); 
-  const [isErasing, setIsErasing] = useState(false); 
+  const [penColor, setPenColor] = useState("black");
+  const [penSize, setPenSize] = useState(3);
+  const [isErasing, setIsErasing] = useState(false);
 
-  const username = user.username; 
+  const username = user.username;
 
   useEffect(() => {
     const link = `${window.location.origin}/whiteboard/${roomId}`;
@@ -22,23 +22,34 @@ const WhiteBoard = ({ roomId, user }) => {
   }, []);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(inviteLink) // Copy the invite link to clipboard
+    navigator.clipboard
+      .writeText(inviteLink) // Copy the invite link to clipboard
       .then(() => {
-        alert("Invite link copied to clipboard!"); 
+        alert("Invite link copied to clipboard!");
       })
       .catch((err) => {
-        console.error("Failed to copy link: ", err); 
+        console.error("Failed to copy link: ", err);
       });
   };
 
-  const handleDraw = ({ x0, y0, x1, y1 }) => {
-    if (!contextRef.current) return; 
+  const handleDraw = ({ x0, y0, x1, y1, color, size, erasing }) => {
+    if (!contextRef.current) return;
 
     contextRef.current.beginPath();
     contextRef.current.moveTo(x0, y0); // Move to the starting point
     contextRef.current.lineTo(x1, y1); // Draw a line to the end point
+
+    contextRef.current.lineWidth = size;
+
+    if (erasing) {
+      contextRef.current.globalCompositeOperation = "destination-out"; // Set to erasing mode
+    } else {
+      contextRef.current.globalCompositeOperation = "source-over"; // Set to normal drawing mode
+      contextRef.current.strokeStyle = color; // Set the stroke color
+    }
+
     contextRef.current.stroke();
-    contextRef.current.closePath(); 
+    contextRef.current.closePath();
   };
 
   useEffect(() => {
@@ -55,15 +66,15 @@ const WhiteBoard = ({ roomId, user }) => {
 
     // Join a room
     if (roomId && username) {
-      socket.emit("join-room", {roomId, username} );
+      socket.emit("join-room", { roomId, username });
     }
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
     socket.on("user-joined", (joinedUsername) => {
-        setJoinMessage(`${joinedUsername} has joined the room`);
-        setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
-      });
+      setJoinMessage(`${joinedUsername} has joined the room`);
+      setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
+    });
 
     return () => {
       socket.off("draw", handleDraw);
@@ -91,12 +102,20 @@ const WhiteBoard = ({ roomId, user }) => {
     contextRef.current.stroke(); // Render the stroke
 
     socket.emit("draw", {
-        roomId,
-        line: { x0, y0, x1, y1 },
+      roomId,
+      line: {
+        x0,
+        y0,
+        x1,
+        y1,
+        color: isErasing ? "erase" : penColor,
+        size: penSize,
+        erasing: isErasing,
+      },
     }); // Emit the drawing event to the server
 
     prevPoint.current = { x: offsetX, y: offsetY }; // Update the previous point
-  },10);
+  }, 10);
 
   const stopDrawing = () => {
     isDrawing.current = false;
@@ -115,20 +134,19 @@ const WhiteBoard = ({ roomId, user }) => {
   const erase = () => {
     if (isErasing) {
       setIsErasing(false);
-      contextRef.current.globalCompositeOperation = 'source-over'; // Reset to normal drawing
-    }
-    else {
+      contextRef.current.globalCompositeOperation = "source-over"; // Reset to normal drawing
+    } else {
       setIsErasing(true);
-    contextRef.current.globalCompositeOperation = 'destination-out'
-   }
-  }
+      contextRef.current.globalCompositeOperation = "destination-out";
+    }
+  };
 
   return (
     <div>
-        <h2>Room Code: {roomId}</h2>
+      <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
-        <VoiceChannel />
-      {joinMessage && <p>{joinMessage}</p>} 
+      <VoiceChannel />
+      {joinMessage && <p>{joinMessage}</p>}
       <div className="ColorPicker">
         <label>Pen Color: </label>
         <input
@@ -155,7 +173,9 @@ const WhiteBoard = ({ roomId, user }) => {
         />
       </div>
       <div className="EraseButton">
-        <button onClick={erase}>{isErasing ? "Eraser : on" : "Eraser : off"}</button>
+        <button onClick={erase}>
+          {isErasing ? "Eraser : on" : "Eraser : off"}
+        </button>
       </div>
       <canvas
         ref={canvasRef} // Reference to the canvas element
