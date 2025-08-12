@@ -17,6 +17,12 @@ const VoiceChannel = ({ roomId, socketID }) => {
       { urls: "stun:stun3.l.google.com:5349" },
       { urls: "stun:stun4.l.google.com:19302" },
       { urls: "stun:stun4.l.google.com:5349" },
+
+            {
+        urls: "turn:numb.viagenie.ca",
+        username: "webrtc@live.com",
+        credential: "muazkh",
+      },
   */
 
   const configuration = {
@@ -28,11 +34,6 @@ const VoiceChannel = ({ roomId, socketID }) => {
         urls: "turn:openrelay.metered.ca:80",
         username: "openrelayproject",
         credential: "openrelayproject",
-      },
-      {
-        urls: "turn:numb.viagenie.ca",
-        username: "webrtc@live.com",
-        credential: "muazkh",
       },
     ],
   };
