@@ -123,12 +123,19 @@ const WhiteBoard = ({ roomId, user }) => {
   };
 
   const clearCanvas = () => {
+    const confirmClear = window.confirm("This will clear the entire canvas for all participants. Are you sure?");
+    if (!confirmClear) return;
+
     contextRef.current.clearRect(
       0,
       0,
       canvasRef.current.width,
       canvasRef.current.height
     );
+
+    socket.emit("clear-canvas", roomId); // Notify the server to clear the canvas for all participants
+    setJoinMessage("Canvas cleared by " + username); // Show a message indicating who cleared the canvas
+    setTimeout(() => setJoinMessage(""), 3000); // Clear the message after 3 seconds
   };
 
   const erase = () => {
