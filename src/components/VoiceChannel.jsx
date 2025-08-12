@@ -9,6 +9,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
   const localStreamRef = useRef(null);
   const peerConnectionRef = useRef(null);
   const remoteAudioRef = useRef(null);
+  const remoteSocketIdRef = useRef(null);
 
   /*
       { urls: "stun:stun2.l.google.com:19302" },
@@ -32,6 +33,16 @@ const VoiceChannel = ({ roomId, socketID }) => {
       },
       {
         urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
         username: "openrelayproject",
         credential: "openrelayproject",
       },
@@ -66,11 +77,19 @@ const VoiceChannel = ({ roomId, socketID }) => {
 
   const handleICECandidateEvent = (event) => {
     if (event.candidate) {
+      if (!remoteSocketIdRef.current) {
+        console.log("Skipping ICE candidate send: missing remote socket id");
+        return;
+      }
       socket.emit("new-ice-candidate", {
         candidate: event.candidate,
-        to: socketID,
+        to: remoteSocketIdRef.current,
       });
-      console.log("Sending ICE candidate", event.candidate);
+      console.log(
+        "Sending ICE candidate to",
+        remoteSocketIdRef.current,
+        event.candidate
+      );
     }
   };
 
@@ -79,7 +98,11 @@ const VoiceChannel = ({ roomId, socketID }) => {
       const offer = await peerConnectionRef.current.createOffer(); // Create SDP
       await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
-      socket.emit("voice-offer", { offer, to: socketID });
+      if (!remoteSocketIdRef.current) {
+        console.log("Cannot send offer: missing remote socket id");
+        return;
+      }
+      socket.emit("voice-offer", { offer, to: remoteSocketIdRef.current });
     } catch (error) {
       console.log("Error during negotiation:", error);
     }
@@ -152,6 +175,24 @@ const VoiceChannel = ({ roomId, socketID }) => {
   };
 
   useEffect(() => {
+    if (socketID) {
+      // Keep latest intended remote id in sync for the caller path
+      remoteSocketIdRef.current = socketID;
+    }
+    // If we already have a peer connection and local tracks but missed negotiation due to unknown remote id earlier,
+    // proactively trigger an offer now that we know the remote id.
+    if (
+      remoteSocketIdRef.current &&
+      peerConnectionRef.current &&
+      peerConnectionRef.current.getSenders().length > 0 &&
+      peerConnectionRef.current.signalingState === "stable" &&
+      !peerConnectionRef.current.localDescription
+    ) {
+      handleNegotiationNeededEvent();
+    }
+  }, [socketID]);
+
+  useEffect(() => {
     // Receiving offer
     socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
@@ -168,6 +209,9 @@ const VoiceChannel = ({ roomId, socketID }) => {
         });
       }
 
+      // Store the remote id for subsequent ICE candidates
+      remoteSocketIdRef.current = from;
+
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
@@ -176,11 +220,13 @@ const VoiceChannel = ({ roomId, socketID }) => {
     });
 
     // Receiving answer
-    socket.on("voice-answer", async ({ answer }) => {
+    socket.on("voice-answer", async ({ answer, from }) => {
       try {
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(answer)
         );
+        // Ensure we have the correct remote id on the caller side
+        if (from) remoteSocketIdRef.current = from;
       } catch (error) {
         console.log(error);
       }
