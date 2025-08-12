@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
 
-const VoiceChannel = ({ socketID }) => {
+const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const localStreamRef = useRef(null);
@@ -105,18 +105,49 @@ const VoiceChannel = ({ socketID }) => {
       }
 
       setIsConnected(true);
+      socket.emit("voice-join", { roomId });
+      console.log("Audio connected");
+
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleDisconnectAudio = () => {
-    // Logic to disconnect audio channel
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close();
+      peerConnectionRef.current = null;
+    }
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
+      localStreamRef.current = null;
+    }
+
+    const audioElements = document.querySelectorAll("audio");
+    audioElements.forEach((audio) => {
+      audio.remove();
+    });
     setIsConnected(false);
+
+    socket.off("voice-offer");
+    socket.off("voice-answer");
+    socket.off("new-ice-candidate");
+
+    socket.emit("voice-leave", { roomId });
+
+    console.log("Audio disconnected");
   };
   const handleMute = () => {
-    // Logic to mute/unmute audio
-    setIsMuted(!isMuted);
+    setIsMuted((prevMuted) => {
+      const newMuted = !prevMuted;
+      if (localStreamRef.current) {
+        localStreamRef.current.getAudioTracks().forEach((track) => {
+          track.enabled = !newMuted; // Mute or unmute the audio track
+        });
+      }
+      console.log(`Audio is now ${newMuted ? "muted" : "unmuted"}`);
+      return newMuted;
+    });
   };
 
   useEffect(() => {
@@ -143,7 +174,7 @@ const VoiceChannel = ({ socketID }) => {
     });
 
     // Receiving answer
-    socket.on("voice-answer", async ({ answer }) => {
+    socket.on("voice-answer", async ({ roomId, answer }) => {
       try {
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(answer)
@@ -174,7 +205,7 @@ const VoiceChannel = ({ socketID }) => {
     <div className="voice-channel">
       {isConnected ? (
         <div className="connected">
-          <Button onClick={handleMute}>Mute</Button>
+          <Button onClick={handleMute}>{isMuted ? "UnMute" : "Mute"}</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
           <audio ref={remoteAudioRef} autoPlay />
         </div>
