@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 const socket = io(SOCKETS_URL, {
   withCredentials: NODE_ENV === "production",
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
 });
 
 export default socket;

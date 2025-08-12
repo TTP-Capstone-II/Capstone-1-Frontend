@@ -39,6 +39,7 @@ const VoiceChannel = ({ socketID }) => {
     peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
     peerConnectionRef.current.ontrack = handleOnTrackEvent;
 
+    // log ICE connection state
     peerConnectionRef.current.oniceconnectionstatechange = () => {
       console.log(
         "ICE connection state:",
@@ -146,7 +147,7 @@ const VoiceChannel = ({ socketID }) => {
     socket.on("new-ice-candidate", async ({ candidate, from }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
-      console.log("Received ICE candidate", candidate);
+      console.log(`Received ICE candidate from: ${from}`, candidate);
       peerConnectionRef.current
         .addIceCandidate(newCandidate)
         .catch(window.reportError);
