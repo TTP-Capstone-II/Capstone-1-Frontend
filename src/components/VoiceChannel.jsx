@@ -130,11 +130,10 @@ const VoiceChannel = ({ socketID }) => {
         localStreamRef.current.getTracks().forEach((track) => {
           peerConnectionRef.current.addTrack(track, localStreamRef.current);
         });
-
-        await peerConnectionRef.current.setRemoteDescription(
-          new RTCSessionDescription(offer)
-        );
       }
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(offer)
+      );
 
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
