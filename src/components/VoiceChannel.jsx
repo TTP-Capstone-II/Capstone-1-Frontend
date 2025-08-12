@@ -34,7 +34,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
         credential: "openrelayproject",
       },
       {
-        url: "turn:numb.viagenie.ca",
+        urls: "turn:numb.viagenie.ca",
         username: "webrtc@live.com",
         credential: "muazkh",
       },
