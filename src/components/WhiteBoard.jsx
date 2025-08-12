@@ -10,6 +10,7 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
+  const [penColor, setPenColor] = useState("black"); // State to manage pen color
 
   const username = user.username; 
 
@@ -45,7 +46,7 @@ const WhiteBoard = ({ roomId, user }) => {
 
     const context = canvas.getContext("2d");
     context.lineCap = "round";
-    context.strokeStyle = "black";
+    context.strokeStyle = penColor;
     context.lineWidth = 3;
 
     contextRef.current = context;
@@ -115,6 +116,18 @@ const WhiteBoard = ({ roomId, user }) => {
       <button onClick={handleCopyLink}>Copy Invite Link</button>
         <VoiceChannel />
       {joinMessage && <p>{joinMessage}</p>} 
+      <div className="ColorPicker">
+        <label>Pen Color: </label>
+        <input
+          type="color"
+          id="penColor"
+          value={penColor}
+          onChange={(e) => {
+            setPenColor(e.target.value);
+            contextRef.current.strokeStyle = e.target.value; // Update the stroke color
+          }}
+        />
+      </div>
       <canvas
         ref={canvasRef} // Reference to the canvas element
         onMouseDown={startDrawing}
