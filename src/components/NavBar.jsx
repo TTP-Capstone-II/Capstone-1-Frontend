@@ -21,6 +21,9 @@ const NavBar = ({ user, onLogout }) => {
             <NavLink to="/forum" className="nav-link">
               Forum
             </NavLink>
+            <NavLink to="/profile" className="nav-link">
+              Profile
+            </NavLink>
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>

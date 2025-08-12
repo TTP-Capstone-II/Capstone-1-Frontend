@@ -8,11 +8,64 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Modal,
+  Box,
 } from "@mui/material";
 import { FreeFallMotion } from "../topics/FreeFall";
+import { API_URL } from "../shared";
+import axios from "axios";
 
-const FreeFallInterface = ({ userInput, setUserInput }) => {
+const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [forum, setForum] = useState("");
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/api/simulation`, {
+        userId: user.id,
+        forumTitle: forum,
+        topic: "free-fall",
+        storedValues: userInput,
+      });
+
+      const savedSim = response.data;
+      console.log("Simulation saved:", savedSim);
+
+      setForum("");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error saving simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handlePatch = async () => {
+    try {
+      const response = await axios.patch(`${API_URL}/api/simulation/${simulation.id}`, {
+        storedValues: userInput,
+        forumTitle: forum,
+        topic: "free-fall",
+      });
+
+      console.log("Simulation updated:", response.data);
+      setOpen(false);
+    } catch (error) {
+      console.error("Error updating simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handleSaveOrUpdate = (e) => {
+    e.preventDefault();
+
+    if (simulation) {
+      handlePatch();
+    } else {
+      handleSave(e);
+    }
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +76,9 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
   };
 
   useEffect(() => {
+    if (simulation) {
+      setForum(simulation.forumTitle || "");
+    }
     if (!userInput.target) return;
 
     const calculations = FreeFallMotion({
@@ -43,6 +99,7 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
     userInput.initialHeight,
     userInput.finalHeight,
     userInput.time,
+    simulation,
   ]);
 
   return (
@@ -60,6 +117,38 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
         overflowY: "auto",
       }}
     >
+      <Button onClick={handleOpen}>Save</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Are you sure you want to save this simulation?
+          </Typography>
+          <TextField
+            label="Simulation title"
+            value={forum}
+            onChange={(e) => setForum(e.target.value)}
+            fullWidth
+          />
+          <Button id="modal-modal-description" sx={{ mt: 2 }} onClick={handleSaveOrUpdate}>
+            {simulation ? "Update Simulation" : "Save Simulation"}
+          </Button>
+        </Box>
+      </Modal>
       <TextField
         label="Acceleration due to gravity (g)"
         type="number"
@@ -187,15 +276,15 @@ const FreeFallInterface = ({ userInput, setUserInput }) => {
       <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {results
           ? JSON.stringify(
-              results,
-              (key, value) => {
-                if (typeof value === "number") {
-                  return Number(value.toFixed(2));
-                }
-                return value;
-              },
-              2
-            )
+            results,
+            (key, value) => {
+              if (typeof value === "number") {
+                return Number(value.toFixed(2));
+              }
+              return value;
+            },
+            2
+          )
           : "No results yet"}
       </pre>
     </Paper>

@@ -1,55 +1,67 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
-import axios from "axios";
-import { API_URL } from "../shared";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-
-const SimulationCard = ({ post }) => {
+const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) => {
   const navigate = useNavigate();
 
-  const fetchForums = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/forum`);
-      setForums(response.data);
-      console.log("Fetched forums:", response.data);
-    } catch (error) {
-      console.error("Error fetching forums:", error);
-    }
+  const handleCardClick = () => {
+    navigate(`/${topic}`, { state: { simulation } });
   };
-
-  useEffect(() => {
-    fetchForums();
-  }, []);
-  const handleClick = () => {
-    const postId = post.id;
-    navigate(`/forum/${forumId}/posts/${postId}`);
-  }
 
   return (
     <Card
+      onClick={handleCardClick}
       sx={{
-        width: "350px",
-        marginBottom: 2,
         cursor: "pointer",
+        height: "300px",
+        width: "350px",
         "&:hover": {
-          boxShadow: 3,
+          boxShadow: 4,
         },
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
       }}
     >
       <CardContent>
-        <Typography variant="h6" component="div">
-          simulation title
+        <Typography variant="h6">
+          {forumTitle}
         </Typography>
-        <Typography color="text.secondary">
-          User Name
+        <Typography variant="caption">
+          {topic}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+
+        <Typography
+          variant="body2"
+          sx={{
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            mt: 1,
+          }}
+        >
+          {JSON.stringify(simulation.storedValues, null, 2)}
+        </Typography>
+
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          sx={{ mt: 2 }}
+        >
           Delete
-        </Typography>
+        </Button>
       </CardContent>
     </Card>
   );
-}
+};
 
 export default SimulationCard;

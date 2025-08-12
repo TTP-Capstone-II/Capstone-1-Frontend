@@ -8,9 +8,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
-import { API_URL, SOCKETS_URL, NODE_ENV } from "./shared";
-import { io } from "socket.io-client";
-import socket from "./socket";
+import Simulation from "./components/Simulation";
+import Simulations from "./pages/Simulations";
 import FreeFall from "./pages/FreeFall";
 import ProjectileMotion from "./pages/ProjectileMotion";
 import IndividualForum from "./pages/IndividualForum";
@@ -19,11 +18,13 @@ import PostPage from "./pages/PostPage";
 import NewPostPage from "./pages/NewPostPage";
 import Friction from "./pages/Friction";
 import Inertia from "./pages/Inertia";
+import { API_URL } from "./shared";
 import Torque from "./pages/Torque";
 import ReplyList from "./components/forum/ReplyList";
 import WhiteboardRoom from "./pages/WhiteboardRoom";
 import WhiteboardLanding from "./pages/WhiteboardLanding";
-
+import Profile from "./pages/Profile"; 
+import socket from "./socket";
 
 
 const App = () => {
@@ -75,11 +76,12 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
-          <Route path="/free-fall" element={<FreeFall />} />
-          <Route path="/projectile-motion" element={<ProjectileMotion />} />
-          <Route path="/torque" element={<Torque />} />
-          <Route path="/friction" element={<Friction />} />
-          <Route path="/inertia" element={<Inertia />} />
+          <Route path="/free-fall" element={<FreeFall user={user}/>} />
+          <Route path="/free-fall/:simId" element={<FreeFall user={user}/>} />
+          <Route path="/projectile-motion" element={<ProjectileMotion user={user}/>} />
+          <Route path="/torque" element={<Torque user={user}/>} />
+          <Route path="/friction" element={<Friction user={user}/>} />
+          <Route path="/inertia" element={<Inertia user={user}/>} />
           <Route exact path="/" element={<Home />} />
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
@@ -93,6 +95,7 @@ const App = () => {
           />
           <Route path="/whiteboard" element={<WhiteboardLanding />} />
           <Route path="/whiteboard/:roomId" element={<WhiteboardRoom  user={user}/>} />
+          <Route path="profile" element={<Profile user={user} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

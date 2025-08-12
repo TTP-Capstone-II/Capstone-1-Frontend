@@ -4,9 +4,13 @@ import FrictionInterface from "../interfaces/FrictionInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Runner, Mouse, MouseConstraint } from "matter-js";
 import { Button } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
-const Friction = () => {
-    const [userInput, setUserInput] = useState({
+const Friction = ({ user }) => {
+    const location = useLocation();
+    const simulation = location.state?.simulation;
+    const [userInput, setUserInput] = useState(
+        simulation?.storedValues || {
         gravity: "9.81",
         mass: "5",
         friction: "0.005",
@@ -107,7 +111,7 @@ const Friction = () => {
 
     return (
         <div className="simulation-page" style={{ display: 'flex', height: '700px' }}>
-            <FrictionInterface userInput={userInput} setUserInput={setUserInput} />
+            <FrictionInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation}/>
             <BaseSimulation onEngineReady={handleEngineReady} />
         </div>
     );

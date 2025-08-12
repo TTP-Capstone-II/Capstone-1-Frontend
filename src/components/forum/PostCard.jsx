@@ -4,6 +4,26 @@ import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
 
+function timeAgo(date) {
+  const now = new Date();
+  const seconds = Math.floor((now - date) / 1000);
+
+  const intervals = [
+    { label: 'year', seconds: 31536000 },
+    { label: 'month', seconds: 2592000 },
+    { label: 'day', seconds: 86400 },
+    { label: 'hour', seconds: 3600 },
+    { label: 'minute', seconds: 60 },
+  ];
+
+  for (const interval of intervals) {
+    const count = Math.floor(seconds / interval.seconds);
+    if (count >= 1) {
+      return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+    }
+  }
+  return 'Just now';
+}
 
 const PostCard = ({ post }) => {
   const {forumId} = useParams();
@@ -47,7 +67,7 @@ const PostCard = ({ post }) => {
           {post.user?.username} - {new Date(post.createdAt).toLocaleDateString()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {post.likes} likes
+          {post.likes} likes - {timeAgo(new Date(post.createdAt))}
         </Typography>
       </CardContent>
     </Card>

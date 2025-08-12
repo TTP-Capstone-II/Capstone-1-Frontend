@@ -4,9 +4,13 @@ import InertiaInterface from "../interfaces/InertiaInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Runner, Mouse, MouseConstraint, Avatar } from "matter-js";
 import { Button } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
-const Inertia = () => {
-    const [userInput, setUserInput] = useState({
+const Inertia = ({ user }) => {
+    const location = useLocation();
+    const simulation = location.state?.simulation;
+    const [userInput, setUserInput] = useState(
+        simulation?.storedValues || {
         gravity: "9.81",
         square1_mass: "0",
         square1_initialAcceleration: "0",
@@ -94,7 +98,7 @@ const Inertia = () => {
 
     return (
         <div className="simulation-page" style={{ display: 'flex', height: '700px' }}>
-            <InertiaInterface userInput={userInput} setUserInput={setUserInput} />
+            <InertiaInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation}/>
             <BaseSimulation onEngineReady={handleEngineReady} />
         </div>
     );
