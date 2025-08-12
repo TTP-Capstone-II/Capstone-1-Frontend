@@ -38,6 +38,13 @@ const VoiceChannel = ({ socketID }) => {
       handleNegotiationNeededEvent;
     peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
     peerConnectionRef.current.ontrack = handleOnTrackEvent;
+
+    peerConnectionRef.current.oniceconnectionstatechange = () => {
+      console.log(
+        "ICE connection state:",
+        peerConnectionRef.current.iceConnectionState
+      );
+    };
   };
 
   const handleOnTrackEvent = (event) => {
@@ -54,6 +61,7 @@ const VoiceChannel = ({ socketID }) => {
         candidate: event.candidate,
         to: socketID,
       });
+      console.log("Sending ICE candidate", event.candidate);
     }
   };
 
@@ -138,6 +146,7 @@ const VoiceChannel = ({ socketID }) => {
     socket.on("new-ice-candidate", async ({ candidate, from }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
+      console.log("Received ICE candidate", candidate);
       peerConnectionRef.current
         .addIceCandidate(newCandidate)
         .catch(window.reportError);
