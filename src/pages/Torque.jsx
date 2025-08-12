@@ -4,9 +4,13 @@ import ProjectileMotionInterface from "../interfaces/ProjectileMotionInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Constraint, Body } from "matter-js";
 import { Button } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
-const Torque = () => {
-  const [userInput, setUserInput] = useState({
+const Torque = ({ user }) => {
+  const location = useLocation();
+  const simulation = location.state?.simulation;
+  const [userInput, setUserInput] = useState(
+    simulation?.storedValues || {
     Torque: "",
     angularAcceleration: "",
     distanceFromPivot: "",
