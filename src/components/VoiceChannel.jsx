@@ -33,6 +33,11 @@ const VoiceChannel = ({ roomId, socketID }) => {
         username: "openrelayproject",
         credential: "openrelayproject",
       },
+      {
+        url: "turn:numb.viagenie.ca",
+        username: "webrtc@live.com",
+        credential: "muazkh",
+      },
     ],
   };
 
@@ -107,7 +112,6 @@ const VoiceChannel = ({ roomId, socketID }) => {
       setIsConnected(true);
       socket.emit("voice-join", { roomId });
       console.log("Audio connected");
-
     } catch (error) {
       console.log(error);
     }
