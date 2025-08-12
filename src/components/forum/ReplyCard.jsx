@@ -7,6 +7,7 @@ import axios from "axios";
 import { API_URL } from "../../shared";
 import ReplyForm from "../../forms/ReplyForm";
 
+//Function for timestamps
 function timeAgo(date) {
   const now = new Date();
   const seconds = Math.floor((now - date) / 1000);
