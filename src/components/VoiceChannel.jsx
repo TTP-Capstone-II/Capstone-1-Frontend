@@ -22,11 +22,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
   const configuration = {
     iceServers: [
       {
-        urls: [
-          "stun:stun.l.google.com:19302",
-          "stun:stun4.l.google.com:19302",
-          "stun:stun3.l.google.com:19302",
-        ],
+        urls: ["stun:stun.l.google.com:19302", "stun:stun3.l.google.com:19302"],
       },
       {
         urls: "turn:openrelay.metered.ca:80",
