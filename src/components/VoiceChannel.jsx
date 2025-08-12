@@ -155,6 +155,10 @@ const VoiceChannel = ({ roomId, socketID }) => {
     socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(offer)
+      );
+
       await getAudioStream();
 
       if (localStreamRef.current) {
@@ -162,10 +166,6 @@ const VoiceChannel = ({ roomId, socketID }) => {
           peerConnectionRef.current.addTrack(track, localStreamRef.current);
         });
       }
-
-      await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
 
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
