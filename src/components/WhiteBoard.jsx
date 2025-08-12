@@ -10,7 +10,8 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
-  const [penColor, setPenColor] = useState("black"); // State to manage pen color
+  const [penColor, setPenColor] = useState("black"); 
+  const [penSize, setPenSize] = useState(3); 
 
   const username = user.username; 
 
@@ -47,7 +48,7 @@ const WhiteBoard = ({ roomId, user }) => {
     const context = canvas.getContext("2d");
     context.lineCap = "round";
     context.strokeStyle = penColor;
-    context.lineWidth = 3;
+    context.lineWidth = penSize;
 
     contextRef.current = context;
 
@@ -125,6 +126,19 @@ const WhiteBoard = ({ roomId, user }) => {
           onChange={(e) => {
             setPenColor(e.target.value);
             contextRef.current.strokeStyle = e.target.value; // Update the stroke color
+          }}
+        />
+      </div>
+      <div className="PenSizePicker">
+        <label>Pen Size: </label>
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={penSize}
+          onChange={(e) => {
+            setPenSize(e.target.value);
+            contextRef.current.lineWidth = e.target.value; // Update the line width
           }}
         />
       </div>
