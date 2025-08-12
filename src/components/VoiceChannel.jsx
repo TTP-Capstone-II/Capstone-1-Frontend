@@ -58,6 +58,7 @@ const VoiceChannel = ({ socketID }) => {
     const remoteStream = event.streams[0];
     if (remoteAudioRef.current) {
       remoteAudioRef.current.srcObject = remoteStream;
+      remoteAudioRef.current.play();
     }
   };
 
@@ -72,10 +73,14 @@ const VoiceChannel = ({ socketID }) => {
   };
 
   const handleNegotiationNeededEvent = async () => {
-    const offer = await peerConnectionRef.current.createOffer(); // Create SDP
-    await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
+    try {
+      const offer = await peerConnectionRef.current.createOffer(); // Create SDP
+      await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
-    socket.emit("voice-offer", { offer, to: socketID });
+      socket.emit("voice-offer", { offer, to: socketID });
+    } catch (error) {
+      console.log("Error during negotiation:", error);
+    }
   };
 
   const getAudioStream = async () => {
@@ -119,15 +124,16 @@ const VoiceChannel = ({ socketID }) => {
     socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
-      await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
       await getAudioStream();
 
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => {
           peerConnectionRef.current.addTrack(track, localStreamRef.current);
         });
+
+        await peerConnectionRef.current.setRemoteDescription(
+          new RTCSessionDescription(offer)
+        );
       }
 
       const answer = await peerConnectionRef.current.createAnswer();
