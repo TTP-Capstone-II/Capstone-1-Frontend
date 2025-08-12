@@ -12,6 +12,7 @@ const WhiteBoard = ({ roomId, user }) => {
   const [joinMessage, setJoinMessage] = useState("");
   const [penColor, setPenColor] = useState("black"); 
   const [penSize, setPenSize] = useState(3); 
+  const [isErasing, setIsErasing] = useState(false); 
 
   const username = user.username; 
 
@@ -111,6 +112,17 @@ const WhiteBoard = ({ roomId, user }) => {
     );
   };
 
+  const erase = () => {
+    if (isErasing) {
+      setIsErasing(false);
+      contextRef.current.globalCompositeOperation = 'source-over'; // Reset to normal drawing
+    }
+    else {
+      setIsErasing(true);
+    contextRef.current.globalCompositeOperation = 'destination-out'
+   }
+  }
+
   return (
     <div>
         <h2>Room Code: {roomId}</h2>
@@ -141,6 +153,9 @@ const WhiteBoard = ({ roomId, user }) => {
             contextRef.current.lineWidth = e.target.value; // Update the line width
           }}
         />
+      </div>
+      <div className="EraseButton">
+        <button onClick={erase}>{isErasing ? "Eraser : on" : "Eraser : off"}</button>
       </div>
       <canvas
         ref={canvasRef} // Reference to the canvas element
