@@ -3,44 +3,84 @@ import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
 
-const VoiceChannel = ({roomId}) => {
+const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const localStreamRef = useRef(null);
   const peerConnectionRef = useRef(null);
+  const remoteAudioRef = useRef(null);
+
+  /*
+      { urls: "stun:stun2.l.google.com:19302" },
+      { urls: "stun:stun2.l.google.com:5349" },
+      { urls: "stun:stun3.l.google.com:3478" },
+      { urls: "stun:stun3.l.google.com:5349" },
+      { urls: "stun:stun4.l.google.com:19302" },
+      { urls: "stun:stun4.l.google.com:5349" },
+  */
 
   const configuration = {
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    iceServers: [
+      {
+        urls: [
+          "stun:stun.l.google.com:19302",
+          "stun:stun4.l.google.com:19302",
+          "stun:stun3.l.google.com:19302",
+        ],
+      },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+    ],
   };
 
   const createPeerConnection = () => {
     peerConnectionRef.current = new RTCPeerConnection(configuration);
 
-    peerConnectionRef.current.negotiationneeded = handleNegotiationNeededEvent;
+    peerConnectionRef.current.onnegotiationneeded =
+      handleNegotiationNeededEvent;
     peerConnectionRef.current.onicecandidate = handleICECandidateEvent;
     peerConnectionRef.current.ontrack = handleOnTrackEvent;
+
+    // log ICE connection state
+    peerConnectionRef.current.oniceconnectionstatechange = () => {
+      console.log(
+        "ICE connection state:",
+        peerConnectionRef.current.iceConnectionState
+      );
+    };
   };
 
   const handleOnTrackEvent = (event) => {
     // Play Remote Audio
     const remoteStream = event.streams[0];
-    const audioElement = document.createElement("audio");
-    audioElement.srcObject = remoteStream;
-    audioElement.autoplay = true;
-    document.body.appendChild(audioElement);
+    if (remoteAudioRef.current) {
+      remoteAudioRef.current.srcObject = remoteStream;
+      remoteAudioRef.current.play();
+    }
   };
 
   const handleICECandidateEvent = (event) => {
     if (event.candidate) {
-      socket.emit("new-ice-candidate", { roomId, candidate: event.candidate });
+      socket.emit("new-ice-candidate", {
+        candidate: event.candidate,
+        to: socketID,
+      });
+      console.log("Sending ICE candidate", event.candidate);
     }
   };
 
   const handleNegotiationNeededEvent = async () => {
-    const offer = await peerConnectionRef.current.createOffer(); // Create SDP
-    await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
+    try {
+      const offer = await peerConnectionRef.current.createOffer(); // Create SDP
+      await peerConnectionRef.current.setLocalDescription(offer); // Set SDP to local description
 
-    socket.emit("voice-offer", { roomId, offer });
+      socket.emit("voice-offer", { offer, to: socketID });
+    } catch (error) {
+      console.log("Error during negotiation:", error);
+    }
   };
 
   const getAudioStream = async () => {
@@ -112,12 +152,9 @@ const VoiceChannel = ({roomId}) => {
 
   useEffect(() => {
     // Receiving offer
-    socket.on("voice-offer", async ({ roomId, offer }) => {
+    socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
 
-      await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
       await getAudioStream();
 
       if (localStreamRef.current) {
@@ -125,11 +162,14 @@ const VoiceChannel = ({roomId}) => {
           peerConnectionRef.current.addTrack(track, localStreamRef.current);
         });
       }
+      await peerConnectionRef.current.setRemoteDescription(
+        new RTCSessionDescription(offer)
+      );
 
       const answer = await peerConnectionRef.current.createAnswer();
       await peerConnectionRef.current.setLocalDescription(answer);
 
-      socket.emit("voice-answer", { roomId, answer });
+      socket.emit("voice-answer", { answer, to: from });
       setIsConnected(true);
     });
 
@@ -145,9 +185,10 @@ const VoiceChannel = ({roomId}) => {
     });
 
     // Receiving ice candidates
-    socket.on("new-ice-candidate", async ({ roomId, candidate }) => {
+    socket.on("new-ice-candidate", async ({ candidate, from }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
+      console.log(`Received ICE candidate from: ${from}`, candidate);
       peerConnectionRef.current
         .addIceCandidate(newCandidate)
         .catch(window.reportError);
@@ -166,6 +207,7 @@ const VoiceChannel = ({roomId}) => {
         <div className="connected">
           <Button onClick={handleMute}>{isMuted ? "UnMute" : "Mute"}</Button>
           <Button onClick={handleDisconnectAudio}>Disconnect Audio</Button>
+          <audio ref={remoteAudioRef} autoPlay />
         </div>
       ) : (
         <div className="disconnected">
