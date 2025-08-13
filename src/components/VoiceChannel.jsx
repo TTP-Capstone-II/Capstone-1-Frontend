@@ -68,11 +68,18 @@ const VoiceChannel = ({ roomId, socketID }) => {
   };
 
   const handleOnTrackEvent = (event) => {
+    console.log("Track event received:", event);
+    console.log("Streams:", event.streams);
+    console.log("Track:", event.track);
     // Play Remote Audio
     const remoteStream = event.streams[0];
     if (remoteAudioRef.current) {
       remoteAudioRef.current.srcObject = remoteStream;
-      remoteAudioRef.current.play();
+      remoteAudioRef.current
+        .play()
+        .catch((e) => console.error("Audio play error:", e));
+    } else {
+      console.warn("No remote stream or audio element");
     }
   };
 
@@ -221,28 +228,34 @@ const VoiceChannel = ({ roomId, socketID }) => {
 
     // Receiving offer
     socket.on("voice-offer", async ({ offer, from }) => {
-      if (!peerConnectionRef.current) createPeerConnection();
+      try {
+        if (!peerConnectionRef.current) createPeerConnection();
 
-      await peerConnectionRef.current.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
+        await peerConnectionRef.current.setRemoteDescription(
+          new RTCSessionDescription(offer)
+        );
 
-      await getAudioStream();
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-      if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach((track) => {
-          peerConnectionRef.current.addTrack(track, localStreamRef.current);
-        });
+        await getAudioStream();
+
+        if (localStreamRef.current) {
+          localStreamRef.current.getTracks().forEach((track) => {
+            peerConnectionRef.current.addTrack(track, localStreamRef.current);
+          });
+        }
+
+        // Store the remote id for subsequent ICE candidates
+        remoteSocketIdRef.current = from;
+
+        const answer = await peerConnectionRef.current.createAnswer();
+        await peerConnectionRef.current.setLocalDescription(answer);
+
+        socket.emit("voice-answer", { answer, to: from });
+        setIsConnected(true);
+      } catch (error) {
+        console.log(error);
       }
-
-      // Store the remote id for subsequent ICE candidates
-      remoteSocketIdRef.current = from;
-
-      const answer = await peerConnectionRef.current.createAnswer();
-      await peerConnectionRef.current.setLocalDescription(answer);
-
-      socket.emit("voice-answer", { answer, to: from });
-      setIsConnected(true);
     });
 
     // Receiving answer
