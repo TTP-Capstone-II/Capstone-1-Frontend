@@ -9,18 +9,20 @@ import { API_URL } from "../../shared";
 const ReplyList = ({ postId, userId }) => {
   const [replies, setReplies] = useState([]);
 
-  useEffect(() => {
-    const fetchReplies = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/post/${postId}/reply`);
-        setReplies(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchReplies = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/post/${postId}/reply`);
+      setReplies(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    fetchReplies();
+  useEffect(() => {
+    if (postId) {
+      fetchReplies();
+    }
   }, [postId]);
 
   const sampleReplies = [
@@ -54,12 +56,9 @@ const ReplyList = ({ postId, userId }) => {
       {replies.map((reply) => (
         <ReplyCard
           key={reply.id}
-          id={reply.id}
+          reply={reply}
           userId={userId}
-          author={reply?.user.username}
-          content={reply?.content}
-          createdAt={reply?.createdAt}
-          numOflikes={reply?.likes}
+          onReplyAdded={fetchReplies}
         />
       ))}
     </Box>
