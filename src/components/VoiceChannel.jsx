@@ -6,6 +6,7 @@ import { useRef } from "react";
 const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [remoteUsers, setRemoteUsers] = useState([]);
   const localStreamRef = useRef(null);
   const peerConnectionRef = useRef(null);
   const remoteAudioRef = useRef(null);
@@ -193,6 +194,31 @@ const VoiceChannel = ({ roomId, socketID }) => {
   }, [socketID]);
 
   useEffect(() => {
+    socket.on("voice-user-joined", ({ userId, username }) => {
+      console.log(`Voice user joined: ${username} (${userId})`);
+      setRemoteUsers((prev) => [...prev, { id: userId, username }]);
+
+      if (!remoteSocketIdRef.current) {
+        remoteSocketIdRef.current = userId;
+        // Trigger negotiation if we're already connected
+        if (
+          peerConnectionRef.current &&
+          peerConnectionRef.current.getSenders().length > 0
+        ) {
+          handleNegotiationNeededEvent();
+        }
+      }
+    });
+
+    socket.on("voice-user-left", ({ userId }) => {
+      console.log(`Voice user left: (${userId})`);
+      setRemoteUsers((prev) => prev.filter((user) => user.id !== userId));
+
+      if (remoteSocketIdRef.current === userId) {
+        remoteSocketIdRef.current = null;
+      }
+    });
+
     // Receiving offer
     socket.on("voice-offer", async ({ offer, from }) => {
       if (!peerConnectionRef.current) createPeerConnection();
@@ -246,6 +272,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
       socket.off("voice-offer");
       socket.off("voice-answer");
       socket.off("new-ice-candidate");
+      socket.off("voice-user-joined");
+      socket.off("voice-user-left");
     };
   }, []);
 
