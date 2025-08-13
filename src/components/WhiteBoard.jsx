@@ -86,11 +86,23 @@ const WhiteBoard = ({ roomId, user }) => {
       setUsersInRoom(users);
     });
 
+    socket.on("clear-canvas", (clearedBy) => {
+      contextRef.current.clearRect(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
+      setJoinMessage(`Canvas cleared by ${clearedBy}`); // Show a message indicating who cleared the canvas
+      setTimeout(() => setJoinMessage(""), 3000); // Clear the message after 3 seconds
+    });
+
     return () => {
       socket.off("draw", handleDraw);
       socket.off("join-room", roomId); // Clean up the socket listeners
       socket.off("user-joined");
       socket.off("update-user-list");
+      socket.off("clear-canvas");
     };
   }, []);
 
@@ -147,8 +159,6 @@ const WhiteBoard = ({ roomId, user }) => {
     );
 
     socket.emit("clear-canvas", roomId); // Notify the server to clear the canvas for all participants
-    setJoinMessage("Canvas cleared by " + username); // Show a message indicating who cleared the canvas
-    setTimeout(() => setJoinMessage(""), 3000); // Clear the message after 3 seconds
   };
 
   const erase = () => {
@@ -179,7 +189,7 @@ const WhiteBoard = ({ roomId, user }) => {
 
             socket.emit("pen-color-change", {
               userId: socket.id,
-              penColor,
+              penColor: e.target.value,
             });
           }}
         />
