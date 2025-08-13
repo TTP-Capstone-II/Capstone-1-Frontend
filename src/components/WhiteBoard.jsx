@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, use } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 import VoiceChannel from "./VoiceChannel";
+import "./WhiteBoardStyles.css";
 
 const WhiteBoard = ({ roomId, user }) => {
   const canvasRef = useRef(null); // Reference to the canvas element
@@ -13,6 +14,7 @@ const WhiteBoard = ({ roomId, user }) => {
   const [penColor, setPenColor] = useState("#000000");
   const [penSize, setPenSize] = useState(3);
   const [isErasing, setIsErasing] = useState(false);
+  const [usersInRoom, setUsersInRoom] = useState([]);
 
   const username = user.username;
 
@@ -66,7 +68,11 @@ const WhiteBoard = ({ roomId, user }) => {
 
     // Join a room
     if (roomId && username) {
-      socket.emit("join-room", { roomId, username });
+      socket.emit("join-room", {
+        roomId,
+        username,
+        penColor,
+      });
     }
 
     socket.on("draw", handleDraw); // Listen for drawing events from the server
@@ -76,10 +82,15 @@ const WhiteBoard = ({ roomId, user }) => {
       setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
     });
 
+    socket.on("update-user-list", (users) => {
+      setUsersInRoom(users);
+    });
+
     return () => {
       socket.off("draw", handleDraw);
       socket.off("join-room", roomId); // Clean up the socket listeners
       socket.off("user-joined");
+      socket.off("update-user-list");
     };
   }, []);
 
@@ -123,7 +134,9 @@ const WhiteBoard = ({ roomId, user }) => {
   };
 
   const clearCanvas = () => {
-    const confirmClear = window.confirm("This will clear the entire canvas for all participants. Are you sure?");
+    const confirmClear = window.confirm(
+      "This will clear the entire canvas for all participants. Are you sure?"
+    );
     if (!confirmClear) return;
 
     contextRef.current.clearRect(
@@ -163,6 +176,11 @@ const WhiteBoard = ({ roomId, user }) => {
           onChange={(e) => {
             setPenColor(e.target.value);
             contextRef.current.strokeStyle = e.target.value; // Update the stroke color
+
+            socket.emit("pen-color-change", {
+              userId: socket.id,
+              penColor,
+            });
           }}
         />
       </div>
@@ -183,6 +201,21 @@ const WhiteBoard = ({ roomId, user }) => {
         <button onClick={erase}>
           {isErasing ? "Eraser : on" : "Eraser : off"}
         </button>
+      </div>
+      <div className="participants">
+        <span>{usersInRoom.length} online</span>
+        <div className="user-list">
+          {usersInRoom.map((u) => (
+            <div
+              key={u.userId}
+              className="user-avatar"
+              style={{ backgroundColor: u.penColor }}
+              title={u.username}
+            >
+              <span>{u.username[0].toUpperCase()}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <canvas
         ref={canvasRef} // Reference to the canvas element
