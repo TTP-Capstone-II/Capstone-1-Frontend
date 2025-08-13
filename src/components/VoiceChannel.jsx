@@ -231,6 +231,13 @@ const VoiceChannel = ({ roomId, socketID }) => {
       try {
         if (!peerConnectionRef.current) createPeerConnection();
 
+        if (!remoteAudioRef.current) {
+          const audioElement = document.createElement("audio");
+          audioElement.autoplay = true;
+          remoteAudioRef.current = audioElement;
+          document.body.appendChild(audioElement);
+        }
+
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(offer)
         );
