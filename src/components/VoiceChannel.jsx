@@ -19,7 +19,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
     const fetchTURNToken = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/turn-token`);
-        const { token } = await response.json();
+        console.log(response.data);
+        const token = response.data.token;
         setIceServers([
           {
             urls: [
@@ -38,7 +39,6 @@ const VoiceChannel = ({ roomId, socketID }) => {
             credential: token,
           },
         ]);
-        console.log("TURN token:", token);
       } catch (error) {
         console.error("Error fetching TURN token:", error);
         setIceServers([
