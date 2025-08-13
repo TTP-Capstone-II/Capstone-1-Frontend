@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
+import axios from "axios";
 
 const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -11,6 +12,46 @@ const VoiceChannel = ({ roomId, socketID }) => {
   const peerConnectionRef = useRef(null);
   const remoteAudioRef = useRef(null);
   const remoteSocketIdRef = useRef(null);
+  const [iceServers, setIceServers] = useState([]);
+
+  useEffect(() => {
+    const fetchTURNToken = async () => {
+      try {
+        const response = await axios.get("/api/turn-token");
+        const { token } = await response.json();
+        setIceServers([
+          {
+            urls: [
+              "stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+            ],
+          },
+          {
+            urls: "turn:global.turn.twilio.com:3478?transport=udp",
+            username: token,
+            credential: token,
+          },
+          {
+            urls: "turn:global.turn.twilio.com:3478?transport=tcp",
+            username: token,
+            credential: token,
+          },
+        ]);
+        console.log("TURN token:", token);
+      } catch (error) {
+        console.error("Error fetching TURN token:", error);
+        setIceServers([
+          {
+            urls: [
+              "stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+            ],
+          },
+        ]);
+      }
+    };
+    fetchTURNToken();
+  }, []);
 
   /*
       { urls: "stun:stun2.l.google.com:19302" },
@@ -25,10 +66,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
         username: "webrtc@live.com",
         credential: "muazkh",
       },
-  */
 
-  const configuration = {
-    iceServers: [
+          iceServers: [
       {
         urls: ["stun:stun.l.google.com:19302", "stun:stun3.l.google.com:19302"],
       },
@@ -42,15 +81,17 @@ const VoiceChannel = ({ roomId, socketID }) => {
         username: "openrelayproject",
         credential: "openrelayproject",
       },
-      {
-        urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
     ],
+  */
+  const configuration = {
+    iceServers: iceServers,
   };
 
   const createPeerConnection = () => {
+    if (iceServers.length === 0) {
+      console.log("Waiting for ICE servers...");
+      return;
+    }
     peerConnectionRef.current = new RTCPeerConnection(configuration);
 
     peerConnectionRef.current.onnegotiationneeded =
