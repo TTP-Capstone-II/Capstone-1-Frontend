@@ -12,6 +12,7 @@ import {
     Box
 } from "@mui/material";
 import { API_URL } from "../shared";
+import { Inertia } from "../topics/Inertia";
 import axios from "axios";
 
 const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
@@ -45,7 +46,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
             const response = await axios.patch(`${API_URL}/api/simulation/${simulation.id}`, {
                 storedValues: userInput,
                 forumTitle: forum,
-                topic: "inertia",
+                topic: "inert",
             });
 
             console.log("Simulation updated:", response.data);
@@ -79,35 +80,28 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
         }
         if (!userInput.target) return;
 
-        const calculations = FreeFallMotion({
+        const calculations = Inertia({
             gravity: userInput.gravity,
             square1_mass: userInput.square1_mass,
             square1_initialAcceleration: userInput.square1_initialAcceleration,
-            square1_finalVelocity: userInput.square1_finalVelocity,
             square1_initialPosition: userInput.square1_initialPosition,
-            square1_finalPosition: userInput.square1_finalPosition,
             square2_mass: userInput.square2_mass,
             square2_initialAcceleration: userInput.square2_initialAcceleration,
-            square2_finalVelocity: userInput.square2_finalVelocity,
             square2_initialPosition: userInput.square2_initialPosition,
-            square2_finalPosition: userInput.square2_finalPosition,
             time: userInput.time,
+            target: userInput.target,
         });
         setResults(calculations);
     }, [
         userInput.gravity,
         userInput.square1_mass,
         userInput.square1_initialAcceleration,
-        userInput.square1_finalVelocity,
         userInput.square1_initialPosition,
-        userInput.square1_finalPosition,
         userInput.square2_mass,
         userInput.square2_initialAcceleration,
-        userInput.square2_finalVelocity,
         userInput.square2_initialPosition,
-        userInput.square2_finalPosition,
-        userInput.square1_finalVelocity,
         userInput.time,
+        userInput.target,
         simulation,
     ]);
 
@@ -182,7 +176,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 inputProps={{ step: "0.01" }} //change soon
                 slotProps={{
                     input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                     },
                 }}
                 onChange={handleInputChange}
@@ -204,21 +198,6 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
             />
 
             <TextField
-                label="Square 1 final velocity"
-                type="number"
-                name="square1_finalVelocity"
-                value={userInput.square1_finalVelocity}
-                variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                    },
-                }}
-                onChange={handleInputChange}
-            />
-
-            <TextField
                 label="Square 1 initial position"
                 type="number"
                 name="square1_initialPosition"
@@ -227,22 +206,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 inputProps={{ step: "0.01" }} //change soon
                 slotProps={{
                     input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                    },
-                }}
-                onChange={handleInputChange}
-            />
-
-            <TextField
-                label="Square 1 final position"
-                type="number"
-                name="square1_finalPosition"
-                value={userInput.square1_finalPosition}
-                variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">m</InputAdornment>,
                     },
                 }}
                 onChange={handleInputChange}
@@ -257,7 +221,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 inputProps={{ step: "0.01" }} //change soon
                 slotProps={{
                     input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                     },
                 }}
                 onChange={handleInputChange}
@@ -279,21 +243,6 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
             />
 
             <TextField
-                label="Square 2 final velocity"
-                type="number"
-                name="square2_finalVelocity"
-                value={userInput.square2_finalVelocity}
-                variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                    },
-                }}
-                onChange={handleInputChange}
-            />
-
-            <TextField
                 label="Square 2 initial position"
                 type="number"
                 name="square2_initialPosition"
@@ -302,22 +251,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 inputProps={{ step: "0.01" }} //change soon
                 slotProps={{
                     input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
-                    },
-                }}
-                onChange={handleInputChange}
-            />
-
-            <TextField
-                label="Square 2 final position"
-                type="number"
-                name="square2_finalPosition"
-                value={userInput.square2_finalPosition}
-                variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">m</InputAdornment>,
                     },
                 }}
                 onChange={handleInputChange}
@@ -352,12 +286,11 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 fullWidth
                 sx={{ mb: 2 }}
             >
-                <MenuItem value="finalVelocity">Final Velocity</MenuItem>
-                <MenuItem value="finalHeight">Final Height</MenuItem>
-                <MenuItem value="time">Fall Time</MenuItem>
-                <MenuItem value="initialVelocity">Start Velocity</MenuItem>
-                <MenuItem value="initialHeight">Start Height</MenuItem>
-                <MenuItem value="gravity">Gravity</MenuItem>
+                <MenuItem value="finalVelocity">Final Velocities</MenuItem>
+                <MenuItem value="momentum">Momentum (before collision)</MenuItem>
+                <MenuItem value="kineticEnergy">Kinetic Energy (before collision)</MenuItem>
+                <MenuItem value="time">Time to collision</MenuItem>
+                <MenuItem value="positionsAfterT">Positions after a set amount of seconds</MenuItem>
                 <MenuItem value="All">All</MenuItem>
             </Select>
 

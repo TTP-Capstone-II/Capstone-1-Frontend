@@ -11,11 +11,14 @@ const Friction = ({ user }) => {
     const simulation = location.state?.simulation;
     const [userInput, setUserInput] = useState(
         simulation?.storedValues || {
-        gravity: "9.81",
-        mass: "5",
-        friction: "0.005",
-        angle: "30",
-    });
+            gravity: 9.81,
+            mass: 5,
+            friction: 0.005,
+            angle: 30,
+            distance: "",
+            time: "",
+        }
+    );
 
     const handleEngineReady = (engine, world) => {
         const canvasWidth = 1000;
@@ -111,7 +114,7 @@ const Friction = ({ user }) => {
 
     return (
         <div className="simulation-page" style={{ display: 'flex', height: '700px' }}>
-            <FrictionInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation}/>
+            <FrictionInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation} />
             <BaseSimulation onEngineReady={handleEngineReady} />
         </div>
     );
