@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import socket from "../socket";
 import { useRef } from "react";
 import axios from "axios";
+import { API_URL } from "../shared";
 
 const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -17,7 +18,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
   useEffect(() => {
     const fetchTURNToken = async () => {
       try {
-        const response = await axios.get("/api/turn-token");
+        const response = await axios.get(`${API_URL}/api/turn-token`);
         const { token } = await response.json();
         setIceServers([
           {
