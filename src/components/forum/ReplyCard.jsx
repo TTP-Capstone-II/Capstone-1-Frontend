@@ -35,11 +35,11 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
     author,
     content,
     createdAt,
-    numOflikes,
+    likes,
     childReplies = [],
     postId,
   } = reply;
-  const [likes, setLikes] = useState(numOflikes);
+  const [numOflikes, setNumOflikes] = useState(likes);
   const [like, setLike] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
 
@@ -47,7 +47,7 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
     if (like === false) {
       try {
         await axios.post(`${API_URL}/api/replylikes/${id}/like/${userId}`);
-        setLikes(likes + 1);
+        setNumOflikes(numOflikes + 1);
         setLike(true);
       } catch (error) {
         console.log(error);
@@ -56,7 +56,7 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
       try {
         await axios.delete(`${API_URL}/api/replylikes/${id}/unlike/${userId}`);
         setLike(false);
-        setLikes(likes - 1);
+        setNumOflikes(numOflikes - 1);
       } catch (error) {
         console.log(error);
       }
@@ -76,7 +76,7 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
       }
     };
     fetchReplyLikeCheck();
-  }, []);
+  }, [id, userId]);
 
 return (
   <>
@@ -89,7 +89,7 @@ return (
       </CardContent>
         <IconButton aria-label="ThumbUp" onClick={handleClick}>
           <ThumbUpIcon></ThumbUpIcon>
-          <Typography color="text.secondary">{likes}</Typography>
+          <Typography color="text.secondary">{numOflikes}</Typography>
           <Typography variant="body2" color="text.secondary">
             &emsp; {timeAgo(new Date(createdAt))}
           </Typography>
