@@ -22,25 +22,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
       try {
         const response = await axios.get(`${API_URL}/api/turn-token`);
         console.log(response.data);
-        const token = response.data.token;
-        setIceServers([
-          {
-            urls: [
-              "stun:stun.l.google.com:19302",
-              "stun:stun1.l.google.com:19302",
-            ],
-          },
-          {
-            urls: "turn:global.turn.twilio.com:3478?transport=udp",
-            username: token,
-            credential: token,
-          },
-          {
-            urls: "turn:global.turn.twilio.com:3478?transport=tcp",
-            username: token,
-            credential: token,
-          },
-        ]);
+        const { token, iceServers } = response.data;
+        setIceServers(iceServers);
       } catch (error) {
         console.error("Error fetching TURN token:", error);
         setIceServers([
