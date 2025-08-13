@@ -10,7 +10,7 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
-  const [penColor, setPenColor] = useState("black");
+  const [penColor, setPenColor] = useState("#000000");
   const [penSize, setPenSize] = useState(3);
   const [isErasing, setIsErasing] = useState(false);
 
