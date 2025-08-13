@@ -214,3 +214,65 @@ export function calcVelocityComponents({ velocity, angle }) {
     vy: velocity * Math.sin(thetaRad),
   };
 }
+
+//Friction formulas
+export function calculateNormalForce({ mass, angle, gravity }) {
+  return mass * gravity * Math.cos((angle * Math.PI) / 180); // Convert angle to radians
+}
+
+export function calculateFrictionForce({ normalForce, frictionCoefficient }) {
+  return normalForce * frictionCoefficient; // F_friction = μ * N
+}
+
+export function calculateParallelForce({ mass, angle, gravity }) {
+  return mass * gravity * Math.sin((angle * Math.PI) / 180); // F_parallel = mg * sin(θ)
+}
+
+export function calculateNetForce({ parallelForce, frictionForce }) {
+  return parallelForce - frictionForce; // F_net = F_parallel - F_friction
+}
+
+export function calculateAcceleration(netForce, mass) {
+  return netForce / mass; // a = F_net / m
+}
+
+export function calculateDistance(acceleration, time) {
+  return 0.5 * acceleration * Math.pow(time, 2); // d = 1/2 * a * t^2
+}
+
+export function calculateTime(acceleration, distance) {
+  return Math.sqrt(2 * distance / acceleration); // t = √(2d / a)
+}
+
+//Inertia formulas
+// Final velocities for perfectly elastic collision
+export function calcFinalVelocitiesElastic({ m1, v1, m2, v2 }) {
+  const v1Final = ((m1 - m2) / (m1 + m2)) * v1 + ((2 * m2) / (m1 + m2)) * v2;
+  const v2Final = ((2 * m1) / (m1 + m2)) * v1 + ((m2 - m1) / (m1 + m2)) * v2;
+  return { v1Final, v2Final };
+}
+
+// Momentum: p = m * v
+export function calcMomentum({ m, v }) {
+  return m * v;
+}
+
+// Kinetic energy: KE = 0.5 * m * v^2
+export function calcKineticEnergy({ m, v }) {
+  return 0.5 * m * v ** 2;
+}
+
+// Time to collision (1D, moving towards each other)
+export function calcTimeToCollision({ x1, v1, x2, v2 }) {
+  if (v1 <= v2) return null; // never collide if first is slower or same speed
+  return (x2 - x1) / (v1 - v2);
+}
+
+// Position after time t: x = x0 + v * t
+export function calcPosition({ x0, v, t }) {
+  return x0 + v * t;
+}
+
+
+
+

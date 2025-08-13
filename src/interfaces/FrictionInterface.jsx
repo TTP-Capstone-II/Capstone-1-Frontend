@@ -81,12 +81,14 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
 
     if (!userInput.target) return;
 
-    const calculations = ProjectileMotion({
+    const calculations = Friction({
       gravity: userInput.gravity,
       mass: userInput.mass,
       friction: userInput.friction,
       angle: userInput.angle,
       target: userInput.target,
+      time: userInput.time,
+      distance: userInput.distance,
     });
     setResults(calculations);
   }, [
@@ -95,6 +97,8 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
     userInput.mass,
     userInput.friction,
     userInput.angle,
+    userInput.time,
+    userInput.distance,
     simulation,
   ]);
 
@@ -159,7 +163,6 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Mass"
         type="number"
@@ -174,7 +177,6 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Angle"
         type="number"
@@ -189,7 +191,6 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Friction"
         type="number"
@@ -204,6 +205,34 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         }}
         onChange={handleInputChange}
       />
+      <TextField
+        label="Distance"
+        type="number"
+        name="distance"
+        value={userInput.distance || ""}
+        variant="outlined"
+        inputProps={{ step: "0.01", min: 0 }}
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
+      <TextField
+        label="Time"
+        type="number"
+        name="time"
+        value={userInput.time || ""}
+        variant="outlined"
+        inputProps={{ step: "0.01", min: 0 }}
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
       <InputLabel id="target-label">Calculate</InputLabel>
       <Select
         label="Calculate"
@@ -214,11 +243,14 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         fullWidth
         sx={{ mt: 2 }}
       >
-        <MenuItem value="range">Friction Force</MenuItem>
-        <MenuItem value="timeOfFlight">Acceleration</MenuItem>
-        <MenuItem value="maxHeight">Distance</MenuItem>
-        <MenuItem value="velocityComponents">Velocity Components</MenuItem>
-        <MenuItem value="All">All</MenuItem>
+        <MenuItem value="frictionForce">Friction Force</MenuItem>
+        <MenuItem value="normalForce">Normal Force</MenuItem>
+        <MenuItem value="netForce">Net Force</MenuItem>
+        <MenuItem value="parallelForce">Parallel Force</MenuItem>
+        <MenuItem value="acceleration">Acceleration</MenuItem>
+        <MenuItem value="time">Time</MenuItem>
+        <MenuItem value="distance">Distance</MenuItem>
+        <MenuItem value="all">All</MenuItem>
       </Select>
 
       <Typography variant="h6" sx={{ mt: 2 }}>

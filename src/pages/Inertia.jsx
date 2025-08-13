@@ -11,19 +11,15 @@ const Inertia = ({ user }) => {
     const simulation = location.state?.simulation;
     const [userInput, setUserInput] = useState(
         simulation?.storedValues || {
-        gravity: "9.81",
-        square1_mass: "0",
-        square1_initialAcceleration: "0",
-        square1_finalVelocity: "",
-        square1_initialPosition: "50",
-        square1_finalPosition: "0",
-        square2_mass: "0",
-        square2_initialAcceleration: "0",
-        square2_finalVelocity: "",
-        square2_initialPosition: "500",
-        square2_finalPosition: "0",
-        time: "",
-    });
+            gravity: "9.81",
+            square1_mass: "0",
+            square1_initialAcceleration: "0",
+            square1_initialPosition: "50",
+            square2_mass: "0",
+            square2_initialAcceleration: "0",
+            square2_initialPosition: "500",
+            time: "",
+        });
 
     const leftWall = Matter.Bodies.rectangle(0, 350, 20, 700, {
         isStatic: true,
@@ -79,26 +75,38 @@ const Inertia = ({ user }) => {
             for (let pair of event.pairs) {
                 const { bodyA, bodyB } = pair;
 
-                const collided =
-                    (bodyA === square && bodyB === square2) ||
-                    (bodyA === square2 && bodyB === square);
+                // Check if one is moving and the other is stationary
+                const velA = bodyA.velocity;
+                const velB = bodyB.velocity;
 
-                if (collided) {
-                    console.log("Collision detected — freezing only square1");
+                const speedA = Math.sqrt(velA.x ** 2 + velA.y ** 2);
+                const speedB = Math.sqrt(velB.x ** 2 + velB.y ** 2);
 
-                    setTimeout(() => {
-                        Matter.Body.setVelocity(square, { x: 0, y: 0 });
-                        Matter.Body.setAngularVelocity(square, 0);
-                    }, 0);
+                const isAStationary = speedA < 0.01;
+                const isBStationary = speedB < 0.01;
+
+                // Case 1: A moving, B stopped
+                if (!isAStationary && isBStationary) {
+                    Matter.Body.setVelocity(bodyB, velA);
+                    Matter.Body.setVelocity(bodyA, { x: 0, y: 0 });
+                    Matter.Body.setAngularVelocity(bodyA, 0);
+                }
+
+                // Case 2: B moving, A stopped
+                else if (isAStationary && !isBStationary) {
+                    Matter.Body.setVelocity(bodyA, velB);
+                    Matter.Body.setVelocity(bodyB, { x: 0, y: 0 });
+                    Matter.Body.setAngularVelocity(bodyB, 0);
                 }
             }
         });
+
 
     };
 
     return (
         <div className="simulation-page" style={{ display: 'flex', height: '700px' }}>
-            <InertiaInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation}/>
+            <InertiaInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation} />
             <BaseSimulation onEngineReady={handleEngineReady} />
         </div>
     );
