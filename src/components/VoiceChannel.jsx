@@ -9,12 +9,14 @@ const VoiceChannel = ({ roomId, socketID }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [remoteUsers, setRemoteUsers] = useState([]);
+  const [pendingIceCandidates, setPendingIceCandidates] = useState([]);
   const localStreamRef = useRef(null);
   const peerConnectionRef = useRef(null);
   const remoteAudioRef = useRef(null);
   const remoteSocketIdRef = useRef(null);
   const [iceServers, setIceServers] = useState([]);
 
+  // set Ice Servers
   useEffect(() => {
     const fetchTURNToken = async () => {
       try {
@@ -54,46 +56,28 @@ const VoiceChannel = ({ roomId, socketID }) => {
     fetchTURNToken();
   }, []);
 
-  /*
-      { urls: "stun:stun2.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:5349" },
-      { urls: "stun:stun3.l.google.com:3478" },
-      { urls: "stun:stun3.l.google.com:5349" },
-      { urls: "stun:stun4.l.google.com:19302" },
-      { urls: "stun:stun4.l.google.com:5349" },
-
-            {
-        urls: "turn:numb.viagenie.ca",
-        username: "webrtc@live.com",
-        credential: "muazkh",
-      },
-
-          iceServers: [
-      {
-        urls: ["stun:stun.l.google.com:19302", "stun:stun3.l.google.com:19302"],
-      },
-      {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
-    ],
-  */
   const configuration = {
     iceServers: iceServers,
   };
 
   const createPeerConnection = () => {
-    if (iceServers.length === 0) {
-      console.log("Waiting for ICE servers...");
-      return;
-    }
     peerConnectionRef.current = new RTCPeerConnection(configuration);
+
+    if (pendingIceCandidates.length > 0) {
+      console.log(
+        `Processing ${pendingIceCandidates.length} pending ICE candidates`
+      );
+      pendingIceCandidates.forEach((candidate) => {
+        if (peerConnectionRef.current) {
+          peerConnectionRef.current
+            .addIceCandidate(candidate)
+            .catch((e) =>
+              console.error("Error adding pending ICE candidate:", e)
+            );
+        }
+      });
+      setPendingIceCandidates([]); // Clear the queue
+    }
 
     peerConnectionRef.current.onnegotiationneeded =
       handleNegotiationNeededEvent;
@@ -180,7 +164,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
       }
 
       setIsConnected(true);
-      socket.emit("voice-join", { roomId });
+      //socket.emit("voice-join", { roomId });
       console.log("Audio connected");
     } catch (error) {
       console.log(error);
@@ -207,7 +191,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
     socket.off("voice-answer");
     socket.off("new-ice-candidate");
 
-    socket.emit("voice-leave", { roomId });
+    //socket.emit("voice-leave", { roomId });
 
     console.log("Audio disconnected");
   };
@@ -243,8 +227,9 @@ const VoiceChannel = ({ roomId, socketID }) => {
   }, [socketID]);
 
   useEffect(() => {
+    /*
     socket.on("voice-user-joined", ({ userId, username }) => {
-      console.log(`Voice user joined: ${username} (${userId})`);
+      console.log(`Voice user joined: ${username} (id: ${userId})`);
       setRemoteUsers((prev) => [...prev, { id: userId, username }]);
 
       if (!remoteSocketIdRef.current) {
@@ -267,6 +252,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
         remoteSocketIdRef.current = null;
       }
     });
+    */
 
     // Receiving offer
     socket.on("voice-offer", async ({ offer, from }) => {
@@ -279,6 +265,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
           remoteAudioRef.current = audioElement;
           document.body.appendChild(audioElement);
         }
+
+        console.log("peer connection:", peerConnectionRef.current);
 
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(offer)
@@ -325,17 +313,23 @@ const VoiceChannel = ({ roomId, socketID }) => {
       const newCandidate = new RTCIceCandidate(candidate);
 
       console.log(`Received ICE candidate from: ${from}`, candidate);
-      peerConnectionRef.current
-        .addIceCandidate(newCandidate)
-        .catch(window.reportError);
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current
+          .addIceCandidate(newCandidate)
+          .catch((e) => console.error("Error adding ICE candidate:", e));
+      } else {
+        // Queue the candidate until peer connection is ready
+        console.log("Queueing ICE candidate, peer connection not ready yet");
+        setPendingIceCandidates((prev) => [...prev, newCandidate]);
+      }
     });
 
     return () => {
       socket.off("voice-offer");
       socket.off("voice-answer");
       socket.off("new-ice-candidate");
-      socket.off("voice-user-joined");
-      socket.off("voice-user-left");
+      //socket.off("voice-user-joined");
+      //socket.off("voice-user-left");
     };
   }, []);
 
