@@ -58,6 +58,7 @@ const ReplyList = ({ postId, userId }) => {
           key={reply.id}
           reply={reply}
           userId={userId}
+          numOflikes={reply?.likes}
           onReplyAdded={fetchReplies}
         />
       ))}

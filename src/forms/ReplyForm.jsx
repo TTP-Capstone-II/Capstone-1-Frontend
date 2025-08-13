@@ -59,7 +59,7 @@ const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
               }}
             />
           </Box>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" disabled={!content.trim()}>
             Reply
           </Button>
         </Box>
