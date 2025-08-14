@@ -210,38 +210,12 @@ const VoiceChannel = ({ roomId, socketID }) => {
   }, [socketID]);
 
   useEffect(() => {
-    /*
-    socket.on("voice-user-joined", ({ userId, username }) => {
-      console.log(`Voice user joined: ${username} (id: ${userId})`);
-      setRemoteUsers((prev) => [...prev, { id: userId, username }]);
-
-      if (!remoteSocketIdRef.current) {
-        remoteSocketIdRef.current = userId;
-        // Trigger negotiation if we're already connected
-        if (
-          peerConnectionRef.current &&
-          peerConnectionRef.current.getSenders().length > 0
-        ) {
-          handleNegotiationNeededEvent();
-        }
-      }
-    });
-
-    socket.on("voice-user-left", ({ userId }) => {
-      console.log(`Voice user left: (${userId})`);
-      setRemoteUsers((prev) => prev.filter((user) => user.id !== userId));
-
-      if (remoteSocketIdRef.current === userId) {
-        remoteSocketIdRef.current = null;
-      }
-    });
-    */
-
     // Receiving offer
     socket.on("voice-offer", async ({ offer, from }) => {
       try {
         if (!peerConnectionRef.current) createPeerConnection();
 
+        // Create audio element
         if (!remoteAudioRef.current) {
           const audioElement = document.createElement("audio");
           audioElement.autoplay = true;
@@ -255,6 +229,7 @@ const VoiceChannel = ({ roomId, socketID }) => {
           new RTCSessionDescription(offer)
         );
 
+        // Wait for Remote Description to be set before adding tracks
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         await getAudioStream();
@@ -294,8 +269,8 @@ const VoiceChannel = ({ roomId, socketID }) => {
     // Receiving ice candidates
     socket.on("new-ice-candidate", async ({ candidate, from }) => {
       const newCandidate = new RTCIceCandidate(candidate);
-
       console.log(`Received ICE candidate from: ${from}`, candidate);
+
       if (peerConnectionRef.current) {
         peerConnectionRef.current
           .addIceCandidate(newCandidate)
