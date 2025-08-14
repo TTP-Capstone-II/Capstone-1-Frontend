@@ -47,10 +47,10 @@ const HomeForum = () => {
                                     {forum.name}
                                 </Typography>
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    description
+                                    {forum.description}
                                 </Typography>
                                 <Typography variant="subtitle2" color="text.secondary">
-                                    number of posts
+                                    {forum.numOfPosts} Posts
                                 </Typography>
                             </CardContent>
                         </Card>
