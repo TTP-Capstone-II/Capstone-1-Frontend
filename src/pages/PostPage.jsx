@@ -12,6 +12,22 @@ const PostPage = ({ user }) => {
   const { forumId, postId } = useParams();
   let params = useParams();
 
+  const insertReply = (replies, newReply) => {
+    if (!newReply.parentId) {
+      return [newReply, ...replies];
+    }
+
+    return replies.map((r) => {
+      if (r.id === newReply.parentId) {
+        const updatedChildren = r.childreplies ? [...r.childreplies, newReply] : [newReply];
+        return { ...r, childReplies: updatedChildren };
+      } else if (r.childReplies && r.childReplies.length > 0 ) {
+        return { ...r, childReplies: insertReply(r.childReplies, newReply) };
+      }
+      return r;
+    });
+  };
+
   const fetchPost = async () => {
     try {
       const response = await axios.get(
@@ -42,22 +58,20 @@ const PostPage = ({ user }) => {
 
     socket.emit("join-post", { postId: params.postId });
 
-    socket.on("new-reply", (reply) => {
+    socket.on("reply-added", (reply) => {
       setReplies((prev) => {
+        if (!Array.isArray(prev)) prev = [];
         if (prev.some((r) => r.id === reply.id)) return prev;
-        return [...prev, reply];
+        return insertReply(prev, reply);
       });
     });
 
-    return () => {
-      socket.off("new-reply");
-    };
+    return () => socket.off("reply-added");
   }, [params.postId]);
 
   return (
     <div className="forum-page">
-      <h1>Post</h1>
-      <div>{post.title}</div>
+      <h1>{post.title}</h1>
       <div>{post.content}</div>
       <ReplyList
         replies={replies}
@@ -69,6 +83,7 @@ const PostPage = ({ user }) => {
         postId={post.id}
         userId={user?.id}
         onReplyAdded={fetchReplies}
+        autoClose={false}
       />
     </div>
   );
