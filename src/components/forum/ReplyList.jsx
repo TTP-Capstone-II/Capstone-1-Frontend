@@ -48,6 +48,10 @@ const ReplyList = ({ postId, userId }) => {
 
   return (
     <Box
+      data-replylist="true"
+      ref={(el) => {
+        if (el) el.fetchReplies = fetchReplies;
+      }}
       sx={{
         width: 700,
         borderRadius: 1,

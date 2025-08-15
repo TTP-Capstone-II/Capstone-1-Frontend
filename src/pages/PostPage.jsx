@@ -31,7 +31,15 @@ const PostPage = ({ user }) => {
       <div>{post.title}</div>
       <div>{post.content}</div>
       <ReplyList postId={post.id} userId={user?.id} />
-      <ReplyForm postId={post.id} userId={user?.id} />
+      <ReplyForm
+        postId={post.id}
+        userId={user?.id}
+        onReplyAdded={() => {
+          document.querySelector(".forum-page")?.scrollIntoView(); // optional scroll
+          const replyList = document.querySelector('[data-replylist="true"]');
+          if (replyList && replyList.fetchReplies) replyList.fetchReplies();
+        }}
+      />
     </div>
   );
 };
