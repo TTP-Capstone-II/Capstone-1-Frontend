@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
+import socket from "../socket";
 
 const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
   const [content, setContent] = useState("");
@@ -16,14 +17,18 @@ const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/post/${postId}/reply`, {
+      const { data: newReply } = await axios.post(`${API_URL}/api/post/${postId}/reply`, {
         content,
         userId,
         postId,
         parentId,
       });
+
       setContent("");
-      if (onReplyAdded) onReplyAdded();
+
+      socket.emit("new-reply", newReply);
+
+      //if (onReplyAdded) onReplyAdded();
     } catch (error) {
       console.error("error posting reply", error);
     }

@@ -26,36 +26,50 @@ const PostPage = ({ user }) => {
   };
 
   const fetchReplies = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/api/post/${params.postId}/reply`);
-    setReplies(response.data);
-  } catch (error) {
-    console.error("Error fetching replies:", error);
-  }
-};
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/post/${params.postId}/reply`
+      );
+      setReplies(response.data);
+    } catch (error) {
+      console.error("Error fetching replies:", error);
+    }
+  };
 
   useEffect(() => {
     fetchPost();
     fetchReplies();
 
-    socket.emit("join-post", postId);
+    socket.emit("join-post", { postId: params.postId });
 
     socket.on("new-reply", (reply) => {
-      setReplies((prev) => [...prev, reply]);
+      setReplies((prev) => {
+        if (prev.some((r) => r.id === reply.id)) return prev;
+        return [...prev, reply];
+      });
     });
 
     return () => {
       socket.off("new-reply");
     };
-  }, [postId]);
+  }, [params.postId]);
 
   return (
     <div className="forum-page">
       <h1>Post</h1>
       <div>{post.title}</div>
       <div>{post.content}</div>
-      <ReplyList replies={replies} userId={user?.id} />
-      <ReplyForm postId={postId} userId={user?.id} />
+      <ReplyList
+        replies={replies}
+        postId={post.id}
+        userId={user?.id}
+        onReplyAdded={fetchReplies}
+      />
+      <ReplyForm
+        postId={post.id}
+        userId={user?.id}
+        onReplyAdded={fetchReplies}
+      />
     </div>
   );
 };
