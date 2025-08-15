@@ -18,7 +18,7 @@ const PostPage = ({ user }) => {
         `${API_URL}/api/forum/${forumId}/posts/${params.postId}`
       );
       setPost(response.data);
-      //setReplies(response.data.replies || []);
+      //setReplies(response.data.replies || []); //
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
