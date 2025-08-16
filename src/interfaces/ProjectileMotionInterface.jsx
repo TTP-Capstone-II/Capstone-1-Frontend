@@ -10,10 +10,21 @@ import {
   Typography,
   Modal,
   Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MathJaxContext } from "better-react-mathjax";
 import { ProjectileMotion } from "../topics/ProjectileMotion";
 import { API_URL } from "../shared";
 import axios from "axios";
+import { 
+  FormulaDisplay, 
+  getProjectileMotionFormulasForTarget 
+} from "../../utils/latexTemplates";
 
 const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -21,6 +32,19 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [forum, setForum] = useState("");
+  const [showFormulas, setShowFormulas] = useState(true);
+  const [showBaseFormula, setShowBaseFormula] = useState(true);
+  const [formulas, setFormulas] = useState([]);
+
+  const mathJaxConfig = {
+    loader: { load: ["[tex]/html"] },
+    tex: {
+      packages: { "[+]": ["html"] },
+      inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -74,6 +98,41 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
     });
   };
 
+  // Function to get the appropriate function name based on target
+  const getFunctionName = (target) => {
+    const targetMap = {
+      range: 'calcRange',
+      timeOfFlight: 'calcTimeOfFlight',
+      maxHeight: 'calcMaxHeight',
+      velocityComponents: 'calcVelocityComponents'
+    };
+    return targetMap[target] || target;
+  };
+
+  // Function to generate formulas for display
+  const generateFormulas = (target, userInput, results) => {
+    if (!target || !results) return [];
+
+    if (target === 'All') {
+      // Generate formulas for all calculations
+      const allFormulas = [];
+      const targets = ['range', 'timeOfFlight', 'maxHeight', 'velocityComponents'];
+      
+      targets.forEach(t => {
+        const functionName = getFunctionName(t);
+        const targetResult = results[t] || results;
+        const formulaData = getProjectileMotionFormulasForTarget(functionName, userInput, targetResult);
+        allFormulas.push(...formulaData);
+      });
+      
+      return allFormulas;
+    } else {
+      // Generate formula for specific target
+      const functionName = getFunctionName(target);
+      return getProjectileMotionFormulasForTarget(functionName, userInput, results);
+    }
+  };
+
   useEffect(() => {
     if (simulation) {
       setForum(simulation.forumTitle || "");
@@ -89,6 +148,17 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
       target: userInput.target,
     });
     setResults(calculations);
+
+    const formulaData = generateFormulas(userInput.target, {
+      velocity: userInput.initialVelocity,
+      angle: userInput.launchAngle,
+      gravity: userInput.gravity,
+      initialHeight: userInput.initialHeight
+    }, calculations);
+    
+    setFormulas(formulaData);
+
+
   }, [
     userInput.target,
     userInput.gravity,
@@ -99,6 +169,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
   ]);
 
   return (
+    <MathJaxContext config={mathJaxConfig}>
     <Paper
       elevation={3}
       sx={{
@@ -154,7 +225,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+            endAdornment: <InputAdornment position="end">m/s²</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
@@ -260,25 +331,135 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         <MenuItem value="All">All</MenuItem>
       </Select>
 
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        Results:
-      </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-            results,
-            (key, value) => {
-              if (typeof value === "number") {
-                return Number(value.toFixed(2));
+       {/* Formula Display Controls */}
+       <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showFormulas}
+                onChange={(e) => setShowFormulas(e.target.checked)}
+                size="small"
+              />
+            }
+            label="Show Formulas"
+          />
+          {showFormulas && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showBaseFormula}
+                  onChange={(e) => setShowBaseFormula(e.target.checked)}
+                  size="small"
+                />
               }
-              return value;
-            },
-            2
-          )
-          : "No results yet"}
-      </pre>
-    </Paper>
+              label="Show Base Formula"
+            />
+          )}
+        </Box>
+
+        {/* Results Section */}
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Results:
+        </Typography>
+
+        {/* Formula Display Section */}
+        {showFormulas && formulas.length > 0 && (
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                Mathematical Steps
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 1 }}>
+              {formulas.map((formula, index) => (
+                <FormulaDisplay
+                  key={index}
+                  formulaKey={formula.key}
+                  values={formula.values}
+                  result={formula.result}
+                  topic="projectile-motion"
+                  showBaseFormula={showBaseFormula}
+                />
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        )}
+
+        {/* Raw Results Display */}
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Raw Results
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <pre style={{ 
+              whiteSpace: "pre-wrap", 
+              wordWrap: "break-word",
+              fontSize: '12px',
+              margin: 0,
+              padding: '8px',
+              backgroundColor: '#f5f5f5',
+              borderRadius: '4px'
+            }}>
+              {results
+                ? JSON.stringify(
+                  results,
+                  (key, value) => {
+                    if (typeof value === "number") {
+                      return Number(value.toFixed(2));
+                    }
+                    return value;
+                  },
+                  2
+                )
+                : "No results yet"}
+            </pre>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Quick Results Summary */}
+        {results && (
+          <Box sx={{ mt: 1, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+              Quick Summary:
+            </Typography>
+            {userInput.target === 'All' ? (
+              <Box>
+                {results.range && <Typography variant="body2">Range: {Number(results.range).toFixed(2)} m</Typography>}
+                {results.timeOfFlight && <Typography variant="body2">Time of Flight: {Number(results.timeOfFlight).toFixed(2)} s</Typography>}
+                {results.maxHeight && <Typography variant="body2">Max Height: {Number(results.maxHeight).toFixed(2)} m</Typography>}
+                {results.vx && results.vy && (
+                  <Typography variant="body2">
+                    Velocity Components: vₓ = {Number(results.vx).toFixed(2)} m/s, vᵧ = {Number(results.vy).toFixed(2)} m/s
+                  </Typography>
+                )}
+              </Box>
+            ) : (
+              <Typography variant="body2">
+                {userInput.target === 'velocityComponents' && results.vx && results.vy
+                  ? `vₓ = ${Number(results.vx).toFixed(2)} m/s, vᵧ = ${Number(results.vy).toFixed(2)} m/s`
+                  : `${Number(results).toFixed(2)} ${getUnit(userInput.target)}`
+                }
+              </Typography>
+            )}
+          </Box>
+        )}
+      </Paper>
+    </MathJaxContext>
   );
 };
+
+//Helper function to get appropriate units
+const getUnit = (target) => {
+  const units = {
+    range: 'm',
+    timeOfFlight: 's',
+    maxHeight: 'm',
+    velocityComponents: 'm/s'
+  };
+  return units[target] || '';
+};
+
 
 export default ProjectileMotionInterface;
