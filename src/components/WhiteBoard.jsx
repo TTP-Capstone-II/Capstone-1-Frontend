@@ -57,13 +57,16 @@ const WhiteBoard = ({ roomId, user }) => {
       socket.emit("join-room", { roomId, username });
     }
 
+    socket.on("my-socket-id", ({ id }) => {
+      setSocketID(id);
+    });
+
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
     socket.on("user-joined", (data) => {
       console.log("data: ", data);
       setJoinMessage(`${data.username} has joined the room`);
       setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
-      setSocketID(data.id);
     });
 
     return () => {
@@ -117,7 +120,7 @@ const WhiteBoard = ({ roomId, user }) => {
     <div>
       <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
-      <VoiceChannel roomId={roomId} socketID={socketID} />
+      <VoiceChannel roomId={roomId} mySocketID={socketID} />
       {joinMessage && <p>{joinMessage}</p>}
       <canvas
         ref={canvasRef} // Reference to the canvas element
