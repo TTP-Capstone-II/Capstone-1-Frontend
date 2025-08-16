@@ -103,7 +103,9 @@ const VoiceChannel = ({ roomId, mySocketID }) => {
 
   const getAudioStream = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
       localStreamRef.current = stream;
       return stream;
     } catch (error) {
@@ -144,11 +146,9 @@ const VoiceChannel = ({ roomId, mySocketID }) => {
 
         await pc.setRemoteDescription(new RTCSessionDescription(offer));
 
-        await getAudioStream();
-
         if (localStreamRef.current) {
           localStreamRef.current.getTracks().forEach((track) => {
-            pc.addTrack(track, localStreamRef.current);
+            pc.addTrack(track.clone(), localStreamRef.current);
           });
         }
 
@@ -198,7 +198,16 @@ const VoiceChannel = ({ roomId, mySocketID }) => {
   }, [isConnected]);
 
   const handleMute = () => {
-    console.log("Mute");
+    setIsMuted((prev) => {
+      const newMuted = !prev;
+      if (localStreamRef.current) {
+        localStreamRef.current.getAudioTracks().forEach((track) => {
+          track.enabled = !newMuted;
+        });
+      }
+      console.log(`Audio is now ${newMuted ? "muted" : "unmuted"}`);
+      return newMuted;
+    });
   };
 
   const handleDisconnectAudio = () => {
