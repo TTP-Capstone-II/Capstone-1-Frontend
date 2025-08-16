@@ -195,7 +195,7 @@ const VoiceChannel = ({ roomId, mySocketID }) => {
       socket.off("voice-answer");
       socket.off("new-ice-candidate");
     };
-  }, []);
+  }, [isConnected]);
 
   const handleMute = () => {
     console.log("Mute");
@@ -203,6 +203,27 @@ const VoiceChannel = ({ roomId, mySocketID }) => {
 
   const handleDisconnectAudio = () => {
     console.log("Disconnect");
+
+    Object.values(peersConnectionRef.current).forEach((pc) => pc.close());
+
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
+      localStreamRef.current = null;
+    }
+
+    Object.values(remoteAudioRef.current).forEach((audio) => {
+      audio.remove();
+    });
+
+    peersConnectionRef.current = {};
+    remoteAudioRef.current = {};
+
+    setIsConnected(false);
+
+    socket.off("voice-user-joined");
+    socket.off("voice-offer");
+    socket.off("voice-answer");
+    socket.off("new-ice-candidate");
   };
 
   return (
