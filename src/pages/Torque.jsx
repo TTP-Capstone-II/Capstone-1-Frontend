@@ -18,11 +18,10 @@ const Torque = () => {
     target: undefined,
   });
 
-  const handleEngineReady = (engine, world) => {
-    var group = Body.nextGroup(true),
-      length = userInput.length,
-      height = 30;
+  const maxForce = 10000;
+  const height = 30;
 
+  const handleEngineReady = (engine, world) => {
     const nail = { x: 400, y: 300 };
     const lever = Bodies.rectangle(
       nail.x + userInput.length / 2,
@@ -32,7 +31,6 @@ const Torque = () => {
       {
         density: 0.01,
         frictionAir: 0.001,
-        collisionFilter: { group: group },
       }
     );
 
@@ -50,7 +48,7 @@ const Torque = () => {
     World.add(world, [lever, nailToLeverPivot]);
 
     Matter.Events.on(engine, "beforeUpdate", () => {
-      const forceMagnitude = 0.01;
+      const forceMagnitude = userInput.force / maxForce;
 
       const forcePoint = {
         x: lever.position.x + (userInput.length / 2) * Math.cos(lever.angle),
