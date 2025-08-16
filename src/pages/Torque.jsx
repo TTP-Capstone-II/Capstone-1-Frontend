@@ -48,11 +48,15 @@ const Torque = () => {
     World.add(world, [lever, nailToLeverPivot]);
 
     Matter.Events.on(engine, "beforeUpdate", () => {
-      const forceMagnitude = userInput.force / maxForce;
+      const forceMagnitude = Math.min(userInput.force / maxForce, 1);
+      const distance = Math.min(
+        userInput.distanceFromPivot,
+        userInput.length / 2
+      );
 
       const forcePoint = {
-        x: lever.position.x + (userInput.length / 2) * Math.cos(lever.angle),
-        y: lever.position.y + (userInput.length / 2) * Math.sin(lever.angle),
+        x: lever.position.x + distance * Math.cos(lever.angle),
+        y: lever.position.y + distance * Math.sin(lever.angle),
       };
 
       const forceVector = {
