@@ -1,4 +1,4 @@
-import { calcTorque, calcAngularAcceleration, calcDistanceFromPivot } from "../../utils/formulas";
+import { calcTorque, calcAngularAcceleration, calcDistanceFromPivot, calcAngle, calcForce } from "../../utils/formulas";
 
 export function Torque ({
   torque = 0,
@@ -18,16 +18,16 @@ switch (target) {
   case "distanceFromPivot":
     return calcDistanceFromPivot({ torque, force, angle });
   case "angle":
-    return angle;
+    return calcAngle({torque, force, distanceFromPivot});
   case "force":
-    return force;
+    return calcForce({torque, distanceFromPivot, angle})
   case "All":
     return {
       torque: calcTorque({ distanceFromPivot, force, angle, inertia, angularAcceleration }),
       angularAcceleration: calcAngularAcceleration({ distanceFromPivot, force, angle, inertia, torque }),
       distanceFromPivot: calcDistanceFromPivot({ torque, force, angle }),
-      angle,
-      force,
+      angle: calcAngle({torque, force, distanceFromPivot}),
+      force: calcForce({torque, distanceFromPivot, angle})
     };
   default:
     return null;

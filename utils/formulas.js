@@ -263,10 +263,31 @@ export function calcDistanceFromPivot({torque, force, angle}) {
     return;
   }
   else {
-    distanceFromPivot = (torque)/(force * Math.sin(angle));
+    const thetaRad = toRadians(angle);
+    distanceFromPivot = (torque)/(force * Math.sin(thetaRad));
   }
 
   return distanceFromPivot;
+}
+
+export function calcAngle({torque, force, distanceFromPivot}) {
+  let angle;
+
+  angle = Math.asin(torque/(distanceFromPivot*force));
+
+  angle = 180/Math.PI * angle;
+
+  return angle;
+}
+
+export function calcForce({torque, distanceFromPivot, angle}) {
+  let force;
+
+  const thetaRad = toRadians(angle);
+
+  force = torque/(distanceFromPivot*Math.sin(thetaRad));
+
+  return force;
 }
 
 //Friction formulas
