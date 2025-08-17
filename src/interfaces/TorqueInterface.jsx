@@ -77,23 +77,6 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
       />
 
       <TextField
-        label="Inertia"
-        type="number"
-        name="inertia"
-        value={userInput.inertia}
-        variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">kg*m^2</InputAdornment>
-            ),
-          },
-        }}
-        onChange={handleInputChange}
-      />
-
-      <TextField
         label="Angular Acceleration"
         type="number"
         name="angularAcceleration"
