@@ -114,7 +114,7 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="distanceFromPivot"
         value={userInput.distanceFromPivot}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
+        inputProps={{ step: "10" }} //change soon
         slotProps={{
           input: {
             endAdornment: <InputAdornment position="end">m</InputAdornment>,
