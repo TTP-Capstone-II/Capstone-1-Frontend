@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLocation } from "react";
 import BaseSimulation from "../components/BaseSimulation";
 import TorqueInterface from "../interfaces/TorqueInterface";
 import Matter from "matter-js";
@@ -7,16 +7,20 @@ import { Button } from "@mui/material";
 import { toRadians } from "../../utils/formulas";
 
 const Torque = () => {
-  const [userInput, setUserInput] = useState({
-    torque: undefined,
-    inertia: undefined,
-    angularAcceleration: undefined,
-    distanceFromPivot: undefined,
-    length: 300,
-    angle: 90,
-    force: undefined,
-    target: undefined,
-  });
+  const location = useLocation();
+  const simulation = location.state?.simulation;
+  const [userInput, setUserInput] = useState(
+    simulation?.storedValues || {
+      torque: undefined,
+      inertia: undefined,
+      angularAcceleration: undefined,
+      distanceFromPivot: undefined,
+      length: 300,
+      angle: 90,
+      force: undefined,
+      target: undefined,
+    }
+  );
 
   const maxForce = 10000;
   const height = 30;

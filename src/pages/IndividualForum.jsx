@@ -27,7 +27,7 @@ const IndividualForum = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [forumId]);
+  }, []);
 
   return (
     <div className="forum-page">

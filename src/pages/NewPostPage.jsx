@@ -15,7 +15,6 @@ const NewPostPage = ({ user }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("test");
 
         try {
             const response = await axios.post(`${API_URL}/api/forum/${forumId}/posts`, {
