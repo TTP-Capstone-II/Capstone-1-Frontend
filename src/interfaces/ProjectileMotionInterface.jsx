@@ -106,40 +106,90 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
       maxHeight: 'calcMaxHeight',
       velocityComponents: 'calcVelocityComponents'
     };
-    return targetMap[target] || target;
+    
+    const mapped = targetMap[target];
+    if (!mapped) {
+      console.warn(`Unknown target: ${target}, using as-is`);
+      return target;
+    }
+    
+    return mapped;
   };
 
   // Function to generate formulas for display
   const generateFormulas = (target, userInput, results) => {
-    if (!target || !results) return [];
-
-    if (target === 'All') {
-      // Generate formulas for all calculations
-      const allFormulas = [];
-      const targets = ['range', 'timeOfFlight', 'maxHeight', 'velocityComponents'];
-      
-      targets.forEach(t => {
-        const functionName = getFunctionName(t);
-        const targetResult = results[t] || results;
-        const formulaData = getProjectileMotionFormulasForTarget(functionName, userInput, targetResult);
-        allFormulas.push(...formulaData);
-      });
-      
-      return allFormulas;
-    } else {
-      // Generate formula for specific target
-      const functionName = getFunctionName(target);
-      return getProjectileMotionFormulasForTarget(functionName, userInput, results);
+    if (!target || !results) {
+      console.warn('Missing target or results for formula generation');
+      return [];
+    }
+  
+    try {
+      if (target === 'All') {
+        // Generate formulas for all calculations
+        const allFormulas = [];
+        const targets = ['range', 'timeOfFlight', 'maxHeight', 'velocityComponents'];
+        
+        targets.forEach(t => {
+          try {
+            const functionName = getFunctionName(t);
+            let targetResult;
+            
+            // Handle different result structures
+            if (typeof results === 'object' && results !== null) {
+              targetResult = results[t] ?? results;
+            } else {
+              targetResult = results;
+            }
+            
+            const formulaData = getProjectileMotionFormulasForTarget(functionName, userInput, targetResult);
+            if (formulaData && formulaData.length > 0) {
+              allFormulas.push(...formulaData);
+            }
+          } catch (error) {
+            console.warn(`Error generating formula for ${t}:`, error);
+          }
+        });
+        
+        return allFormulas;
+      } else {
+        // Generate formula for specific target
+        const functionName = getFunctionName(target);
+        let targetResult;
+        
+        // Handle different result structures more robustly
+        if (typeof results === 'object' && results !== null) {
+          targetResult = results[target] ?? results;
+        } else {
+          targetResult = results;
+        }
+        
+        return getProjectileMotionFormulasForTarget(functionName, userInput, targetResult);
+      }
+    } catch (error) {
+      console.error('Error in generateFormulas:', error);
+      return [];
     }
   };
 
-  useEffect(() => {
-    if (simulation) {
-      setForum(simulation.forumTitle || "");
-    }
+  // FIXED useEffect in your ProjectileMotionInterface component
+useEffect(() => {
+  if (simulation) {
+    setForum(simulation.forumTitle || "");
+  }
 
-    if (!userInput.target) return;
+  // FIX: Add validation for required inputs
+  if (!userInput.target || 
+      userInput.initialVelocity === undefined || 
+      userInput.launchAngle === undefined ||
+      userInput.gravity === undefined ||
+      userInput.initialHeight === undefined) {
+    console.log('Missing required inputs, skipping calculation');
+    setResults(null);
+    setFormulas([]);
+    return;
+  }
 
+  try {
     const calculations = ProjectileMotion({
       gravity: userInput.gravity,
       initialVelocity: userInput.initialVelocity,
@@ -147,26 +197,35 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
       initialHeight: userInput.initialHeight,
       target: userInput.target,
     });
+    
     setResults(calculations);
 
+    // FIX: Use consistent parameter names
     const formulaData = generateFormulas(userInput.target, {
-      velocity: userInput.initialVelocity,
-      angle: userInput.launchAngle,
+      velocity: userInput.initialVelocity,        // Keep this
+      initialVelocity: userInput.initialVelocity, // Add this for consistency
+      angle: userInput.launchAngle,               // FIX: Use correct mapping
+      launchAngle: userInput.launchAngle,         // Add this for consistency
       gravity: userInput.gravity,
       initialHeight: userInput.initialHeight
     }, calculations);
     
     setFormulas(formulaData);
 
+  } catch (error) {
+    console.error('Error in projectile motion calculation:', error);
+    setResults(null);
+    setFormulas([]);
+  }
 
-  }, [
-    userInput.target,
-    userInput.gravity,
-    userInput.initialVelocity,
-    userInput.launchAngle,
-    userInput.initialHeight,
-    simulation,
-  ]);
+}, [
+  userInput.target,
+  userInput.gravity,
+  userInput.initialVelocity,
+  userInput.launchAngle,
+  userInput.initialHeight,
+  simulation,
+]);
 
   return (
     <MathJaxContext config={mathJaxConfig}>

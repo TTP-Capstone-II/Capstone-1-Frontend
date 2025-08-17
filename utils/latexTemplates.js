@@ -145,30 +145,30 @@ export const FREE_FALL_FORMULAS = {
 
 // PROJECTILE MOTION FORMULA TEMPLATES - Improved
 export const PROJECTILE_MOTION_FORMULAS = {
-  calcRange: {
-    template: "R = \\frac{{velocity} \\cos({angle}°) \\cdot [{velocity} \\sin({angle}°) + \\sqrt{({velocity} \\sin({angle}°))^2 + 2 \\cdot {gravity} \\cdot {initialHeight}}]}{{gravity}}",
-    description: "Horizontal Range",
-    baseFormula: "R = vₓ × t"
-  },
-  
-  calcTimeOfFlight: {
-    template: "t = \\frac{{velocity} \\sin({angle}°) + \\sqrt{({velocity} \\sin({angle}°))^2 + 2 \\cdot {gravity} \\cdot {initialHeight}}}{{gravity}}",
-    description: "Time of Flight",
-    baseFormula: "t = [v sin θ + √((v sin θ)² + 2gy₀)]/g"
-  },
-  
-  calcMaxHeight: {
-    template: "H = {initialHeight} + \\frac{({velocity} \\sin({angle}°))^2}{2 \\cdot {gravity}}",
-    description: "Maximum Height",
-    baseFormula: "H = y₀ + (v² sin²θ)/(2g)"
-  },
-  
-  calcVelocityComponents: {
-    template: "v_x = {velocity} \\cos({angle}°) = {vx}, \\quad v_y = {velocity} \\sin({angle}°) = {vy}",
-    description: "Velocity Components",
-    baseFormula: "vₓ = v cos θ, vᵧ = v sin θ"
-  }
-};
+    calcRange: {
+      template: "R = \\frac{{velocity} \\cos({angle}°) \\left[ {velocity} \\sin({angle}°) + \\sqrt{({velocity} \\sin({angle}°))^2 + 2 \\cdot {gravity} \\cdot {initialHeight}} \\right]}{{gravity}}",
+      description: "Horizontal Range",
+      baseFormula: "R = (v²sin(2θ))/g + (vₓ√(vᵧ² + 2gy₀))/g"
+    },
+    
+    calcTimeOfFlight: {
+      template: "t = \\frac{{velocity} \\sin({angle}°) + \\sqrt{({velocity} \\sin({angle}°))^2 + 2 \\times {gravity} \\times {initialHeight}}}{{gravity}}",
+      description: "Time of Flight",
+      baseFormula: "t = (v sin θ + √((v sin θ)² + 2gy₀))/g"
+    },
+    
+    calcMaxHeight: {
+      template: "H = {initialHeight} + \\frac{({velocity} \\sin({angle}°))^2}{2 \\times {gravity}}",
+      description: "Maximum Height",
+      baseFormula: "H = y₀ + (v sin θ)²/(2g)"
+    },
+    
+    calcVelocityComponents: {
+      template: "v_x = {velocity} \\cos({angle}°), \\quad v_y = {velocity} \\sin({angle}°)",
+      description: "Velocity Components",
+      baseFormula: "vₓ = v cos θ, vᵧ = v sin θ"
+    }
+  };
 
 // FRICTION FORMULA TEMPLATES - Fixed
 export const FRICTION_FORMULAS = {
@@ -366,50 +366,27 @@ export const getFreeFallFormulasForTarget = (functionName, userInput, result) =>
 
 // PROJECTILE MOTION helper function
 export const getProjectileMotionFormulasForTarget = (functionName, userInput, result) => {
-  const baseValues = {
-    velocity: userInput.velocity ?? 0,
-    angle: userInput.angle ?? 0,
-    gravity: userInput.gravity ?? 9.81,
-    initialHeight: userInput.initialHeight ?? 0,
-    vx: result?.vx,
-    vy: result?.vy
+    const baseValues = {
+      velocity: userInput.velocity ?? userInput.initialVelocity ?? 0,
+      angle: userInput.angle ?? userInput.launchAngle ?? 0, // FIX: Map launchAngle correctly
+      gravity: Math.abs(userInput.gravity ?? 9.81), // FIX: Ensure positive for display
+      initialHeight: userInput.initialHeight ?? 0,
+      vx: result?.vx,
+      vy: result?.vy
+    };
+  
+    // Handle velocity components special case
+    if (functionName === 'calcVelocityComponents' && result) {
+      baseValues.vx = result.vx?.toFixed(2);
+      baseValues.vy = result.vy?.toFixed(2);
+    }
+  
+    return [{
+      key: functionName,
+      values: baseValues,
+      result: typeof result === 'object' ? null : result
+    }];
   };
-
-  // Handle velocity components special case
-  if (functionName === 'calcVelocityComponents' && result) {
-    baseValues.vx = result.vx?.toFixed(2);
-    baseValues.vy = result.vy?.toFixed(2);
-  }
-
-  return [{
-    key: functionName,
-    values: baseValues,
-    result: typeof result === 'object' ? null : result
-  }];
-};
-
-// FRICTION helper function  
-export const getFrictionFormulasForTarget = (functionName, userInput, result) => {
-  const baseValues = {
-    mass: userInput.mass ?? 0,
-    gravity: userInput.gravity ?? 9.81,
-    angle: userInput.angle ?? 0,
-    frictionCoefficient: userInput.frictionCoefficient ?? 0,
-    normalForce: userInput.normalForce ?? result,
-    frictionForce: userInput.frictionForce ?? result,
-    parallelForce: userInput.parallelForce ?? result,
-    netForce: userInput.netForce ?? result,
-    acceleration: userInput.acceleration ?? result,
-    distance: userInput.distance ?? result,
-    time: userInput.time ?? result
-  };
-
-  return [{
-    key: functionName,
-    values: baseValues,
-    result: result
-  }];
-};
 
 // COLLISION helper function
 export const getCollisionFormulasForTarget = (functionName, userInput, result) => {
