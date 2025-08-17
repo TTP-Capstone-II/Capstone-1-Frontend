@@ -1,10 +1,11 @@
-import React, { useState, useLocation } from "react";
+import React, { useState } from "react";
 import BaseSimulation from "../components/BaseSimulation";
 import TorqueInterface from "../interfaces/TorqueInterface";
 import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Constraint, Body } from "matter-js";
 import { Button } from "@mui/material";
 import { toRadians } from "../../utils/formulas";
+import { useLocation } from "react-router-dom";
 
 const Torque = () => {
   const location = useLocation();

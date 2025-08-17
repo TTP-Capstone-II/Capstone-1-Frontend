@@ -256,6 +256,19 @@ export function calcAngularAcceleration({distanceFromPivot, force, angle, inerti
   return angularAcceleration;
 }
 
+export function calcDistanceFromPivot({torque, force, angle}) {
+  let distanceFromPivot;
+
+  if (!(torque && force && angle)) {
+    return;
+  }
+  else {
+    distanceFromPivot = (torque)/(force * Math.sin(angle));
+  }
+
+  return distanceFromPivot;
+}
+
 //Friction formulas
 export function calculateNormalForce({ mass, angle, gravity }) {
   return mass * gravity * Math.cos((angle * Math.PI) / 180); // Convert angle to radians
