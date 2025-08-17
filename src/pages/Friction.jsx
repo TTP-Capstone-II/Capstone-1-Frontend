@@ -16,7 +16,7 @@ const Friction = ({ user }) => {
             friction: 0.005,
             angle: 30,
             distance: "",
-            time: "",
+            time: ""
         }
     );
 
