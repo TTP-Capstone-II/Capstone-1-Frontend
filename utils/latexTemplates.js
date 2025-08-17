@@ -44,104 +44,104 @@ export const createFormulaTemplate = (template, values, result) => {
 
 // FREE FALL FORMULA TEMPLATES - Fixed parameter mapping
 export const FREE_FALL_FORMULAS = {
-  // v = u + at
-  getFinalVelocityNoY: {
-    template: "v_f = {initialVelocity} + {gravity} \\cdot {time}",
-    description: "Final Velocity (without displacement)",
-    baseFormula: "v = u + at"
-  },
-  
-  // v² = u² + 2as  
-  getFinalVelocityNoTime: {
-    template: "v_f = \\sqrt{{initialVelocity}^2 + 2 \\cdot {gravity} \\cdot ({finalHeight} - {initialHeight})}",
-    description: "Final Velocity (without time)",
-    baseFormula: "v² = u² + 2as"
-  },
-  
-  // u = (s - ½at²)/t
-  getinitialVelocityNoFV: {
-    template: "u = \\frac{({finalHeight} - {initialHeight}) - \\frac{1}{2} \\cdot {gravity} \\cdot {time}^2}{{time}}",
-    description: "Initial Velocity (from displacement)",
-    baseFormula: "u = (s - ½at²)/t"
-  },
-  
-  // u = v - at
-  getinitialVelocityNoY: {
-    template: "u = {finalVelocity} - {gravity} \\cdot {time}",
-    description: "Initial Velocity (from final velocity)",
-    baseFormula: "u = v - at"
-  },
-  
-  // u² = v² - 2as
-  getinitialVelocityNoTime: {
-    template: "u = \\sqrt{{finalVelocity}^2 - 2 \\cdot {gravity} \\cdot ({finalHeight} - {initialHeight})}",
-    description: "Initial Velocity (without time)",
-    baseFormula: "u² = v² - 2as"
-  },
-  
-  // a = (s - ut)/(½t²)
-  getGravityNoFV: {
-    template: "a = \\frac{({finalHeight} - {initialHeight}) - {initialVelocity} \\cdot {time}}{\\frac{1}{2} \\cdot {time}^2}",
-    description: "Acceleration (without final velocity)",
-    baseFormula: "a = (s - ut)/(½t²)"
-  },
-  
-  // a = (v - u)/t
-  getGravityNoY: {
-    template: "a = \\frac{{finalVelocity} - {initialVelocity}}{{time}}",
-    description: "Acceleration (from velocity change)",
-    baseFormula: "a = (v - u)/t"
-  },
-  
-  // a = (v² - u²)/(2s)
-  getGravityNoTime: {
-    template: "a = \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot ({finalHeight} - {initialHeight})}",
-    description: "Acceleration (without time)",
-    baseFormula: "a = (v² - u²)/(2s)"
-  },
-  
-  // t = (v - u)/a
-  getTimeNoY: {
-    template: "t = \\frac{{finalVelocity} - {initialVelocity}}{{gravity}}",
-    description: "Time (from velocities)",
-    baseFormula: "t = (v - u)/a"
-  },
-  
-  // Quadratic solution for time
-  getTimeNoFV: {
-    template: "t = \\frac{-{initialVelocity} + \\sqrt{{initialVelocity}^2 - 2 \\cdot {gravity} \\cdot ({initialHeight} - {finalHeight})}}{{gravity}}",
-    description: "Time (from displacement - quadratic solution)",
-    baseFormula: "s = ut + ½at² → solve for t"
-  },
-  
-  // y = y₀ + (v² - u²)/(2a)
-  getfinalHeightNoTime: {
-    template: "y_f = {initialHeight} + \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot {gravity}}",
-    description: "Final Position (without time)",
-    baseFormula: "y = y₀ + (v² - u²)/(2a)"
-  },
-  
-  // y = y₀ + ut + ½at²
-  getfinalHeightNoFV: {
-    template: "y_f = {initialHeight} + {initialVelocity} \\cdot {time} + \\frac{1}{2} \\cdot {gravity} \\cdot {time}^2",
-    description: "Final Position (with time)",
-    baseFormula: "y = y₀ + ut + ½at²"
-  },
-  
-  // y₀ = y - (v² - u²)/(2a)
-  getinitialHeightNoTime: {
-    template: "y_0 = {finalHeight} - \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot {gravity}}",
-    description: "Initial Position (without time)",
-    baseFormula: "y₀ = y - (v² - u²)/(2a)"
-  },
-  
-  // y₀ = y - ut - ½at²
-  getinitialHeightNoFV: {
-    template: "y_0 = {finalHeight} - {initialVelocity} \\cdot {time} - \\frac{1}{2} \\cdot {gravity} \\cdot {time}^2",
-    description: "Initial Position (with time)",
-    baseFormula: "y₀ = y - ut - ½at²"
-  }
-};
+    // v = u + at
+    getFinalVelocityNoY: {
+      template: "v_f = {initialVelocity} + ({gravity}) \\cdot {time}",
+      description: "Final Velocity (without displacement)",
+      baseFormula: "v = u + at"
+    },
+    
+    // v² = u² + 2as  
+    getFinalVelocityNoTime: {
+      template: "v_f = \\sqrt{{initialVelocity}^2 + 2 \\cdot ({gravity}) \\cdot ({finalHeight} - {initialHeight})}",
+      description: "Final Velocity (without time)",
+      baseFormula: "v² = u² + 2as"
+    },
+    
+    // u = (s - ½at²)/t
+    getinitialVelocityNoFV: {
+      template: "u = \\frac{({finalHeight} - {initialHeight}) - \\frac{1}{2} \\cdot ({gravity}) \\cdot {time}^2}{{time}}",
+      description: "Initial Velocity (from displacement)",
+      baseFormula: "u = (s - ½at²)/t"
+    },
+    
+    // u = v - at
+    getinitialVelocityNoY: {
+      template: "u = {finalVelocity} - ({gravity}) \\cdot {time}",
+      description: "Initial Velocity (from final velocity)",
+      baseFormula: "u = v - at"
+    },
+    
+    // u² = v² - 2as
+    getinitialVelocityNoTime: {
+      template: "u = \\sqrt{{finalVelocity}^2 - 2 \\cdot ({gravity}) \\cdot ({finalHeight} - {initialHeight})}",
+      description: "Initial Velocity (without time)",
+      baseFormula: "u² = v² - 2as"
+    },
+    
+    // a = (s - ut)/(½t²)
+    getGravityNoFV: {
+      template: "a = \\frac{({finalHeight} - {initialHeight}) - {initialVelocity} \\cdot {time}}{\\frac{1}{2} \\cdot {time}^2}",
+      description: "Acceleration (without final velocity)",
+      baseFormula: "a = (s - ut)/(½t²)"
+    },
+    
+    // a = (v - u)/t
+    getGravityNoY: {
+      template: "a = \\frac{{finalVelocity} - {initialVelocity}}{{time}}",
+      description: "Acceleration (from velocity change)",
+      baseFormula: "a = (v - u)/t"
+    },
+    
+    // a = (v² - u²)/(2s)
+    getGravityNoTime: {
+      template: "a = \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot ({finalHeight} - {initialHeight})}",
+      description: "Acceleration (without time)",
+      baseFormula: "a = (v² - u²)/(2s)"
+    },
+    
+    // t = (v - u)/a
+    getTimeNoY: {
+      template: "t = \\frac{{finalVelocity} - {initialVelocity}}{{gravity}}",
+      description: "Time (from velocities)",
+      baseFormula: "t = (v - u)/a"
+    },
+    
+    // Quadratic solution for time
+    getTimeNoFV: {
+      template: "t = \\frac{-{initialVelocity} + \\sqrt{{initialVelocity}^2 - 2 \\cdot ({gravity}) \\cdot ({initialHeight} - {finalHeight})}}{{gravity}}",
+      description: "Time (from displacement - quadratic solution)",
+      baseFormula: "s = ut + ½at² → solve for t"
+    },
+    
+    // y = y₀ + (v² - u²)/(2a)
+    getfinalHeightNoTime: {
+      template: "y_f = {initialHeight} + \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot ({gravity})}",
+      description: "Final Position (without time)",
+      baseFormula: "y = y₀ + (v² - u²)/(2a)"
+    },
+    
+    // y = y₀ + ut + ½at²
+    getfinalHeightNoFV: {
+      template: "y_f = {initialHeight} + {initialVelocity} \\cdot {time} + \\frac{1}{2} \\cdot ({gravity}) \\cdot {time}^2",
+      description: "Final Position (with time)",
+      baseFormula: "y = y₀ + ut + ½at²"
+    },
+    
+    // y₀ = y - (v² - u²)/(2a)
+    getinitialHeightNoTime: {
+      template: "y_0 = {finalHeight} - \\frac{{finalVelocity}^2 - {initialVelocity}^2}{2 \\cdot ({gravity})}",
+      description: "Initial Position (without time)",
+      baseFormula: "y₀ = y - (v² - u²)/(2a)"
+    },
+    
+    // y₀ = y - ut - ½at²
+    getinitialHeightNoFV: {
+      template: "y_0 = {finalHeight} - {initialVelocity} \\cdot {time} - \\frac{1}{2} \\cdot ({gravity}) \\cdot {time}^2",
+      description: "Initial Position (with time)",
+      baseFormula: "y₀ = y - ut - ½at²"
+    }
+  };
 
 // PROJECTILE MOTION FORMULA TEMPLATES - Improved
 export const PROJECTILE_MOTION_FORMULAS = {
@@ -347,22 +347,41 @@ export const FormulaDisplay = ({
 
 // FREE FALL helper function
 export const getFreeFallFormulasForTarget = (functionName, userInput, result) => {
-  // Map the function parameters to display values
-  const baseValues = {
-    initialVelocity: userInput.initialVelocity ?? 0,
-    finalVelocity: userInput.finalVelocity ?? result,
-    gravity: userInput.gravity ?? 9.81,
-    initialHeight: userInput.initialHeight ?? 0,
-    finalHeight: userInput.finalHeight ?? result,
-    time: userInput.time ?? result
+    // Validate and sanitize inputs
+    const sanitizeValue = (value, fallback = 0) => {
+      if (value === null || value === undefined || value === '' || isNaN(value)) {
+        return fallback;
+      }
+      return Number(value);
+    };
+  
+    const baseValues = {
+      initialVelocity: sanitizeValue(userInput.initialVelocity),
+      finalVelocity: sanitizeValue(userInput.finalVelocity, result),
+      gravity: sanitizeValue(userInput.gravity, 9.81),
+      initialHeight: sanitizeValue(userInput.initialHeight),
+      finalHeight: sanitizeValue(userInput.finalHeight, result),
+      time: sanitizeValue(userInput.time, result)
+    };
+  
+    // Check if we have enough non-zero values to make sense
+    const hasValidInputs = Object.values(baseValues).some(val => val !== 0);
+    
+    if (!hasValidInputs) {
+      console.warn('No valid inputs provided for formula generation');
+      return [];
+    }
+  
+    // For the specific calculation, use the result if it's the target
+    const targetValue = typeof result === 'number' ? Number(result.toFixed(3)) : result;
+  
+    return [{
+      key: functionName,
+      values: baseValues,
+      result: targetValue
+    }];
   };
-
-  return [{
-    key: functionName,
-    values: baseValues,
-    result: result
-  }];
-};
+  
 
 // PROJECTILE MOTION helper function
 export const getProjectileMotionFormulasForTarget = (functionName, userInput, result) => {
@@ -385,6 +404,49 @@ export const getProjectileMotionFormulasForTarget = (functionName, userInput, re
       key: functionName,
       values: baseValues,
       result: typeof result === 'object' ? null : result
+    }];
+  };
+
+// FRICTION helper function 
+export const getFrictionFormulasForTarget = (functionName, userInput, result) => {
+    // Validate and sanitize inputs
+    const sanitizeValue = (value, fallback = 0) => {
+      if (value === null || value === undefined || value === '' || isNaN(value)) {
+        return fallback;
+      }
+      return Number(value);
+    };
+  
+    const baseValues = {
+      mass: sanitizeValue(userInput.mass),
+      gravity: sanitizeValue(userInput.gravity, 9.81),
+      angle: sanitizeValue(userInput.angle),
+      frictionCoefficient: sanitizeValue(userInput.frictionCoefficient || userInput.friction),
+      time: sanitizeValue(userInput.time),
+      distance: sanitizeValue(userInput.distance),
+      // Include intermediate calculated values
+      normalForce: sanitizeValue(userInput.normalForce),
+      frictionForce: sanitizeValue(userInput.frictionForce),
+      parallelForce: sanitizeValue(userInput.parallelForce),
+      netForce: sanitizeValue(userInput.netForce),
+      acceleration: sanitizeValue(userInput.acceleration)
+    };
+  
+    // Check if we have enough non-zero values to make sense
+    const hasValidInputs = Object.values(baseValues).some(val => val !== 0);
+    
+    if (!hasValidInputs) {
+      console.warn('No valid inputs provided for friction formula generation');
+      return [];
+    }
+  
+    // For the specific calculation, use the result if it's the target
+    const targetValue = typeof result === 'number' ? Number(result.toFixed(3)) : result;
+  
+    return [{
+      key: functionName,
+      values: baseValues,
+      result: targetValue
     }];
   };
 

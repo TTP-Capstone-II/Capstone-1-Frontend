@@ -10,10 +10,22 @@ import {
   MenuItem,
   Modal,
   Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MathJaxContext } from "better-react-mathjax";
 import { FreeFallMotion } from "../topics/FreeFall";
 import { API_URL } from "../shared";
 import axios from "axios";
+import { 
+  FormulaDisplay, 
+  getFreeFallFormulasForTarget 
+} from "../../utils/latexTemplates";
+
 
 const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -21,6 +33,20 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [forum, setForum] = useState("");
+  const [showFormulas, setShowFormulas] = useState(true);
+  const [showBaseFormula, setShowBaseFormula] = useState(true);
+  const [formulas, setFormulas] = useState([]);
+
+  const mathJaxConfig = {
+    loader: { load: ["[tex]/html"] },
+    tex: {
+      packages: { "[+]": ["html"] },
+      inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+    }
+  };
+
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -75,22 +101,104 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
     });
   };
 
+  const getFunctionName = (target) => {
+    const targetMap = {
+      finalVelocity: 'getFinalVelocityNoY', // Most common case
+      finalHeight: 'getfinalHeightNoFV', // Most common case
+      time: 'getTimeNoY', // Most common case
+      initialVelocity: 'getinitialVelocityNoY', // Most common case
+      initialHeight: 'getinitialHeightNoFV', // Most common case
+      gravity: 'getGravityNoY' // Most common case
+    };
+    return targetMap[target] || target;
+  };
+
+  // Function to generate formulas for display
+  const generateFormulas = (target, userInput, results) => {
+    if (!target || !results) return [];
+
+    try {
+      if (target === 'All') {
+        // Generate formulas for all calculations
+        const allFormulas = [];
+        const targets = ['finalVelocity', 'finalHeight', 'time', 'initialVelocity', 'initialHeight', 'gravity'];
+        
+        targets.forEach(t => {
+          try {
+            const functionName = getFunctionName(t);
+            let targetResult;
+            
+            // Handle different result structures
+            if (typeof results === 'object' && results !== null) {
+              targetResult = results[t] ?? results;
+            } else {
+              targetResult = results;
+            }
+            
+            const formulaData = getFreeFallFormulasForTarget(functionName, userInput, targetResult);
+            if (formulaData && formulaData.length > 0) {
+              allFormulas.push(...formulaData);
+            }
+          } catch (error) {
+            console.warn(`Error generating formula for ${t}:`, error);
+          }
+        });
+        
+        return allFormulas;
+      } else {
+        // Generate formula for specific target
+        const functionName = getFunctionName(target);
+        let targetResult;
+        
+        // Handle different result structures
+        if (typeof results === 'object' && results !== null) {
+          targetResult = results[target] ?? results;
+        } else {
+          targetResult = results;
+        }
+        
+        return getFreeFallFormulasForTarget(functionName, userInput, targetResult);
+      }
+    } catch (error) {
+      console.error('Error in generateFormulas:', error);
+      return [];
+    }
+  };
+
   useEffect(() => {
     if (simulation) {
       setForum(simulation.forumTitle || "");
     }
-    if (!userInput.target) return;
 
-    const calculations = FreeFallMotion({
-      gravity: userInput.gravity,
-      initialVelocity: userInput.initialVelocity,
-      finalVelocity: userInput.finalVelocity,
-      initialHeight: userInput.initialHeight,
-      finalHeight: userInput.finalHeight,
-      time: userInput.time,
-      target: userInput.target,
-    });
-    setResults(calculations);
+    // Validation for required inputs
+    if (!userInput.target) {
+      setResults(null);
+      setFormulas([]);
+      return;
+    }
+
+    try {
+      const calculations = FreeFallMotion({
+        gravity: userInput.gravity,
+        initialVelocity: userInput.initialVelocity,
+        finalVelocity: userInput.finalVelocity,
+        initialHeight: userInput.initialHeight,
+        finalHeight: userInput.finalHeight,
+        time: userInput.time,
+        target: userInput.target,
+      });
+      
+      setResults(calculations);
+
+      // Generate formula display
+      const formulaData = generateFormulas(userInput.target, userInput, calculations);
+      setFormulas(formulaData);
+
+    } catch (error) {
+      console.error('Error in free fall calculation:', error);
+      setResults(null);
+      setFormulas([]);
+    }
   }, [
     userInput.target,
     userInput.gravity,
@@ -103,6 +211,7 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   ]);
 
   return (
+    <MathJaxContext config={mathJaxConfig}>
     <Paper
       elevation={3}
       sx={{
@@ -270,25 +379,131 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         <MenuItem value="All">All</MenuItem>
       </Select>
 
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        Results:
-      </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-            results,
-            (key, value) => {
-              if (typeof value === "number") {
-                return Number(value.toFixed(2));
+      {/* Formula Display Controls */}
+      <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showFormulas}
+                onChange={(e) => setShowFormulas(e.target.checked)}
+                size="small"
+              />
+            }
+            label="Show Formulas"
+          />
+          {showFormulas && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showBaseFormula}
+                  onChange={(e) => setShowBaseFormula(e.target.checked)}
+                  size="small"
+                />
               }
-              return value;
-            },
-            2
-          )
-          : "No results yet"}
-      </pre>
-    </Paper>
+              label="Show Base Formula"
+            />
+          )}
+        </Box>
+
+        {/* Results Section */}
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Results:
+        </Typography>
+
+        {/* Formula Display Section */}
+        {showFormulas && formulas.length > 0 && (
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                Mathematical Steps
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 1 }}>
+              {formulas.map((formula, index) => (
+                <FormulaDisplay
+                  key={index}
+                  formulaKey={formula.key}
+                  values={formula.values}
+                  result={formula.result}
+                  topic="freefall"
+                  showBaseFormula={showBaseFormula}
+                />
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        )}
+
+        {/* Raw Results Display */}
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              Raw Results
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <pre style={{ 
+              whiteSpace: "pre-wrap", 
+              wordWrap: "break-word",
+              fontSize: '12px',
+              margin: 0,
+              padding: '8px',
+              backgroundColor: '#f5f5f5',
+              borderRadius: '4px'
+            }}>
+              {results
+                ? JSON.stringify(
+                  results,
+                  (key, value) => {
+                    if (typeof value === "number") {
+                      return Number(value.toFixed(2));
+                    }
+                    return value;
+                  },
+                  2
+                )
+                : "No results yet"}
+            </pre>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Quick Results Summary */}
+        {results && (
+          <Box sx={{ mt: 1, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+              Quick Summary:
+            </Typography>
+            {userInput.target === 'All' ? (
+              <Box>
+                {results.finalVelocity !== undefined && <Typography variant="body2">Final Velocity: {Number(results.finalVelocity).toFixed(2)} m/s</Typography>}
+                {results.finalHeight !== undefined && <Typography variant="body2">Final Height: {Number(results.finalHeight).toFixed(2)} m</Typography>}
+                {results.time !== undefined && <Typography variant="body2">Time: {Number(results.time).toFixed(2)} s</Typography>}
+                {results.initialVelocity !== undefined && <Typography variant="body2">Initial Velocity: {Number(results.initialVelocity).toFixed(2)} m/s</Typography>}
+                {results.initialHeight !== undefined && <Typography variant="body2">Initial Height: {Number(results.initialHeight).toFixed(2)} m</Typography>}
+                {results.gravity !== undefined && <Typography variant="body2">Gravity: {Number(results.gravity).toFixed(2)} m/s²</Typography>}
+              </Box>
+            ) : (
+              <Typography variant="body2">
+                {`${Number(results).toFixed(2)} ${getUnit(userInput.target)}`}
+              </Typography>
+            )}
+          </Box>
+        )}
+      </Paper>
+    </MathJaxContext>
   );
+};
+
+// Helper function to get appropriate units
+const getUnit = (target) => {
+  const units = {
+    finalVelocity: 'm/s',
+    finalHeight: 'm',
+    time: 's',
+    initialVelocity: 'm/s',
+    initialHeight: 'm',
+    gravity: 'm/s²'
+  };
+  return units[target] || '';
 };
 
 export default FreeFallInterface;
