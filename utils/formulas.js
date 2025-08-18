@@ -215,6 +215,81 @@ export function calcVelocityComponents({ velocity, angle }) {
   };
 }
 
+// Torque
+//----------------------------------
+export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcceleration}) {
+  let torque;
+  if (distanceFromPivot !== undefined && force !== undefined) {
+    const thetaRad = toRadians(angle);
+    // τ = r * F * sin(θ)
+     torque = distanceFromPivot * force * Math.sin(thetaRad);
+  }
+
+   // τ = I * α
+  else if (inertia !== undefined && angularAcceleration !== undefined) {
+    torque = inertia * angularAcceleration;
+  }
+
+  else {
+    console.log("Invalid parameters for Torque");
+  }
+
+  return torque;
+}
+
+export function calcAngularAcceleration({distanceFromPivot, force, angle, inertia, torque}) {
+  let angularAcceleration;
+
+  if (!inertia) {
+    return;
+  }
+
+    if (torque) {
+    // α = τ / I 
+     angularAcceleration = torque / inertia;
+    }
+    else if (distanceFromPivot && force && angle) {
+      const thetaRad = toRadians(angle);
+      angularAcceleration = (distanceFromPivot * force * Math.sin(thetaRad)) / inertia;
+
+    }
+  return angularAcceleration;
+}
+
+export function calcDistanceFromPivot({torque, force, angle}) {
+  let distanceFromPivot;
+
+  if (!(torque && force && angle)) {
+    return;
+  }
+  else {
+    const thetaRad = toRadians(angle);
+    distanceFromPivot = (torque)/(force * Math.sin(thetaRad));
+  }
+
+  return distanceFromPivot;
+}
+
+export function calcAngle({torque, force, distanceFromPivot}) {
+  let angle;
+
+  angle = Math.asin(torque/(distanceFromPivot*force));
+
+  angle = 180/Math.PI * angle;
+
+  return angle;
+}
+
+export function calcForce({torque, distanceFromPivot, angle}) {
+  let force;
+
+  const thetaRad = toRadians(angle);
+
+  force = torque/(distanceFromPivot*Math.sin(thetaRad));
+
+  return force;
+}
+
 //Friction formulas
 export function calculateNormalForce({ mass, angle, gravity }) {
   return mass * gravity * Math.cos((angle * Math.PI) / 180); // Convert angle to radians
@@ -272,7 +347,4 @@ export function calcTimeToCollision({ x1, v1, x2, v2 }) {
 export function calcPosition({ x0, v, t }) {
   return x0 + v * t;
 }
-
-
-
 
