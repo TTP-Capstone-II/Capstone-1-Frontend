@@ -13,12 +13,12 @@
 .nav-brand a {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
+  color: #073E7B;
   text-decoration: none;
 }
 
 .nav-brand a:hover {
-  color: #007bff;
+  color: #042851;
 }
 
 .nav-links {
@@ -33,7 +33,7 @@
 }
 
 .nav-link {
-  color: #666;
+  color: #073E7B;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -41,8 +41,8 @@
 }
 
 .nav-link:hover {
-  color: #007bff;
-  background-color: #e9ecef;
+  color: #042851;
+  background-color: #DC7F2D;
 }
 
 .user-section {
@@ -52,8 +52,8 @@
 }
 
 .username {
-  color: #666;
-  font-weight: 500;
+  color: #073E7B;
+  font-weight: bold;
 }
 
 .logout-btn {

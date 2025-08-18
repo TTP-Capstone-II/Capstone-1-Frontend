@@ -1,11 +1,15 @@
 import React from "react";
+import LandingPage from "../pages/LandingPage";
 
-const Home = () => {
+const Home = ({ user }) => {
   return (
-    <>
-      <h1>Hello React!</h1>
-      <img className="react-logo" src="/react-logo.svg" alt="React Logo" />
-    </>
+    <div className="nav-links">
+      {user ? (
+        <div> test </div>
+      ) : (
+        <LandingPage/>
+      )}
+    </div>
   );
 };
 

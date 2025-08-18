@@ -3,18 +3,21 @@ import { NavLink, Link } from "react-router-dom";
 import Dropdown from "./Dropdown.jsx";
 import "./NavBarStyles.css";
 
-const NavBar = ({ user, onLogout }) => {
+const NavBar = ({ user, onLogout, checkingAuth }) => {
+  console.log("Navbar user:", user);
   return (
-    <nav className="navbar">
+    <nav className="navbar" style={{ backgroundColor: "#F19648" }}>
       <div className="nav-brand">
         <NavLink to="/">Capstone II</NavLink>
       </div>
 
       <div className="nav-links">
-        {user ? (
+        {checkingAuth ? (
+          <span className="loading-text">Loading...</span>
+        ) : user ? (
           <div className="user-section">
             <span className="username">Welcome, {user.username}!</span>
-            <Dropdown></Dropdown>
+            <Dropdown />
             <NavLink to="/whiteboard" className="nav-link">
               Whiteboard
             </NavLink>
@@ -42,5 +45,6 @@ const NavBar = ({ user, onLogout }) => {
     </nav>
   );
 };
+
 
 export default NavBar;

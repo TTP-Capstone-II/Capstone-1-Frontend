@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 import "./AuthStyles.css";
 import { API_URL } from "../shared";
 
@@ -13,6 +14,8 @@ const Signup = ({ setUser }) => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { loginWithRedirect } = useAuth0();
 
   const validateForm = () => {
     const newErrors = {};
@@ -86,6 +89,14 @@ const Signup = ({ setUser }) => {
     }
   };
 
+  const handleAuth0Signup = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: "signup",
+      },
+    });
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-form">
@@ -145,6 +156,14 @@ const Signup = ({ setUser }) => {
             {isLoading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
+
+        <div className="form-group"> 
+          <span>or</span>
+        </div>
+
+        <button type="button" onClick={handleAuth0Signup} disabled={isLoading}>
+          Sign up with Auth0
+        </button>
 
         <p className="auth-link">
           Already have an account? <Link to="/login">Login</Link>

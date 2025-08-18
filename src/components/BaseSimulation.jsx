@@ -42,7 +42,7 @@ const BaseSimulation = ({ onEngineReady, topic }) => {
         width: 1000,
         height: 700,
         wireframes: false,
-        background: "#f0f0f0",
+        background: "#BDBDA3",
       },
     });
 
@@ -101,7 +101,7 @@ const BaseSimulation = ({ onEngineReady, topic }) => {
         }}
       >
         <div style={{ width: "auto", margin: "10px auto" }}>
-          <Button onClick={setupMatter}>Reset Simulation</Button>
+          <Button variant="contained" sx={{ backgroundColor: "#073E7B",color: "#fff",'&:hover': {backgroundColor: '#042851' }, }} onClick={setupMatter}>Reset Simulation</Button>
         </div>
 
         <div

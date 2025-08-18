@@ -23,15 +23,22 @@ const Inertia = ({ user }) => {
 
     const leftWall = Matter.Bodies.rectangle(0, 350, 20, 700, {
         isStatic: true,
-        restitution: 0.1,       // Perfectly elastic bounce
+        restitution: 1,   // Perfectly elastic bounce
         friction: 0,
         render: { fillStyle: 'black' }
     });
 
     const rightWall = Matter.Bodies.rectangle(1000, 350, 20, 700, {
         isStatic: true,
-        restitution: 0.1,       // Perfectly elastic bounce
+        restitution: 1,   // Perfectly elastic bounce
         friction: 0,
+        render: { fillStyle: 'black' }
+    });
+
+    const ground = Matter.Bodies.rectangle(500, 700, 1000, 20, {
+        isStatic: true,
+        friction: 0.2,     // Adjust friction to control how fast they slow down
+        restitution: 0,    // No bounce on the ground
         render: { fillStyle: 'black' }
     });
 
@@ -40,8 +47,8 @@ const Inertia = ({ user }) => {
         const square = Matter.Bodies.rectangle(Number(userInput.square1_initialPosition), 650, 50, 50, {
             mass: Number(userInput.square1_mass),
             isStatic: false,
-            friction: 0,
-            frictionAir: 0,
+            friction: 0.05,
+            frictionAir: 0.01,
             frictionStatic: 0,
             restitution: 1, // For perfectly elastic collisions
             inertia: Infinity // To prevent rotation
@@ -50,8 +57,8 @@ const Inertia = ({ user }) => {
         const square2 = Matter.Bodies.rectangle(Number(userInput.square2_initialPosition), 650, 50, 50, {
             mass: Number(userInput.square2_mass),
             isStatic: false,
-            friction: 0,
-            frictionAir: 0,
+            friction: 0.05,
+            frictionAir: 0.01,
             frictionStatic: 0,
             restitution: 1, // For perfectly elastic collisions
             inertia: Infinity // To prevent rotation
@@ -64,6 +71,7 @@ const Inertia = ({ user }) => {
         World.add(world, square2);
         World.add(world, leftWall);
         World.add(world, rightWall);
+        World.add(world, ground);
 
 
         const forceMagnitude = (userInput.square1_initialAcceleration / 100) * square.mass;
@@ -75,7 +83,13 @@ const Inertia = ({ user }) => {
             for (let pair of event.pairs) {
                 const { bodyA, bodyB } = pair;
 
-                // Check if one is moving and the other is stationary
+                // Ignore collisions with walls — walls are static, so just bounce
+                if (bodyA.isStatic || bodyB.isStatic) {
+                    continue;  // let Matter.js handle the bounce naturally
+                }
+
+                // Only handle square-to-square collisions
+
                 const velA = bodyA.velocity;
                 const velB = bodyB.velocity;
 
@@ -85,21 +99,19 @@ const Inertia = ({ user }) => {
                 const isAStationary = speedA < 0.01;
                 const isBStationary = speedB < 0.01;
 
-                // Case 1: A moving, B stopped
+                // Transfer velocity between moving and stationary squares
                 if (!isAStationary && isBStationary) {
                     Matter.Body.setVelocity(bodyB, velA);
                     Matter.Body.setVelocity(bodyA, { x: 0, y: 0 });
                     Matter.Body.setAngularVelocity(bodyA, 0);
-                }
-
-                // Case 2: B moving, A stopped
-                else if (isAStationary && !isBStationary) {
+                } else if (isAStationary && !isBStationary) {
                     Matter.Body.setVelocity(bodyA, velB);
                     Matter.Body.setVelocity(bodyB, { x: 0, y: 0 });
                     Matter.Body.setAngularVelocity(bodyB, 0);
                 }
             }
         });
+
 
 
     };
