@@ -175,15 +175,13 @@ const Torque = () => {
     });
   };
 
-  const topic = "torque";
-
   return (
     <div
       className="simulation-page"
       style={{ display: "flex", height: "700px" }}
     >
       <TorqueInterface userInput={userInput} setUserInput={setUserInput} />
-      <BaseSimulation onEngineReady={handleEngineReady} topic={topic} />
+      <BaseSimulation onEngineReady={handleEngineReady} />
     </div>
   );
 };

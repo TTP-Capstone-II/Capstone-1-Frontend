@@ -61,10 +61,6 @@ const BaseSimulation = ({ onEngineReady, topic }) => {
       },
     });
 
-    if (topic === "torque") {
-      //Events.on(renderRef.current, "afterRender", () => {});
-    }
-
     World.add(world, mouseConstraint);
 
     // Link mouse to render
