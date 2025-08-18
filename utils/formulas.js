@@ -214,3 +214,137 @@ export function calcVelocityComponents({ velocity, angle }) {
     vy: velocity * Math.sin(thetaRad),
   };
 }
+
+// Torque
+//----------------------------------
+export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcceleration}) {
+  let torque;
+  if (distanceFromPivot !== undefined && force !== undefined) {
+    const thetaRad = toRadians(angle);
+    // τ = r * F * sin(θ)
+     torque = distanceFromPivot * force * Math.sin(thetaRad);
+  }
+
+   // τ = I * α
+  else if (inertia !== undefined && angularAcceleration !== undefined) {
+    torque = inertia * angularAcceleration;
+  }
+
+  else {
+    console.log("Invalid parameters for Torque");
+  }
+
+  return torque;
+}
+
+export function calcAngularAcceleration({distanceFromPivot, force, angle, inertia, torque}) {
+  let angularAcceleration;
+
+  if (!inertia) {
+    return;
+  }
+
+    if (torque) {
+    // α = τ / I 
+     angularAcceleration = torque / inertia;
+    }
+    else if (distanceFromPivot && force && angle) {
+      const thetaRad = toRadians(angle);
+      angularAcceleration = (distanceFromPivot * force * Math.sin(thetaRad)) / inertia;
+
+    }
+  return angularAcceleration;
+}
+
+export function calcDistanceFromPivot({torque, force, angle}) {
+  let distanceFromPivot;
+
+  if (!(torque && force && angle)) {
+    return;
+  }
+  else {
+    const thetaRad = toRadians(angle);
+    distanceFromPivot = (torque)/(force * Math.sin(thetaRad));
+  }
+
+  return distanceFromPivot;
+}
+
+export function calcAngle({torque, force, distanceFromPivot}) {
+  let angle;
+
+  angle = Math.asin(torque/(distanceFromPivot*force));
+
+  angle = 180/Math.PI * angle;
+
+  return angle;
+}
+
+export function calcForce({torque, distanceFromPivot, angle}) {
+  let force;
+
+  const thetaRad = toRadians(angle);
+
+  force = torque/(distanceFromPivot*Math.sin(thetaRad));
+
+  return force;
+}
+
+//Friction formulas
+export function calculateNormalForce({ mass, angle, gravity }) {
+  return mass * gravity * Math.cos((angle * Math.PI) / 180); // Convert angle to radians
+}
+
+export function calculateFrictionForce({ normalForce, frictionCoefficient }) {
+  return normalForce * frictionCoefficient; // F_friction = μ * N
+}
+
+export function calculateParallelForce({ mass, angle, gravity }) {
+  return mass * gravity * Math.sin((angle * Math.PI) / 180); // F_parallel = mg * sin(θ)
+}
+
+export function calculateNetForce({ parallelForce, frictionForce }) {
+  return parallelForce - frictionForce; // F_net = F_parallel - F_friction
+}
+
+export function calculateAcceleration(netForce, mass) {
+  return netForce / mass; // a = F_net / m
+}
+
+export function calculateDistance(acceleration, time) {
+  return 0.5 * acceleration * Math.pow(time, 2); // d = 1/2 * a * t^2
+}
+
+export function calculateTime(acceleration, distance) {
+  return Math.sqrt(2 * distance / acceleration); // t = √(2d / a)
+}
+
+//Inertia formulas
+// Final velocities for perfectly elastic collision
+export function calcFinalVelocitiesElastic({ m1, v1, m2, v2 }) {
+  const v1Final = ((m1 - m2) / (m1 + m2)) * v1 + ((2 * m2) / (m1 + m2)) * v2;
+  const v2Final = ((2 * m1) / (m1 + m2)) * v1 + ((m2 - m1) / (m1 + m2)) * v2;
+  return { v1Final, v2Final };
+}
+
+// Momentum: p = m * v
+export function calcMomentum({ m, v }) {
+  return m * v;
+}
+
+// Kinetic energy: KE = 0.5 * m * v^2
+export function calcKineticEnergy({ m, v }) {
+  return 0.5 * m * v ** 2;
+}
+
+// Time to collision (1D, moving towards each other)
+export function calcTimeToCollision({ x1, v1, x2, v2 }) {
+  if (v1 <= v2) return null; // never collide if first is slower or same speed
+  return (x2 - x1) / (v1 - v2);
+}
+
+// Position after time t: x = x0 + v * t
+export function calcPosition({ x0, v, t }) {
+  return x0 + v * t;
+}
+

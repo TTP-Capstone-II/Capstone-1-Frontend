@@ -12,9 +12,13 @@ import {
   MouseConstraint,
 } from "matter-js";
 import { Button } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
-const ProjectileMotion = () => {
-  const [userInput, setUserInput] = useState({
+const ProjectileMotion = ({ user }) => {
+  const location = useLocation();
+  const simulation = location.state?.simulation;
+  const [userInput, setUserInput] = useState(
+    simulation?.storedValues || {
     gravity: "9.81",
     initialVelocity: "",
     launchAngle: "",
@@ -44,7 +48,7 @@ const ProjectileMotion = () => {
       x: initialVelocityX,
       y: -initialVelocityY,
     });
-    Matter.Body.setPosition(ball, { x: 50, y: 635||userInput.initialHeight });
+    Matter.Body.setPosition(ball, { x: 50, y: userInput.initialHeight });
 
     // Add gravity
     engine.world.gravity.y = Number(userInput.gravity) / 9.81;
@@ -60,6 +64,8 @@ const ProjectileMotion = () => {
       <ProjectileMotionInterface
         userInput={userInput}
         setUserInput={setUserInput}
+        user={user}
+        simulation={simulation}
       />
       <BaseSimulation onEngineReady={handleEngineReady} />
     </div>

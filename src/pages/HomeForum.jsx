@@ -18,7 +18,6 @@ const HomeForum = () => {
         }
     };
 
-
     useEffect(() => {
         fetchForums();
     }, []);
@@ -26,10 +25,35 @@ const HomeForum = () => {
     return (
         <div className="forum-page">
             <h1>All Forums</h1>
-             <div className="forum-list">
+            <div className="forum-list">
                 {forums.map((forum) => (
-                    <Link to={`/forum/${forum.id}/posts`} key={forum.id} className="forum-card">
-                        <h2>{forum.name}</h2>
+                    <Link 
+                        to={`/forum/${forum.id}/posts`} 
+                        key={forum.id} 
+                        className="forum-card" 
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Card
+                            sx={{
+                                marginBottom: 2,
+                                cursor: "pointer",
+                                "&:hover": {
+                                    boxShadow: 3,
+                                },
+                            }}
+                        >
+                            <CardContent>
+                                <Typography variant="h5" component="div">
+                                    {forum.name}
+                                </Typography>
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    description
+                                </Typography>
+                                <Typography variant="subtitle2" color="text.secondary">
+                                    number of posts
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     </Link>
                 ))}
             </div>

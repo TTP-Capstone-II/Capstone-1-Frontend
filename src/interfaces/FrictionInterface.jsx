@@ -8,11 +8,63 @@ import {
   InputLabel,
   MenuItem,
   Typography,
+  Modal,
+  Box,
 } from "@mui/material";
 import { Friction } from "../topics/Friction";
+import { API_URL } from "../shared";
+import axios from "axios";
 
-const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
+const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [forum, setForum] = useState("");
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/api/simulation`, {
+        userId: user.id,
+        forumTitle: forum,
+        topic: "friction",
+        storedValues: userInput,
+      });
+
+      const savedSim = response.data;
+      console.log("Simulation saved:", savedSim);
+
+      setForum("");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error saving simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handlePatch = async () => {
+    try {
+      const response = await axios.patch(`${API_URL}/api/simulation/${simulation.id}`, {
+        storedValues: userInput,
+        forumTitle: forum,
+        topic: "friction",
+      });
+
+      console.log("Simulation updated:", response.data);
+      setOpen(false);
+    } catch (error) {
+      console.error("Error updating simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handleSaveOrUpdate = (e) => {
+    e.preventDefault();
+
+    if (simulation) {
+      handlePatch();
+    } else {
+      handleSave(e);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,14 +75,20 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
   };
 
   useEffect(() => {
+    if (simulation) {
+      setForum(simulation.forumTitle || "");
+    }
+
     if (!userInput.target) return;
 
-    const calculations = ProjectileMotion({
+    const calculations = Friction({
       gravity: userInput.gravity,
       mass: userInput.mass,
       friction: userInput.friction,
       angle: userInput.angle,
       target: userInput.target,
+      time: userInput.time,
+      distance: userInput.distance,
     });
     setResults(calculations);
   }, [
@@ -39,6 +97,9 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
     userInput.mass,
     userInput.friction,
     userInput.angle,
+    userInput.time,
+    userInput.distance,
+    simulation,
   ]);
 
   return (
@@ -56,6 +117,38 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         overflowY: "auto",
       }}
     >
+      <Button onClick={handleOpen}>Save</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Are you sure you want to save this simulation?
+          </Typography>
+          <TextField
+            label="Simulation title"
+            value={forum}
+            onChange={(e) => setForum(e.target.value)}
+            fullWidth
+          />
+          <Button id="modal-modal-description" sx={{ mt: 2 }} onClick={handleSaveOrUpdate}>
+            {simulation ? "Update Simulation" : "Save Simulation"}
+          </Button>
+        </Box>
+      </Modal>
       <TextField
         label="Acceleration due to gravity (g)"
         type="number"
@@ -70,7 +163,6 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Mass"
         type="number"
@@ -85,7 +177,6 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Angle"
         type="number"
@@ -100,7 +191,6 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
-
       <TextField
         label="Friction"
         type="number"
@@ -115,6 +205,34 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         }}
         onChange={handleInputChange}
       />
+      <TextField
+        label="Distance"
+        type="number"
+        name="distance"
+        value={userInput.distance || ""}
+        variant="outlined"
+        inputProps={{ step: "0.01", min: 0 }}
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
+      <TextField
+        label="Time"
+        type="number"
+        name="time"
+        value={userInput.time || ""}
+        variant="outlined"
+        inputProps={{ step: "0.01", min: 0 }}
+        slotProps={{
+          input: {
+            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+          },
+        }}
+        onChange={handleInputChange}
+      />
       <InputLabel id="target-label">Calculate</InputLabel>
       <Select
         label="Calculate"
@@ -125,11 +243,14 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
         fullWidth
         sx={{ mt: 2 }}
       >
-        <MenuItem value="range">Friction Force</MenuItem>
-        <MenuItem value="timeOfFlight">Acceleration</MenuItem>
-        <MenuItem value="maxHeight">Distance</MenuItem>
-        <MenuItem value="velocityComponents">Velocity Components</MenuItem>
-        <MenuItem value="All">All</MenuItem>
+        <MenuItem value="frictionForce">Friction Force</MenuItem>
+        <MenuItem value="normalForce">Normal Force</MenuItem>
+        <MenuItem value="netForce">Net Force</MenuItem>
+        <MenuItem value="parallelForce">Parallel Force</MenuItem>
+        <MenuItem value="acceleration">Acceleration</MenuItem>
+        <MenuItem value="time">Time</MenuItem>
+        <MenuItem value="distance">Distance</MenuItem>
+        <MenuItem value="all">All</MenuItem>
       </Select>
 
       <Typography variant="h6" sx={{ mt: 2 }}>
@@ -138,19 +259,19 @@ const ProjectileMotionInterface = ({ userInput, setUserInput }) => {
       <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {results
           ? JSON.stringify(
-              results,
-              (key, value) => {
-                if (typeof value === "number") {
-                  return Number(value.toFixed(2));
-                }
-                return value;
-              },
-              2
-            )
+            results,
+            (key, value) => {
+              if (typeof value === "number") {
+                return Number(value.toFixed(2));
+              }
+              return value;
+            },
+            2
+          )
           : "No results yet"}
       </pre>
     </Paper>
   );
 };
 
-export default ProjectileMotionInterface;
+export default FrictionInterface;

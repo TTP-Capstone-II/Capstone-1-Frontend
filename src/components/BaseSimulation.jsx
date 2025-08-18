@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Matter from "matter-js";
+import Matter, { Events, Vector } from "matter-js";
 import {
   Engine,
   Render,
@@ -11,7 +11,7 @@ import {
 } from "matter-js";
 import { Button } from "@mui/material";
 
-const Simulation = ({ onEngineReady }) => {
+const BaseSimulation = ({ onEngineReady, topic }) => {
   const canvasRef = useRef(null);
   const engineRef = useRef(Engine.create());
   const renderRef = useRef();
@@ -73,7 +73,7 @@ const Simulation = ({ onEngineReady }) => {
 
     // Expose engine/world to parent
     if (onEngineReady) {
-      onEngineReady(engine, world);
+      onEngineReady(engine, world, renderRef.current);
     }
   }, [engine, world, onEngineReady]);
 
@@ -117,4 +117,4 @@ const Simulation = ({ onEngineReady }) => {
   );
 };
 
-export default Simulation;
+export default BaseSimulation;

@@ -10,36 +10,24 @@ import React, { useEffect, useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
 
-const ReplyForm = ({ postId, userId }) => {
-  const [replyData, setReplyData] = useState({
-    content: "",
-    userId: "",
-    postId: "",
-    likes: 0,
-  });
+const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
+  const [content, setContent] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${API_URL}/api/post/${postId}/reply`,
-        replyData
-      );
-      console.log("Post reply resposne:", response);
+      await axios.post(`${API_URL}/api/post/${postId}/reply`, {
+        content,
+        userId,
+        postId,
+        parentId,
+      });
+      setContent("");
+      if (onReplyAdded) onReplyAdded();
     } catch (error) {
       console.error("error posting reply", error);
     }
   };
-
-  useEffect(() => {
-    if (userId && postId) {
-      setReplyData((prev) => ({
-        ...prev,
-        userId,
-        postId,
-      }));
-    }
-  }, [userId, postId]);
 
   return (
     <div className="reply-page">
@@ -57,9 +45,9 @@ const ReplyForm = ({ postId, userId }) => {
           <Box>
             <TextareaAutosize
               minRows={2}
-              value={replyData.content}
+              value={content}
               onChange={(e) =>
-                setReplyData({ ...replyData, content: e.target.value })
+                setContent(e.target.value)
               }
               style={{
                 width: "100%",
@@ -71,7 +59,7 @@ const ReplyForm = ({ postId, userId }) => {
               }}
             />
           </Box>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" disabled={!content.trim()}>
             Reply
           </Button>
         </Box>
