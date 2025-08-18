@@ -55,10 +55,7 @@ const Torque = () => {
 
     Matter.Events.on(engine, "beforeUpdate", () => {
       const forceMagnitude = Math.min(userInput.force / maxForce, 1);
-      const distance = Math.min(
-        userInput.distanceFromPivot,
-        userInput.length / 2
-      );
+      const distance = Math.min(userInput.distanceFromPivot, userInput.length);
 
       const pivot = {
         x: lever.position.x - (userInput.length / 2) * Math.cos(lever.angle),
@@ -87,10 +84,7 @@ const Torque = () => {
         y: lever.position.y - (userInput.length / 2) * Math.sin(lever.angle),
       };
 
-      const distance = Math.min(
-        userInput.distanceFromPivot,
-        userInput.length / 2
-      );
+      const distance = Math.min(userInput.distanceFromPivot, userInput.length);
 
       const forcePoint = {
         x: pivot.x + distance * Math.cos(lever.angle),
