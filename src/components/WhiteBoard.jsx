@@ -11,6 +11,8 @@ const WhiteBoard = ({ roomId, user }) => {
   const prevPoint = useRef({ x: 0, y: 0 });
   const [inviteLink, setInviteLink] = useState("");
   const [joinMessage, setJoinMessage] = useState("");
+
+  const [socketID, setSocketID] = useState("");
   const [penColor, setPenColor] = useState("#000000");
   const [penSize, setPenSize] = useState(3);
   const [isErasing, setIsErasing] = useState(false);
@@ -75,10 +77,14 @@ const WhiteBoard = ({ roomId, user }) => {
       });
     }
 
+    socket.on("my-socket-id", ({ id }) => {
+      setSocketID(id);
+    });
+
     socket.on("draw", handleDraw); // Listen for drawing events from the server
 
-    socket.on("user-joined", (joinedUsername) => {
-      setJoinMessage(`${joinedUsername} has joined the room`);
+    socket.on("user-joined", (data) => {
+      setJoinMessage(`${data.username} has joined the room`);
       setTimeout(() => setJoinMessage(""), 3000); // Clear after 3 sec
     });
 
@@ -175,7 +181,7 @@ const WhiteBoard = ({ roomId, user }) => {
     <div>
       <h2>Room Code: {roomId}</h2>
       <button onClick={handleCopyLink}>Copy Invite Link</button>
-      <VoiceChannel />
+      <VoiceChannel roomId={roomId} mySocketID={socketID} />
       {joinMessage && <p>{joinMessage}</p>}
       <div className="ColorPicker">
         <label>Pen Color: </label>
