@@ -14,7 +14,8 @@ export function FreeFallMotion({
   const t = time !== undefined ? Number(time) : undefined;
   const y0 = initialHeight !== undefined ? Number(initialHeight) : undefined;
   const v = finalVelocity !== undefined ? Number(finalVelocity) : undefined;
-  const y = finalHeight !== undefined ? Number(finalHeight) : undefined;
+  const y =
+    finalHeight !== undefined && finalHeight !== "" ? Number(finalHeight) : 0; // default to ground
 
   const results = {};
 

@@ -91,6 +91,13 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
       target: userInput.target,
     });
     setResults(calculations);
+
+    setUserInput(prev => ({
+    ...prev,
+    ...Object.fromEntries(
+      Object.entries(calculations).filter(([k, v]) => v !== undefined && v !== null)
+    )
+  }));
   }, [
     userInput.target,
     userInput.gravity,
@@ -158,7 +165,7 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+            endAdornment: <InputAdornment position="end">m/s²</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
