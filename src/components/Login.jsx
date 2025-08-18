@@ -3,8 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../shared";
 import "./AuthStyles.css";
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const Login = ({ setUser }) => {
+  const { loginWithRedirect } = useAuth0();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -118,6 +121,14 @@ const Login = ({ setUser }) => {
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="form-group">
+          <span>or</span>
+        </div>
+
+        <button type="button" onClick={() => loginWithRedirect()} disabled={isLoading}>
+          Login with Auth0
+        </button>
 
         <p className="auth-link">
           Don't have an account? <Link to="/signup">Sign up</Link>
