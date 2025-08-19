@@ -21,10 +21,7 @@ import { useRef } from "react";
 
 const Profile = ({ user }) => {
   const [simulations, setSimulations] = useState([]);
-  const [avatar, setAvatar] = useState(
-    user?.image_url ||
-      "https://www.pngfind.com/pngs/m/676-6764065_default-profile-picture-transparent-hd-png-download.png"
-  );
+  const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [open, setOpen] = useState(false);
   const fileInputRef = useRef(null);
@@ -72,7 +69,14 @@ const Profile = ({ user }) => {
       const response = await axios.post(`${API_URL}/api/upload`, {
         image_url: preview,
       });
+
+      await axios.patch(`${API_URL}/api/users/${user.id}`, {
+        profile_image: response.data.url,
+      });
+
       setAvatar(response.data.url);
+      setOpen(false);
+      setPreview(null);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -84,6 +88,24 @@ const Profile = ({ user }) => {
       fetchSimulations();
     }
   }, [user]);
+
+  useEffect(() => {
+    console.log(user);
+
+    const fetchUserAvatar = async () => {
+      try {
+        const resAvatar = await axios.get(`${API_URL}/api/users/${user.id}`);
+        console.log(resAvatar);
+        setAvatar(resAvatar.data.profile_image);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (user?.id) {
+      fetchUserAvatar();
+    }
+  }, [setAvatar]);
 
   return (
     <Container>
@@ -117,7 +139,7 @@ const Profile = ({ user }) => {
             <IconButton onClick={handleAvatarClick}>
               <Avatar
                 alt="profile_picture"
-                src={avatar}
+                src={avatar || user?.profile_image}
                 sx={{ width: 80, height: 80 }}
               />
             </IconButton>
@@ -129,7 +151,7 @@ const Profile = ({ user }) => {
             <Box display="flex" justifyContent="center">
               <Avatar
                 alt="profile_picture"
-                src={preview || avatar}
+                src={preview || user?.profile_image}
                 sx={{ width: 200, height: 200 }}
               />
             </Box>
