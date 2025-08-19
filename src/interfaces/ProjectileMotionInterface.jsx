@@ -159,7 +159,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+            endAdornment: <InputAdornment position="end">m/s²</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
