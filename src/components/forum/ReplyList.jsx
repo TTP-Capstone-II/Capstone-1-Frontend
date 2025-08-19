@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
 
-const ReplyList = ({ postId, userId }) => {
+const ReplyList = ({ postId, userId, replies: propReplies, onReplyAdded }) => {
   const [replies, setReplies] = useState([]);
 
   const fetchReplies = async () => {
@@ -20,10 +20,12 @@ const ReplyList = ({ postId, userId }) => {
   };
 
   useEffect(() => {
-    if (postId) {
+    if (postId && !propReplies) {
       fetchReplies();
     }
-  }, [postId]);
+  }, [postId, propReplies]);
+
+  const currentReplies = propReplies || replies;
 
   const sampleReplies = [
     {
@@ -53,13 +55,13 @@ const ReplyList = ({ postId, userId }) => {
         borderRadius: 1,
       }}
     >
-      {replies.map((reply) => (
+      {currentReplies.map((reply) => (
         <ReplyCard
           key={reply.id}
           reply={reply}
           userId={userId}
           numOflikes={reply?.likes}
-          onReplyAdded={fetchReplies}
+          onReplyAdded={onReplyAdded}
         />
       ))}
     </Box>
