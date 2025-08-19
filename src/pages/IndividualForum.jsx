@@ -21,7 +21,7 @@ const IndividualForum = () => {
     try {
       const response = await axios.get(`${API_URL}/api/forum/${forumId}/posts`);
       setForumName(response.data.forumName);
-      setPosts(response.data.posts);
+      setPosts(response.data.posts || []);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }

@@ -43,7 +43,7 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
   const [like, setLike] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
 
-  const handleClick = async () => {
+  const handleLikeClick = async () => {
     if (like === false) {
       try {
         await axios.post(`${API_URL}/api/replylikes/${id}/like/${userId}`);
@@ -83,11 +83,11 @@ return (
     <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4 }}>
       <CardContent>
         <Typography color="text.secondary">
-          {userId.username} - {new Date(createdAt).toLocaleDateString()}
+          {user.username} - {new Date(createdAt).toLocaleDateString()}
         </Typography>
         {content}
       </CardContent>
-        <IconButton aria-label="ThumbUp" onClick={handleClick}>
+        <IconButton aria-label="ThumbUp" onClick={handleLikeClick}>
           <ThumbUpIcon></ThumbUpIcon>
           <Typography color="text.secondary">{numOflikes}</Typography>
           <Typography variant="body2" color="text.secondary">
