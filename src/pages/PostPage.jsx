@@ -146,20 +146,20 @@ const PostPage = ({ user }) => {
   }, [post.id, post.userId]);
 
   return (
-    <Card sx={{ margin: 2, padding: 2, backgroundColor: "#48cae4" }}>
+    <Card sx={{ margin: 2, padding: 2 }}>
       <CardContent>
-        <Typography color="#1c344cff" variant="h5" component="div" gutterBottom>
+        <Typography variant="h5" component="div" gutterBottom>
           {post.title}
         </Typography>
 
-        <Typography color="#1c344cff" variant="body1" sx={{ mb: 1 }}>
+        <Typography variant="body1" sx={{ mb: 1 }}>
           {post.content}
         </Typography>
 
-        <Typography color="#1c344cff" variant="body2" sx={{ mb: 2 }}>
+        <Typography variant="body2" sx={{ mb: 2 }}>
           by {post.user?.username} -{" "}
           <IconButton aria-label="ThumbUp" onClick={handleLikeClick}>
-            <ThumbUpIcon sx={{ color: "#1c344cff" }}></ThumbUpIcon>
+            <ThumbUpIcon></ThumbUpIcon>
           </IconButton>{" "}
           - {numOflikes} likes - {timeAgo(new Date(post.createdAt))}
         </Typography>
