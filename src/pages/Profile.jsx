@@ -21,7 +21,11 @@ import { useRef } from "react";
 
 const Profile = ({ user }) => {
   const [simulations, setSimulations] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [avatar, setAvatar] = useState(
+    user?.image_url ||
+      "https://www.pngfind.com/pngs/m/676-6764065_default-profile-picture-transparent-hd-png-download.png"
+  );
+  const [preview, setPreview] = useState(null);
   const [open, setOpen] = useState(false);
   const fileInputRef = useRef(null);
   const fetchSimulations = async () => {
@@ -49,7 +53,7 @@ const Profile = ({ user }) => {
 
     var reader = new FileReader();
     reader.onloadend = () => {
-      setSelectedImage(reader.result);
+      setPreview(reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -63,11 +67,12 @@ const Profile = ({ user }) => {
   const handleImageUpload = async (e) => {
     e.preventDefault();
 
-    if (!selectedImage) return;
+    if (!preview) return;
     try {
       const response = await axios.post(`${API_URL}/api/upload`, {
-        image_url: selectedImage,
+        image_url: preview,
       });
+      setAvatar(response.data.url);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -112,10 +117,7 @@ const Profile = ({ user }) => {
             <IconButton onClick={handleAvatarClick}>
               <Avatar
                 alt="profile_picture"
-                src={
-                  selectedImage ||
-                  "https://www.pngfind.com/pngs/m/676-6764065_default-profile-picture-transparent-hd-png-download.png"
-                }
+                src={avatar}
                 sx={{ width: 80, height: 80 }}
               />
             </IconButton>
@@ -127,10 +129,7 @@ const Profile = ({ user }) => {
             <Box display="flex" justifyContent="center">
               <Avatar
                 alt="profile_picture"
-                src={
-                  selectedImage ||
-                  "https://www.pngfind.com/pngs/m/676-6764065_default-profile-picture-transparent-hd-png-download.png"
-                }
+                src={preview || avatar}
                 sx={{ width: 200, height: 200 }}
               />
             </Box>
@@ -146,7 +145,7 @@ const Profile = ({ user }) => {
               color="primary"
               sx={{ mt: 1 }}
               onClick={handleImageUpload}
-              disabled={!selectedImage}
+              disabled={!preview}
             >
               Upload
             </Button>
