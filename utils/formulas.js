@@ -217,77 +217,84 @@ export function calcVelocityComponents({ velocity, angle }) {
 
 // Torque
 //----------------------------------
-export function calcTorque({distanceFromPivot, force, angle, inertia, angularAcceleration}) {
-  let torque;
-  if (distanceFromPivot !== undefined && force !== undefined) {
-    const thetaRad = toRadians(angle);
-    // τ = r * F * sin(θ)
-     torque = distanceFromPivot * force * Math.sin(thetaRad);
-  }
 
-   // τ = I * α
-  else if (inertia !== undefined && angularAcceleration !== undefined) {
-    torque = inertia * angularAcceleration;
-  }
+export function calcTorque({ distanceFromPivot, force, angle, inertia, angularAcceleration }) {
+  // Safely parse inputs
+  const r = Number(distanceFromPivot) || 0;
+  const F = Number(force) || 0;
+  const theta = Number(angle) || 0;
+  const I = Number(inertia) || 0;
+  const alpha = Number(angularAcceleration) || 0;
 
-  else {
-    console.log("Invalid parameters for Torque");
+  if (r && F && Number.isFinite(toRadians(theta))) {
+    const thetaRad = toRadians(theta);
+    return r * F * Math.sin(thetaRad);
+  } else if (I && alpha) {
+    return I * alpha;
   }
-
-  return torque;
+  return null;
 }
 
-export function calcAngularAcceleration({distanceFromPivot, force, angle, inertia, torque}) {
-  let angularAcceleration;
+export function calcAngularAcceleration({ distanceFromPivot, force, angle, inertia, torque }) {
+  // Safely parse inputs
+  const r = Number(distanceFromPivot) || 0;
+  const F = Number(force) || 0;
+  const theta = Number(angle) || 0;
+  const I = Number(inertia) || 0;
+  const tau = Number(torque) || 0;
 
-  if (!inertia) {
-    return;
+  if (I === 0) return null;
+
+  if (tau) {
+    return tau / I;
+  } else if (r && F && Number.isFinite(toRadians(theta))) {
+    const thetaRad = toRadians(theta);
+    return (r * F * Math.sin(thetaRad)) / I;
   }
+  return null;
+}
 
-    if (torque) {
-    // α = τ / I 
-     angularAcceleration = torque / inertia;
+export function calcDistanceFromPivot({ torque, force, angle }) {
+  // Safely parse inputs
+  const tau = Number(torque) || 0;
+  const F = Number(force) || 0;
+  const theta = Number(angle) || 0;
+
+  const thetaRad = toRadians(theta);
+  const sinTheta = Math.sin(thetaRad);
+  if (F !== 0 && sinTheta !== 0 && Number.isFinite(sinTheta)) {
+    return tau / (F * sinTheta);
+  }
+  return null;
+}
+
+export function calcAngle({ torque, force, distanceFromPivot }) {
+  // Safely parse inputs
+  const tau = Number(torque) || 0;
+  const F = Number(force) || 0;
+  const r = Number(distanceFromPivot) || 0;
+
+  if (r !== 0 && F !== 0 && Number.isFinite(tau / (r * F))) {
+    const ratio = tau / (r * F);
+    if (Math.abs(ratio) <= 1) {
+      return (Math.asin(ratio) * 180) / Math.PI;
     }
-    else if (distanceFromPivot && force && angle) {
-      const thetaRad = toRadians(angle);
-      angularAcceleration = (distanceFromPivot * force * Math.sin(thetaRad)) / inertia;
-
-    }
-  return angularAcceleration;
-}
-
-export function calcDistanceFromPivot({torque, force, angle}) {
-  let distanceFromPivot;
-
-  if (!(torque && force && angle)) {
-    return;
   }
-  else {
-    const thetaRad = toRadians(angle);
-    distanceFromPivot = (torque)/(force * Math.sin(thetaRad));
+  return null;
+}
+
+export function calcForce({ torque, distanceFromPivot, angle }) {
+  // Safely parse inputs
+  const tau = Number(torque) || 0;
+  const r = Number(distanceFromPivot) || 0;
+  const theta = Number(angle) || 0;
+
+  const thetaRad = toRadians(theta);
+  const sinTheta = Math.sin(thetaRad);
+  if (r !== 0 && sinTheta !== 0 && Number.isFinite(sinTheta)) {
+    return tau / (r * sinTheta);
   }
-
-  return distanceFromPivot;
-}
-
-export function calcAngle({torque, force, distanceFromPivot}) {
-  let angle;
-
-  angle = Math.asin(torque/(distanceFromPivot*force));
-
-  angle = 180/Math.PI * angle;
-
-  return angle;
-}
-
-export function calcForce({torque, distanceFromPivot, angle}) {
-  let force;
-
-  const thetaRad = toRadians(angle);
-
-  force = torque/(distanceFromPivot*Math.sin(thetaRad));
-
-  return force;
+  return null;
 }
 
 //Friction formulas

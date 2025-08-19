@@ -10,10 +10,13 @@ import {
   MenuItem,
   Modal,
   Box,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import { FreeFallMotion } from "../topics/FreeFall";
 import { API_URL } from "../shared";
 import axios from "axios";
+import FreeFallFormulaDisplay from "../../utils/FreeFallFormulaDisplay";
 
 const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -21,6 +24,8 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [forum, setForum] = useState("");
+  const [showFormulas, setShowFormulas] = useState(false);
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -240,14 +245,6 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         onChange={handleInputChange}
       />
 
-      {/*<Button 
-        variant="contained" 
-        color="primary"
-        sx={{ mt: 2 }}
-      >
-        Enter
-      </Button> */}
-
       <InputLabel id="target-label" sx={{ mt: 2 }}>
         Calculate
       </InputLabel>
@@ -270,23 +267,69 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         <MenuItem value="All">All</MenuItem>
       </Select>
 
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showFormulas}
+            onChange={() => setShowFormulas(!showFormulas)}
+            color="primary"
+          />
+        }
+        label="Show Formulas"
+      />
       <Typography variant="h6" sx={{ mt: 2 }}>
         Results:
       </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-            results,
-            (key, value) => {
-              if (typeof value === "number") {
-                return Number(value.toFixed(2));
-              }
-              return value;
-            },
-            2
-          )
-          : "No results yet"}
-      </pre>
+      {showFormulas && results && userInput?.target && (
+        <FreeFallFormulaDisplay
+          topic="freeFall"
+          target={userInput.target}
+          results={results}
+          userInput={userInput}
+        />
+      )}
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="subtitle1">Calculated Results:</Typography>
+        {results ? (
+          <>
+            {results.finalVelocity && (
+              <Typography variant="body2">
+                Final Velocity: {Number(results.finalVelocity).toFixed(2)} m/s
+              </Typography>
+            )}
+            {results.finalHeight && (
+              <Typography variant="body2">
+                Final Height: {Number(results.finalHeight).toFixed(2)} m
+              </Typography>
+            )}
+            {results.time && (
+              <Typography variant="body2">
+                Fall Time: {(Array.isArray(results.time) ? results.time.map(t => Number(t).toFixed(2)).filter(t => t > 0).join(", ") : Number(results.time).toFixed(2))} s
+              </Typography>
+            )}
+            {results.initialVelocity && (
+              <Typography variant="body2">
+                Initial Velocity: {Number(results.initialVelocity).toFixed(2)} m/s
+              </Typography>
+            )}
+            {results.initialHeight && (
+              <Typography variant="body2">
+                Initial Height: {Number(results.initialHeight).toFixed(2)} m
+              </Typography>
+            )}
+            {results.gravity && (
+              <Typography variant="body2">
+                Gravity: {Number(results.gravity).toFixed(2)} m/s²
+              </Typography>
+            )}
+            {!Object.keys(results).length && (
+              <Typography variant="body2">No valid results</Typography>
+            )}
+          </>
+        ) : (
+          <Typography variant="body2">No results yet</Typography>
+        )}
+      </Box>
     </Paper>
   );
 };
