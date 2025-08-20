@@ -7,12 +7,8 @@ import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 
 const IndividualForum = () => {
-<<<<<<< Updated upstream
   const {forumId} = useParams();
   const [forumName, setForumName] = useState(""); 
-=======
-  const { forumId } = useParams();
->>>>>>> Stashed changes
   const [posts, setPosts] = useState([]);
 
   const navigate = useNavigate();

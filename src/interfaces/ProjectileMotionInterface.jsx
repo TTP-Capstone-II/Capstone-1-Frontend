@@ -10,10 +10,13 @@ import {
   Typography,
   Modal,
   Box,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import { ProjectileMotion } from "../topics/ProjectileMotion";
 import { API_URL } from "../shared";
 import axios from "axios";
+import FormulaDisplay from "../../utils/formulaDisplay";
 import "../AppStyles.css";
 
 const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }) => {
@@ -22,6 +25,8 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [forum, setForum] = useState("");
+  const [showFormulas, setShowFormulas] = useState(false);
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -71,7 +76,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
     const { name, value } = e.target;
     setUserInput({
       ...userInput,
-      [name]: parseFloat(value),
+      [name]: value === "" ? "" : parseFloat(value) || 0,
     });
   };
 
@@ -91,11 +96,11 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
     });
     setResults(calculations);
   }, [
-    userInput.target,
-    userInput.gravity,
-    userInput.initialVelocity,
-    userInput.launchAngle,
-    userInput.initialHeight,
+    userInput?.target,
+    userInput?.gravity,
+    userInput?.initialVelocity,
+    userInput?.launchAngle,
+    userInput?.initialHeight,
     simulation,
   ]);
 
@@ -156,7 +161,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+            endAdornment: <InputAdornment position="end">m/s²</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
@@ -207,44 +212,6 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         onChange={handleInputChange}
       />
 
-      {/*  <TextField
-        label="Final position"
-        type="number"
-        name="finalPosition"
-        value={userInput.finalPosition}
-        variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
-            },
-          }}
-        onChange={handleInputChange}
-      />
-
-      <TextField
-        label="Time"
-        type="number"
-        name="time"
-        value={userInput.time}
-        variant="outlined"
-        fullWidth
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-            input: {
-                endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            },
-          }}
-        onChange={handleInputChange}
-      />
-      <Button 
-        variant="contained" 
-        color="primary"
-        sx={{ mt: 2 }}
-      >
-        Enter
-      </Button>
-      */}
       <InputLabel id="target-label">Calculate</InputLabel>
       <Select
         label="Calculate"
@@ -269,23 +236,39 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         <MenuItem value="All">All</MenuItem>
       </Select>
 
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showFormulas}
+            onChange={() => setShowFormulas(!showFormulas)}
+            color="primary"
+          />
+        }
+        label="Show Formulas"
+      />
       <Typography variant="h6" sx={{ mt: 2 }}>
         Results:
       </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-            results,
-            (key, value) => {
-              if (typeof value === "number") {
-                return Number(value.toFixed(2));
-              }
-              return value;
-            },
-            2
-          )
-          : "No results yet"}
-      </pre>
+      {showFormulas && results && userInput?.target && (
+        <FormulaDisplay
+          topic="projectile-motion"
+          target={userInput.target}
+          results={results}
+          userInput={userInput}
+        />
+      )}
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="subtitle1">Calculated Results:</Typography>
+        <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+          {results
+            ? JSON.stringify(
+                results,
+                (key, value) => (typeof value === "number" ? Number(value.toFixed(2)) : value),
+                2
+              )
+            : "No results yet"}
+        </pre>
+      </Box>
     </Paper>
   );
 };

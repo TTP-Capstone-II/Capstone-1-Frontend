@@ -28,7 +28,7 @@ const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) =
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "var(--interface-box)",
+        backgroundColor: "var(--buttons)",
       }}
     >
       <CardContent>

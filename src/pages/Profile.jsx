@@ -9,13 +9,23 @@ import {
     Container,
     Avatar,
     Grid,
+    IconButton,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    Button,
 } from "@mui/material";
 import { API_URL } from "../shared";
 import SimulationCard from "./SimulationCard";
+import { useRef } from "react";
 import "../AppStyles.css";
 
 const Profile = ({ user }) => {
     const [simulations, setSimulations] = useState([]);
+    const [avatar, setAvatar] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const [open, setOpen] = useState(false);
+    const fileInputRef = useRef(null);
     const fetchSimulations = async () => {
         try {
             const response = await axios.get(`${API_URL}/api/simulation/${user.id}`);
@@ -34,17 +44,75 @@ const Profile = ({ user }) => {
         }
     };
 
+    const handleImageChange = (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onloadend = () => {
+            setPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleChangePicture = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleAvatarClick = () => setOpen(true);
+
+    const handleImageUpload = async (e) => {
+        e.preventDefault();
+
+        if (!preview) return;
+        try {
+            const response = await axios.post(`${API_URL}/api/upload`, {
+                image_url: preview,
+            });
+
+            await axios.patch(`${API_URL}/api/users/${user.id}`, {
+                profile_image: response.data.url,
+            });
+
+            setAvatar(response.data.url);
+            setOpen(false);
+            setPreview(null);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         if (user?.id) {
             fetchSimulations();
         }
     }, [user]);
 
+    useEffect(() => {
+        console.log(user);
+
+        const fetchUserAvatar = async () => {
+            try {
+                const resAvatar = await axios.get(`${API_URL}/api/users/${user.id}`);
+                console.log(resAvatar);
+                setAvatar(resAvatar.data.profile_image);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (user?.id) {
+            fetchUserAvatar();
+        }
+    }, [setAvatar]);
+
     return (
-        <Container sx={{ width: 1250, backgroundColor: "var(--interface-color)", marginTop: 4, boxShadow: 3, padding: 2, borderRadius: 1 }}>
+        <Container sx={{ width: 1250, backgroundColor: "var(--background-canvas)", marginTop: 4, boxShadow: 3, padding: 2, borderRadius: 1 }}>
             <Card elevation={6} square={false} component="section" sx={{
                 p: 2, border: '1px solid grey', display: 'flex',
-                justifyContent: 'center', height: "300px", margin: 16, gap: 20, marginTop: 4, backgroundColor: "var(--interface-box)", boxShadow: 3, borderRadius: 2
+                justifyContent: 'center', height: "300px", margin: 16, gap: 20, marginTop: 4, backgroundColor: "var(--buttons)", boxShadow: 3, borderRadius: 2
             }}>
                 <CardContent sx={{
                     display: 'flex',
@@ -55,9 +123,50 @@ const Profile = ({ user }) => {
                     height: '100%',
                 }}>
                     <Typography align="center">{user?.username}</Typography>
-                    <Avatar align="center" alt="profile_picture" src="https://www.pngfind.com/pngs/m/676-6764065_default-profile-picture-transparent-hd-png-download.png" sx={{ width: 80, height: 80 }} />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleImageChange}
+                    />
+                    <IconButton onClick={handleAvatarClick}>
+                        <Avatar
+                            alt="profile_picture"
+                            src={avatar || user?.profile_image}
+                            sx={{ width: 80, height: 80 }}
+                        />
+                    </IconButton>
                 </CardContent>
             </Card>
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogContent>
+                    <Box display="flex" justifyContent="center">
+                        <Avatar
+                            alt="profile_picture"
+                            src={preview || user?.profile_image}
+                            sx={{ width: 200, height: 200 }}
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions
+                    sx={{ justifyContent: "center", flexDirection: "column" }}
+                >
+                    <Button variant="outlined" onClick={handleChangePicture}>
+                        Change Picture
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 1 }}
+                        onClick={handleImageUpload}
+                        disabled={!preview}
+                    >
+                        Upload
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             <Box sx={{ p: 2 }}>
                 <Typography variant="h6" sx={{ mb: 2 }}>

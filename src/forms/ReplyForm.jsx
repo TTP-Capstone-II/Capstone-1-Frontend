@@ -9,11 +9,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
-<<<<<<< Updated upstream
 import socket from "../socket";
-=======
 import "../AppStyles.css";
->>>>>>> Stashed changes
 
 const ReplyForm = ({
   postId,
@@ -53,48 +50,6 @@ const ReplyForm = ({
   };
 
   return (
-<<<<<<< Updated upstream
-    isOpen && (
-      <div className="reply-page">
-        <FormControl>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              maxWidth: 600,
-            }}
-          >
-            <Box>
-              <TextareaAutosize
-                minRows={2}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                style={{
-                  width: "100%",
-                  fontSize: "1rem",
-                  padding: "10px",
-                  borderColor: "#c4c4c4",
-                  borderRadius: "4px",
-                  resize: "vertical",
-                }}
-              />
-            </Box>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!content.trim()}
-            >
-              Reply
-            </Button>
-          </Box>
-        </FormControl>
-      </div>
-    )
-=======
     <div className="reply-page">
       <FormControl>
         <Box
@@ -118,7 +73,7 @@ const ReplyForm = ({
                 width: "100%",
                 fontSize: "1rem",
                 padding: "10px",
-                backgroundColor: "var(--interface-box)",
+                backgroundColor: "var(--background-canvas)",
                 resize: "vertical",
                 border: "1px solid var(--buttons)",
                 borderRadius: "2px",
@@ -141,7 +96,6 @@ const ReplyForm = ({
         </Box>
       </FormControl>
     </div>
->>>>>>> Stashed changes
   );
 };
 

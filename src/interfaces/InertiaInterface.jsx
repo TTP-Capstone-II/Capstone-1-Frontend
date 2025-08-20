@@ -9,11 +9,14 @@ import {
     Select,
     MenuItem,
     Modal,
-    Box
+    Box,
+    Switch,
+    FormControlLabel,
 } from "@mui/material";
 import { API_URL } from "../shared";
 import { Inertia } from "../topics/Inertia";
 import axios from "axios";
+import InertiaFormulaDisplay from "../../utils/InertiaFormulaDisplay";
 import "../AppStyles.css";
 
 const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
@@ -22,6 +25,8 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [forum, setForum] = useState("");
+    const [showFormulas, setShowFormulas] = useState(false);
+
     const handleSave = async (e) => {
         e.preventDefault();
         try {
@@ -303,24 +308,85 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 <MenuItem value="All">All</MenuItem>
             </Select>
 
-            <Typography variant="h6" sx={{ mt: 2 }}>
-                Results:
-            </Typography>
-            <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                {results
-                    ? JSON.stringify(
-                        results,
-                        (key, value) => {
-                            if (typeof value === "number") {
-                                return Number(value.toFixed(2));
-                            }
-                            return value;
-                        },
-                        2
-                    )
-                    : "No results yet"}
-            </pre>
-        </Paper>
+            <FormControlLabel
+        control={
+          <Switch
+            checked={showFormulas}
+            onChange={() => setShowFormulas(!showFormulas)}
+            color="primary"
+          />
+        }
+        label="Show Formulas"
+      />
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Results:
+      </Typography>
+      {showFormulas && results && userInput?.target && (
+        <InertiaFormulaDisplay
+          topic="inertia"
+          target={userInput.target}
+          results={results}
+          userInput={userInput}
+        />
+      )}
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="subtitle1">Calculated Results:</Typography>
+        {results ? (
+          <>
+            {results.v1Final && (
+              <Typography variant="body2">
+                Final Velocity (Square 1): {Number(results.v1Final).toFixed(2)} m/s
+              </Typography>
+            )}
+            {results.v2Final && (
+              <Typography variant="body2">
+                Final Velocity (Square 2): {Number(results.v2Final).toFixed(2)} m/s
+              </Typography>
+            )}
+            {results.momentum1 && (
+              <Typography variant="body2">
+                Momentum (Square 1): {Number(results.momentum1).toFixed(2)} kg·m/s
+              </Typography>
+            )}
+            {results.momentum2 && (
+              <Typography variant="body2">
+                Momentum (Square 2): {Number(results.momentum2).toFixed(2)} kg·m/s
+              </Typography>
+            )}
+            {results.kineticEnergy1 && (
+              <Typography variant="body2">
+                Kinetic Energy (Square 1): {Number(results.kineticEnergy1).toFixed(2)} J
+              </Typography>
+            )}
+            {results.kineticEnergy2 && (
+              <Typography variant="body2">
+                Kinetic Energy (Square 2): {Number(results.kineticEnergy2).toFixed(2)} J
+              </Typography>
+            )}
+            {results.timeToCollision && Number.isFinite(Number(results.timeToCollision)) && (
+              <Typography variant="body2">
+                Time to Collision: {Number(results.timeToCollision).toFixed(2)} s
+              </Typography>
+            )}
+            {results.position1 && (
+              <Typography variant="body2">
+                Position (Square 1): {Number(results.position1).toFixed(2)} m
+              </Typography>
+            )}
+            {results.position2 && (
+              <Typography variant="body2">
+                Position (Square 2): {Number(results.position2).toFixed(2)} m
+              </Typography>
+            )}
+            {!Object.keys(results).length && (
+              <Typography variant="body2">No valid results</Typography>
+            )}
+          </>
+        ) : (
+          <Typography variant="body2">No results yet</Typography>
+        )}
+      </Box>
+    </Paper>
     );
 };
 

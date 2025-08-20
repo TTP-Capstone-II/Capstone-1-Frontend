@@ -42,7 +42,7 @@ const HomeForum = () => {
                                     boxShadow: 3,
                                 },
                                 width: 1250,
-                                backgroundColor: "var(--interface-color)",
+                                backgroundColor: "var(--background-canvas)",
                             }}
                         >
                             <CardContent>

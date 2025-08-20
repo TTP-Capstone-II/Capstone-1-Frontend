@@ -33,7 +33,7 @@ function timeAgo(date) {
 const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
   const {
     id,
-    author,
+    user,
     content,
     createdAt,
     likes,
@@ -81,10 +81,10 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
 
 return (
   <>
-    <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4, backgroundColor: "var(--interface-box)" }}>
+    <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4, backgroundColor: "var(--background-canvas)" }}>
       <CardContent>
         <Typography color="text.secondary">
-          {author} - {new Date(createdAt).toLocaleDateString()}
+          {userId.username} - {new Date(createdAt).toLocaleDateString()}
         </Typography>
         {content}
       </CardContent>

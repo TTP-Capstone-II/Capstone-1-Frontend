@@ -22,7 +22,7 @@ const FreeFall = ({ user }) => {
       gravity: "9.81",
       initialVelocity: "0",
       finalVelocity: "",
-      initialHeight: "50",
+      initialHeight: "700",
       finalHeight: "0",
       time: "",
       target: "",
@@ -32,12 +32,24 @@ const FreeFall = ({ user }) => {
   const handleEngineReady = (engine, world) => {
     const square = Matter.Bodies.rectangle(
       500,
-      userInput.initialHeight,
+      650 - userInput.initialHeight,
       50,
       50
     );
 
+    Matter.Body.setVelocity(square, {x: 0, y: userInput.initialVelocity});
+
     engine.world.gravity.y = Number(userInput.gravity) / 9.81;
+
+Matter.Events.on(engine, "beforeUpdate", () => {
+    if (square.position.y >= 675 - userInput.finalHeight) {
+      Matter.Body.setVelocity(square, { x: 0, y: 0 });
+      Matter.Body.setPosition(square, { x: square.position.x, y: 675 - userInput.finalHeight});
+      square.isStatic = true;
+    }
+  });
+
+
     World.add(world, square);
   };
 

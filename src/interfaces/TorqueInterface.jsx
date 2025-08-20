@@ -8,12 +8,18 @@ import {
   InputLabel,
   MenuItem,
   Typography,
+  Modal,
+  Box,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import { Torque } from "../topics/Torque";
+import TorqueFormulaDisplay from "../../utils/TorqueFormulaDisplay";
 import "../AppStyles.css";
 
 const TorqueInterface = ({ userInput, setUserInput }) => {
   const [results, setResults] = useState(null);
+  const [showFormulas, setShowFormulas] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -195,23 +201,69 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         <MenuItem value="All">All</MenuItem>
       </Select>
 
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showFormulas}
+            onChange={() => setShowFormulas(!showFormulas)}
+            color="primary"
+          />
+        }
+        label="Show Formulas"
+      />
       <Typography variant="h6" sx={{ mt: 2 }}>
         Results:
       </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-              results,
-              (key, value) => {
-                if (typeof value === "number") {
-                  return Number(value.toFixed(2));
-                }
-                return value;
-              },
-              2
-            )
-          : "No results yet"}
-      </pre>
+      {showFormulas && results && userInput?.target && (
+        <TorqueFormulaDisplay
+          topic="torque"
+          target={userInput.target}
+          results={results}
+          userInput={userInput}
+        />
+      )}
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="subtitle1">Calculated Results:</Typography>
+        {results ? (
+          <>
+            {results.torque && (
+              <Typography variant="body2">
+                Torque: {Number(results.torque).toFixed(2)} N·m
+              </Typography>
+            )}
+            {results.angularAcceleration && (
+              <Typography variant="body2">
+                Angular Acceleration: {Number(results.angularAcceleration).toFixed(2)} rad/s²
+              </Typography>
+            )}
+            {results.distanceFromPivot && (
+              <Typography variant="body2">
+                Distance from Pivot: {Number(results.distanceFromPivot).toFixed(2)} m
+              </Typography>
+            )}
+            {results.angle && Number.isFinite(Number(results.angle)) && (
+              <Typography variant="body2">
+                Angle: {Number(results.angle).toFixed(2)} °
+              </Typography>
+            )}
+            {results.angle && !Number.isFinite(Number(results.angle)) && (
+              <Typography variant="body2">
+                Angle: Invalid (check inputs)
+              </Typography>
+            )}
+            {results.force && (
+              <Typography variant="body2">
+                Force: {Number(results.force).toFixed(2)} N
+              </Typography>
+            )}
+            {!Object.keys(results).length && (
+              <Typography variant="body2">No valid results</Typography>
+            )}
+          </>
+        ) : (
+          <Typography variant="body2">No results yet</Typography>
+        )}
+      </Box>
     </Paper>
   );
 };

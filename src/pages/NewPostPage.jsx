@@ -40,7 +40,7 @@ const NewPostPage = ({ user }) => {
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600, backgroundColor: "var(--interface-color)", padding: 2, borderRadius: 1 }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600, backgroundColor: "var(--background-canvas)", padding: 2, borderRadius: 1 }}
                 >
                     <TextField
                         label="Title"
@@ -62,7 +62,7 @@ const NewPostPage = ({ user }) => {
                                 borderColor: '#c4c4c4',
                                 borderRadius: '4px',
                                 resize: 'vertical',
-                                backgroundColor: "var(--interface-color)",
+                                backgroundColor: "var(--background-canvas)",
                             }}
                         />
                     </Box>

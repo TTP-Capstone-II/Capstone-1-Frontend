@@ -29,13 +29,15 @@ import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import Sandbox from "./pages/Sandbox";
 import LandingPage from "./pages/LandingPage";
 
-
-
 const App = () => {
   const [user, setUser] = useState(null);
-  const { isAuthenticated, user: auth0User, logout: auth0Logout, isLoading } = useAuth0();
+  const {
+    isAuthenticated,
+    user: auth0User,
+    logout: auth0Logout,
+    isLoading,
+  } = useAuth0();
   const [checkingAuth, setCheckingAuth] = useState(true);
-
 
   const checkAuth = async () => {
     setCheckingAuth(true); // Start loading
@@ -43,13 +45,12 @@ const App = () => {
     console.log("Auth0 isAuthenticated:", isAuthenticated);
     console.log("Auth0 user:", auth0User);
 
-
     try {
       if (isAuthenticated && auth0User) {
         const response = await axios.post(
           `${API_URL}/auth/auth0-login`,
           {
-            auth0Id: auth0User.sub,       // 👈 This is the unique Auth0 ID
+            auth0Id: auth0User.sub, // 👈 This is the unique Auth0 ID
             email: auth0User.email,
             username: auth0User.name,
             picture: auth0User.picture,
@@ -66,13 +67,12 @@ const App = () => {
         setUser(response.data.user);
       }
     } catch (error) {
-      console.log("Not authenticated");
+      console.log("Not authenticated", error);
       setUser(null);
     } finally {
       setCheckingAuth(false); // Done loading
     }
   };
-
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -87,7 +87,6 @@ const App = () => {
       checkAuth();
     }
   }, [isLoading, isAuthenticated, auth0User]); // Watch all 3
-
 
   const handleLogout = async () => {
     try {
@@ -116,12 +115,16 @@ const App = () => {
     <div>
       <NavBar user={user} onLogout={handleLogout} checkingAuth={checkingAuth} theme={theme} setTheme={setTheme}/>
       <div className="app">
-        <Routes>"
+        <Routes>
+          "
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/free-fall" element={<FreeFall user={user} />} />
           <Route path="/free-fall/:simId" element={<FreeFall user={user} />} />
-          <Route path="/projectile-motion" element={<ProjectileMotion user={user} />} />
+          <Route
+            path="/projectile-motion"
+            element={<ProjectileMotion user={user} />}
+          />
           <Route path="/torque" element={<Torque user={user} />} />
           <Route path="/friction" element={<Friction user={user} />} />
           <Route path="/inertia" element={<Inertia user={user} />} />
@@ -139,7 +142,10 @@ const App = () => {
             element={<NewPostPage user={user} />}
           />
           <Route path="/whiteboard" element={<WhiteboardLanding />} />
-          <Route path="/whiteboard/:roomId" element={<WhiteboardRoom user={user} />} />
+          <Route
+            path="/whiteboard/:roomId"
+            element={<WhiteboardRoom user={user} />}
+          />
           <Route path="profile" element={<Profile user={user} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -150,11 +156,13 @@ const App = () => {
 
 const Root = () => {
   return (
-    <Auth0Provider domain="dev-w5l850kkmucq6zqz.us.auth0.com"
+    <Auth0Provider
+      domain="dev-w5l850kkmucq6zqz.us.auth0.com"
       clientId="cDmT65DZoqL5KVWOXj9vrLh2jFyPQxYi"
       authorizationParams={{
-        redirect_uri: window.location.origin
-      }}>
+        redirect_uri: window.location.origin,
+      }}
+    >
       <Router>
         <App />
       </Router>
