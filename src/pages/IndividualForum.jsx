@@ -39,7 +39,11 @@ const IndividualForum = () => {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      <Button variant="contained" color="success" onClick={handleClick}>
+      <Button variant="contained" sx={{
+        backgroundColor: "var(--buttons)",
+        color: "#fff",
+        '&:hover': { backgroundColor: "var(--buttons-hover)" },
+      }} onClick={handleClick}>
         New Post
       </Button>
     </div>

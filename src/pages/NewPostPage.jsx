@@ -3,6 +3,7 @@ import axios from "axios";
 import { TextField, Button, Box, TextareaAutosize, InputLabel, Select, MenuItem, Typography, FormControl } from '@mui/material';
 import { useParams, useNavigate } from "react-router";
 import { API_URL } from "../shared";
+import "../AppStyles.css";
 
 const NewPostPage = ({ user }) => {
     const [post, setPost] = useState([]);
@@ -39,7 +40,7 @@ const NewPostPage = ({ user }) => {
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600 }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600, backgroundColor: "var(--background-canvas)", padding: 2, borderRadius: 1 }}
                 >
                     <TextField
                         label="Title"
@@ -60,11 +61,12 @@ const NewPostPage = ({ user }) => {
                                 padding: '10px',
                                 borderColor: '#c4c4c4',
                                 borderRadius: '4px',
-                                resize: 'vertical'
+                                resize: 'vertical',
+                                backgroundColor: "var(--background-canvas)",
                             }}
                         />
                     </Box>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit" variant="contained" sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }}>
                         Submit
                     </Button>
                 </Box>

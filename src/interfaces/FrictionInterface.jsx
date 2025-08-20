@@ -16,6 +16,7 @@ import {
 import { Friction } from "../topics/Friction";
 import { API_URL } from "../shared";
 import axios from "axios";
+import "../AppStyles.css";
 import FrictionFormulaDisplay from "../../utils/frictionFormulaDisplay";
 
 const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
@@ -120,6 +121,7 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         flexDirection: "column",
         gap: 2,
         overflowY: "auto",
+        backgroundColor: "var(--interface-color)",
       }}
     >
       <Button onClick={handleOpen}>Save</Button>
@@ -246,7 +248,14 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, backgroundColor: "var(--interface-color)" }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+            }
+          }
+        }}
       >
         <MenuItem value="frictionForce">Friction Force</MenuItem>
         <MenuItem value="normalForce">Normal Force</MenuItem>

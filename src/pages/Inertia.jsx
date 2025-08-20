@@ -5,6 +5,7 @@ import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Runner, Mouse, MouseConstraint, Avatar } from "matter-js";
 import { Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import "../AppStyles.css";
 
 const Inertia = ({ user }) => {
     const location = useLocation();
@@ -21,25 +22,29 @@ const Inertia = ({ user }) => {
             time: "",
         });
 
+    const wallsCanvasColor = getComputedStyle(document.documentElement)
+            .getPropertyValue('--walls-canvas')
+            .trim();
+
     const leftWall = Matter.Bodies.rectangle(0, 350, 20, 700, {
         isStatic: true,
         restitution: 1,   // Perfectly elastic bounce
         friction: 0,
-        render: { fillStyle: 'black' }
+        render: { fillStyle: wallsCanvasColor }
     });
 
     const rightWall = Matter.Bodies.rectangle(1000, 350, 20, 700, {
         isStatic: true,
         restitution: 1,   // Perfectly elastic bounce
         friction: 0,
-        render: { fillStyle: 'black' }
+        render: { fillStyle: wallsCanvasColor }
     });
 
     const ground = Matter.Bodies.rectangle(500, 700, 1000, 20, {
         isStatic: true,
         friction: 0.2,     // Adjust friction to control how fast they slow down
         restitution: 0,    // No bounce on the ground
-        render: { fillStyle: 'black' }
+        render: { fillStyle: wallsCanvasColor }
     });
 
 

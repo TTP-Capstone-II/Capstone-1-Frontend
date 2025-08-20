@@ -5,6 +5,8 @@ import { API_URL } from "../shared";
 import ReplyList from "../components/forum/ReplyList";
 import ReplyForm from "../forms/ReplyForm";
 import socket from "../socket";
+import "../AppStyles.css";
+import { Container } from "@mui/material";
 
 const PostPage = ({ user }) => {
   const [post, setPost] = useState([]);
@@ -21,7 +23,7 @@ const PostPage = ({ user }) => {
       if (r.id === newReply.parentId) {
         const updatedChildren = r.childreplies ? [...r.childreplies, newReply] : [newReply];
         return { ...r, childReplies: updatedChildren };
-      } else if (r.childReplies && r.childReplies.length > 0 ) {
+      } else if (r.childReplies && r.childReplies.length > 0) {
         return { ...r, childReplies: insertReply(r.childReplies, newReply) };
       }
       return r;
@@ -71,20 +73,22 @@ const PostPage = ({ user }) => {
 
   return (
     <div className="forum-page">
-      <h1>{post.title}</h1>
-      <div>{post.content}</div>
-      <ReplyList
-        replies={replies}
-        postId={post.id}
-        userId={user?.id}
-        onReplyAdded={fetchReplies}
-      />
-      <ReplyForm
-        postId={post.id}
-        userId={user?.id}
-        onReplyAdded={fetchReplies}
-        autoClose={false}
-      />
+      <Container sx={{ width: 1250, backgroundColor: "var(--walls-canvas)", marginTop: 4, boxShadow: 3, padding: 2, borderRadius: 1 }}>
+        <div style={{ fontSize: "24px", color: "var(--background-canvas)", fontWeight: "bold", marginBottom: "16px", }}>{post.title}</div>
+        <div style={{ fontSize: "18px", color: "var(--background-canvas)", marginBottom: "24px", lineHeight: 1.6, }}>{post.content}</div>
+        <ReplyList
+          replies={replies}
+          postId={post.id}
+          userId={user?.id}
+          onReplyAdded={fetchReplies}
+        />
+        <ReplyForm
+          postId={post.id}
+          userId={user?.id}
+          onReplyAdded={fetchReplies}
+          autoClose={false}
+        />
+      </Container>
     </div>
   );
 };

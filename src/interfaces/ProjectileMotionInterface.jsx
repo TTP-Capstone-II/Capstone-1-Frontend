@@ -17,6 +17,7 @@ import { ProjectileMotion } from "../topics/ProjectileMotion";
 import { API_URL } from "../shared";
 import axios from "axios";
 import FormulaDisplay from "../../utils/formulaDisplay";
+import "../AppStyles.css";
 
 const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -116,6 +117,7 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         flexDirection: "column",
         gap: 2,
         overflowY: "auto",
+        backgroundColor: "var(--interface-color)",
       }}
     >
       <Button onClick={handleOpen}>Save</Button>
@@ -218,7 +220,14 @@ const ProjectileMotionInterface = ({ userInput, setUserInput, user, simulation }
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, backgroundColor: "var(--interface-color)" }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+            }
+          }
+        }}
       >
         <MenuItem value="range">Range</MenuItem>
         <MenuItem value="timeOfFlight">Time of Flight</MenuItem>

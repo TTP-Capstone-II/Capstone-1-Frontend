@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
+import "../../AppStyles.css";
 
 function timeAgo(date) {
   const now = new Date();
@@ -26,7 +27,7 @@ function timeAgo(date) {
 }
 
 const PostCard = ({ post }) => {
-  const {forumId} = useParams();
+  const { forumId } = useParams();
   const [forums, setForums] = useState([]);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
@@ -53,9 +54,9 @@ const PostCard = ({ post }) => {
       sx={{
         marginBottom: 2,
         cursor: "pointer",
-        "&:hover": {
-          boxShadow: 3,
-        },
+        boxShadow: 3,
+        width: 1250,
+        backgroundColor: "var(--background-canvas)",
       }}
       onClick={handleClick}
     >

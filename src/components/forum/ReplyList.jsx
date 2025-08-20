@@ -5,6 +5,7 @@ import ReplyCard from "./ReplyCard";
 import { Box } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
+import "../../AppStyles.css";
 
 const ReplyList = ({ postId, userId, replies: propReplies, onReplyAdded }) => {
   const [replies, setReplies] = useState([]);
@@ -51,7 +52,7 @@ const ReplyList = ({ postId, userId, replies: propReplies, onReplyAdded }) => {
   return (
     <Box
       sx={{
-        width: 700,
+        width: 1150,
         borderRadius: 1,
       }}
     >

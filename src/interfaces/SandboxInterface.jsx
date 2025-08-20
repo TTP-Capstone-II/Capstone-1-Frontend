@@ -16,6 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FreeFallMotion } from "../topics/FreeFall";
 import { API_URL } from "../shared";
 import axios from "axios";
+import "../AppStyles.css";
 
 const SandboxInterface = ({
     userInput,
@@ -108,7 +109,7 @@ const SandboxInterface = ({
                 flexDirection: "column",
                 gap: 2,
                 overflowY: "auto",
-                backgroundColor: "#F5D259",
+                backgroundColor: "var(--interface-color)",
             }}
         >
             {/* Create Buttons */}
@@ -129,7 +130,7 @@ const SandboxInterface = ({
                     });
                     setCreateModalOpen(true);
                 }}
-                sx={{ backgroundColor: "#073e7b", '&:hover': { backgroundColor: '#042851' }, }}
+                sx={{ backgroundColor: "var(--buttons)  ", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }}
             >
                 Create Square
             </Button>
@@ -150,7 +151,7 @@ const SandboxInterface = ({
                     });
                     setCreateModalOpen(true);
                 }}
-                sx={{ backgroundColor: "#073e7b", '&:hover': { backgroundColor: '#042851' }, }}
+                sx={{ backgroundColor: "var(--buttons)  ", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }}
             >
                 Create Circle
             </Button>
@@ -241,7 +242,7 @@ const SandboxInterface = ({
                         />
                     </Box>
 
-                    <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleCreate}>
+                    <Button variant="contained" sx={{ mt: 2, backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleCreate}>
                         Add {shapeType === "circle" ? "Circle" : "Square"}
                     </Button>
                 </Box>
@@ -253,7 +254,7 @@ const SandboxInterface = ({
             </Typography>
 
             {objects.map((obj) => (
-                <Accordion sx={{backgroundColor: "#E7BB1A"}}key={obj.id}>
+                <Accordion sx={{backgroundColor: "var(--interface-box)"}}key={obj.id}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Box>
                             <Typography>{obj.name}</Typography>
@@ -360,7 +361,7 @@ const modalStyle = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: "background.paper",
+    backgroundColor: "var(--interface-color)",
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,

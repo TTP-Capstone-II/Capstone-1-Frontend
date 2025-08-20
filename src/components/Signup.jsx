@@ -4,6 +4,8 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import "./AuthStyles.css";
 import { API_URL } from "../shared";
+import Button from "@mui/material/Button";
+import "../AppStyles.css";
 
 const Signup = ({ setUser }) => {
   const [formData, setFormData] = useState({
@@ -152,18 +154,18 @@ const Signup = ({ setUser }) => {
             )}
           </div>
 
-          <button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Creating account..." : "Sign Up"}
-          </button>
+          </Button>
         </form>
 
         <div className="form-group"> 
           <span>or</span>
         </div>
 
-        <button type="button" onClick={handleAuth0Signup} disabled={isLoading}>
+        <Button disabled={isLoading}>
           Sign up with Auth0
-        </button>
+        </Button>
 
         <p className="auth-link">
           Already have an account? <Link to="/login">Login</Link>

@@ -104,9 +104,16 @@ const App = () => {
     }
   };
 
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
     <div>
-      <NavBar user={user} onLogout={handleLogout} checkingAuth={checkingAuth} />
+      <NavBar user={user} onLogout={handleLogout} checkingAuth={checkingAuth} theme={theme} setTheme={setTheme}/>
       <div className="app">
         <Routes>
           "

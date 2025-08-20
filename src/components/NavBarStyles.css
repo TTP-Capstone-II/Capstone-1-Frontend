@@ -1,3 +1,5 @@
+@import './AuthStyles.css';
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -5,7 +7,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: #f8f9fa;
+  background-color: var(--navbar-color);
   padding: 1rem 2rem;
   border-bottom: 1px solid #e9ecef;
 }
@@ -13,12 +15,12 @@
 .nav-brand a {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #073E7B;
+  color: var(--navbar-text);
   text-decoration: none;
 }
 
 .nav-brand a:hover {
-  color: #042851;
+  color: var(--navbar-text-hover);
 }
 
 .nav-links {
@@ -33,7 +35,7 @@
 }
 
 .nav-link {
-  color: #073E7B;
+  color: var(--navbar-text);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -41,8 +43,8 @@
 }
 
 .nav-link:hover {
-  color: #042851;
-  background-color: #DC7F2D;
+  color: var(--navbar-text-hover);
+  background-color: var(--navbar-color-hover);
 }
 
 .user-section {
@@ -52,7 +54,7 @@
 }
 
 .username {
-  color: #073E7B;
+  color: var(--navbar-text);
   font-weight: bold;
 }
 

@@ -27,11 +27,11 @@ export default function Dropdown() {
   const open = Boolean(anchorEl);
 
   const menuItemStyles = {
-    color: "#073E7B",
-    backgroundColor: "#F19648",
+    color: "#899ca8",
+    backgroundColor: "#29435eff",
     "&:hover": {
-      backgroundColor: "#073E7B",
-      color: "#DC7F2D",
+      backgroundColor: "#899ca8",
+      color: "#1e2f41",
     },
   };
 
@@ -48,7 +48,7 @@ export default function Dropdown() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         className="nav-link"
-        sx={{ textTransform: "none", color: "#073E7B", fontSize: "1rem" }}
+        sx={{ textTransform: "none", color: "#899ca8", fontSize: "1rem" }}
       >
         Simulation Topics
       </Button>

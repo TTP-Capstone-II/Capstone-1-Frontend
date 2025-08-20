@@ -1,3 +1,5 @@
+@import "../AppStyles.css";
+
 .participants {
     display: flex;
     align-items: center;

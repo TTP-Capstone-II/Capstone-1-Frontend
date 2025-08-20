@@ -13,6 +13,7 @@ import {
     Box,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import "../AppStyles.css";
 
 const LandingPage = ({ user }) => {
     const sceneRef = useRef(null);
@@ -43,7 +44,7 @@ const LandingPage = ({ user }) => {
                 height: 600,
                 showAngleIndicator: true,
                 wireframes: false,
-                background: "#BDBDA3"
+                background: "var(--background-canvas)",
             }
         });
 
@@ -52,12 +53,15 @@ const LandingPage = ({ user }) => {
         const runner = Runner.create();
         Runner.run(runner, engine);
 
+        const wallsCanvasColor = getComputedStyle(document.documentElement)
+            .getPropertyValue('--walls-canvas')
+            .trim();
         // boundaries
         Composite.add(world, [
-            Bodies.rectangle(400, 0, 800, 50, { isStatic: true, render: { fillStyle: "#042851" } }),
-            Bodies.rectangle(400, 600, 800, 50, { isStatic: true, render: { fillStyle: "#042851" } }),
-            Bodies.rectangle(800, 300, 50, 600, { isStatic: true, render: { fillStyle: "#042851" } }),
-            Bodies.rectangle(0, 300, 50, 600, { isStatic: true, render: { fillStyle: "#042851" } })
+            Bodies.rectangle(400, 0, 800, 50, { isStatic: true, render: { fillStyle: wallsCanvasColor } }),
+            Bodies.rectangle(400, 600, 800, 50, { isStatic: true, render: { fillStyle: wallsCanvasColor } }),
+            Bodies.rectangle(800, 300, 50, 600, { isStatic: true, render: { fillStyle: wallsCanvasColor } }),
+            Bodies.rectangle(0, 300, 50, 600, { isStatic: true, render: { fillStyle: wallsCanvasColor } })
         ]);
 
         // explosion logic
@@ -148,7 +152,7 @@ const LandingPage = ({ user }) => {
             <div style={{ display: "flex", alignItems: "flex-start" }}>
                 <div ref={sceneRef} style={{ flexShrink: 0, marginLeft: "0px" }} />
 
-                <Paper elevation={3} style={{ marginLeft: "20px", padding: "20px", maxWidth: "450px", height: "600px", display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "#F5D259" }}>
+                <Paper elevation={3} style={{ marginLeft: "20px", padding: "20px", maxWidth: "450px", height: "600px", display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "var(--interface-color)" }}>
                     <div>
                         <Typography variant="h6" gutterBottom>
                             About This Project
@@ -166,10 +170,10 @@ const LandingPage = ({ user }) => {
                                 width: "200px",
                                 height: "45px",
                                 fontSize: "1.1rem",
-                                backgroundColor: "#073E7B",
+                                backgroundColor: "var(--buttons)",
                                 color: "#fff",
                                 '&:hover': {
-                                    backgroundColor: '#042851'
+                                    backgroundColor: 'var(--buttons-hover)'
                                 },
                                 textDecoration: 'none',
                                 display: 'flex',
@@ -187,10 +191,10 @@ const LandingPage = ({ user }) => {
                                 width: "200px",
                                 height: "45px",
                                 fontSize: "1.1rem",
-                                backgroundColor: "#073E7B",
+                                backgroundColor: "var(--buttons)",
                                 color: "#fff",
                                 '&:hover': {
-                                    backgroundColor: '#042851'
+                                    backgroundColor: "var(--buttons-hover)"
                                 },
                                 textDecoration: 'none',
                                 display: 'flex',

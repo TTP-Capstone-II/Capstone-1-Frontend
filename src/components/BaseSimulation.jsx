@@ -10,6 +10,7 @@ import {
   MouseConstraint,
 } from "matter-js";
 import { Button } from "@mui/material";
+import "../AppStyles.css";
 
 const BaseSimulation = ({ onEngineReady, topic }) => {
   const canvasRef = useRef(null);
@@ -42,12 +43,16 @@ const BaseSimulation = ({ onEngineReady, topic }) => {
         width: 1000,
         height: 700,
         wireframes: false,
-        background: "#BDBDA3",
+        background: "var(--background-canvas)",
       },
     });
 
+    const wallsCanvasColor = getComputedStyle(document.documentElement)
+            .getPropertyValue('--walls-canvas')
+            .trim();
+
     // Add ground
-    World.add(world, Bodies.rectangle(500, 690, 1200, 20, { isStatic: true }));
+    World.add(world, Bodies.rectangle(500, 690, 1200, 20, { isStatic: true, render: { fillStyle: wallsCanvasColor } }));
 
     // Create mouse
     const mouse = Mouse.create(renderRef.current.canvas);
@@ -101,7 +106,7 @@ const BaseSimulation = ({ onEngineReady, topic }) => {
         }}
       >
         <div style={{ width: "auto", margin: "10px auto" }}>
-          <Button variant="contained" sx={{ backgroundColor: "#073E7B",color: "#fff",'&:hover': {backgroundColor: '#042851' }, }} onClick={setupMatter}>Reset Simulation</Button>
+          <Button variant="contained" sx={{ backgroundColor: "var(--buttons)",color: "#fff",'&:hover': {backgroundColor: "var(--buttons-hover)" }, }} onClick={setupMatter}>Reset Simulation</Button>
         </div>
 
         <div

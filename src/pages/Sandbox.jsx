@@ -3,6 +3,7 @@ import Matter from "matter-js";
 import SandboxInterface from "../interfaces/SandboxInterface";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
+import "../AppStyles.css";
 
 const Sandbox = ({ user }) => {
     const location = useLocation();
@@ -33,33 +34,37 @@ const Sandbox = ({ user }) => {
                 width: 1000,
                 height: 700,
                 wireframes: false,
-                background: "#BDBDA3",
+                background: "var(--background-canvas)",
             },
         });
+
+        const wallsCanvasColor = getComputedStyle(document.documentElement)
+            .getPropertyValue('--walls-canvas')
+            .trim();
 
         const leftWall = Matter.Bodies.rectangle(0, 350, 20, 700, {
             isStatic: true,
             restitution: 1,   // Perfectly elastic bounce
             friction: 0,
-            render: { fillStyle: "#042851" }
+            render: { fillStyle: wallsCanvasColor }
         });
 
         const rightWall = Matter.Bodies.rectangle(1000, 350, 20, 700, {
             isStatic: true,
             restitution: 1,   // Perfectly elastic bounce
             friction: 0,
-            render: { fillStyle: "#042851" }
+            render: { fillStyle: wallsCanvasColor }
         });
 
         const topWall = Matter.Bodies.rectangle(500, 0, 1200, 20, {
             isStatic: true,
             restitution: 1,   // Perfectly elastic bounce
             friction: 0,
-            render: { fillStyle: "#042851" }
+            render: { fillStyle: wallsCanvasColor }
         });
 
         // Add ground
-        Matter.World.add(world, Matter.Bodies.rectangle(500, 690, 1200, 20, { isStatic: true, restitution: 0.8, render: { fillStyle: "#042851"} }));
+        Matter.World.add(world, Matter.Bodies.rectangle(500, 690, 1200, 20, { isStatic: true, restitution: 0.8, render: { fillStyle: wallsCanvasColor } }));
         Matter.World.add(world, leftWall);
         Matter.World.add(world, rightWall);
         Matter.World.add(world, topWall);
@@ -308,7 +313,7 @@ const Sandbox = ({ user }) => {
                 <div style={{ width: "auto", margin: "10px auto" }}>
                     <Button
                         variant="contained"
-                        sx={{ backgroundColor: "#073E7B",color: "#fff",'&:hover': {backgroundColor: '#042851' }, }}
+                        sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }}
                         onClick={() => {
                             // Reset simulation: clear all objects and reset engine/world
                             objects.forEach((obj) => {
@@ -326,7 +331,7 @@ const Sandbox = ({ user }) => {
                     style={{
                         width: 1000,
                         height: 700,
-                        backgroundColor: "#BDBDA3",
+                        backgroundColor: "var(--background-canvas)",
                     }}
                 />
             </div>

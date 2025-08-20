@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { Torque } from "../topics/Torque";
 import TorqueFormulaDisplay from "../../utils/TorqueFormulaDisplay";
+import "../AppStyles.css";
 
 const TorqueInterface = ({ userInput, setUserInput }) => {
   const [results, setResults] = useState(null);
@@ -65,6 +66,7 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         flexDirection: "column",
         gap: 2,
         overflowY: "auto",
+        backgroundColor: "var(--interface-color)",
       }}
     >
       <TextField
@@ -182,7 +184,14 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, backgroundColor: "var(--interface-color)" }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+            }
+          }
+        }}
       >
         <MenuItem value="torque">Torque</MenuItem>
         <MenuItem value="angularAcceleration">Angular Acceleration</MenuItem>
