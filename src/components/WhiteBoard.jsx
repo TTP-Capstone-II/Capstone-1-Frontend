@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, use } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 import VoiceChannel from "./VoiceChannel";
+import { Button } from "@mui/material";
 import "./WhiteBoardStyles.css";
 
 const WhiteBoard = ({ roomId, user }) => {
@@ -179,12 +180,12 @@ const WhiteBoard = ({ roomId, user }) => {
 
   return (
     <div>
-      <h2>Room Code: {roomId}</h2>
-      <button onClick={handleCopyLink}>Copy Invite Link</button>
+      <h2 style={{color: "var(--buttons-hover)"}}>Room Code: {roomId}</h2>
+      <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleCopyLink}>Copy Invite Link</Button>
       <VoiceChannel roomId={roomId} mySocketID={socketID} />
       {joinMessage && <p>{joinMessage}</p>}
       <div className="ColorPicker">
-        <label>Pen Color: </label>
+        <label style={{color: "var(--buttons-hover)"}}>Pen Color: </label>
         <input
           type="color"
           id="penColor"
@@ -201,7 +202,7 @@ const WhiteBoard = ({ roomId, user }) => {
         />
       </div>
       <div className="PenSizePicker">
-        <label>Pen Size: </label>
+        <label style={{color: "var(--buttons-hover)"}}>Pen Size: </label>
         <input
           type="range"
           min="1"
@@ -214,9 +215,9 @@ const WhiteBoard = ({ roomId, user }) => {
         />
       </div>
       <div className="EraseButton">
-        <button onClick={erase}>
+        <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={erase}>
           {isErasing ? "Eraser : on" : "Eraser : off"}
-        </button>
+        </Button>
       </div>
       <div className="participants">
         <span>{usersInRoom.length} online</span>
@@ -241,7 +242,7 @@ const WhiteBoard = ({ roomId, user }) => {
         onMouseLeave={stopDrawing}
         style={{ border: "1px solid black", cursor: "crosshair" }}
       />
-      <button onClick={clearCanvas}>Clear Canvas</button>
+      <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={clearCanvas}>Clear Canvas</Button>
     </div>
   );
 };

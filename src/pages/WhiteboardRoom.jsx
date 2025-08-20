@@ -1,15 +1,16 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import WhiteBoard from "../components/WhiteBoard";
+import "../AppStyles.css";
 
 const WhiteboardRoom = ({user}) => {
     const { roomId } = useParams();
 
   return (
     <div style={{ padding: "1rem" }}>
-      <h1>Whiteboard</h1>
+      <h1 style={{color: "var(--buttons-hover)"}}>Whiteboard</h1>
 
-      <Link to="/" style={{ textDecoration: "underline", color: "blue" }}>
+      <Link to="/" style={{ textDecoration: "underline", color: "var(--buttons)" }}>
         ⬅ Back to Home
       </Link>
 

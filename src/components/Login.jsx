@@ -4,8 +4,7 @@ import axios from "axios";
 import { API_URL } from "../shared";
 import "./AuthStyles.css";
 import { useAuth0 } from "@auth0/auth0-react";
-
-
+import Button from "@mui/material/Button";
 const Login = ({ setUser }) => {
   const { loginWithRedirect } = useAuth0();
   const [formData, setFormData] = useState({
@@ -117,18 +116,18 @@ const Login = ({ setUser }) => {
             )}
           </div>
 
-          <button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Logging in..." : "Login"}
-          </button>
+          </Button>
         </form>
 
         <div className="form-group">
           <span>or</span>
         </div>
 
-        <button type="button" onClick={() => loginWithRedirect()} disabled={isLoading}>
+        <Button type="button" onClick={() => loginWithRedirect()} disabled={isLoading}>
           Login with Auth0
-        </button>
+        </Button>
 
         <p className="auth-link">
           Don't have an account? <Link to="/signup">Sign up</Link>

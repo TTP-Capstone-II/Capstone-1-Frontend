@@ -14,6 +14,7 @@ import {
 import { FreeFallMotion } from "../topics/FreeFall";
 import { API_URL } from "../shared";
 import axios from "axios";
+import "../AppStyles.css";
 
 const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -115,6 +116,7 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         flexDirection: "column",
         gap: 2,
         overflowY: "auto",
+        backgroundColor: "var(--interface-color)",
       }}
     >
       <Button onClick={handleOpen}>Save</Button>
@@ -248,7 +250,7 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         Enter
       </Button> */}
 
-      <InputLabel id="target-label" sx={{ mt: 2 }}>
+      <InputLabel id="target-label" sx={{ mt: 2, backgroundColor: "var(--interface-color)" }}>
         Calculate
       </InputLabel>
       <Select
@@ -259,7 +261,14 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, backgroundColor: "var(--interface-color)" }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+            }
+          }
+        }}
       >
         <MenuItem value="finalVelocity">Final Velocity</MenuItem>
         <MenuItem value="finalHeight">Final Height</MenuItem>

@@ -6,6 +6,7 @@ import {
   Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import "../AppStyles.css";
 
 const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) =
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        backgroundColor: "var(--interface-box)",
       }}
     >
       <CardContent>
@@ -49,7 +51,7 @@ const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) =
         </Typography>
 
         <Button
-          variant="outlined"
+          variant="contained"
           color="error"
           onClick={(e) => {
             e.stopPropagation();

@@ -14,6 +14,7 @@ import {
 import { API_URL } from "../shared";
 import { Inertia } from "../topics/Inertia";
 import axios from "axios";
+import "../AppStyles.css";
 
 const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
     const [results, setResults] = useState(null);
@@ -118,6 +119,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 flexDirection: "column",
                 gap: 2,
                 overflowY: "auto",
+                backgroundColor: "var(--interface-color)",
             }}
         >
             <Button onClick={handleOpen}>Save</Button>
@@ -284,7 +286,14 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
                 variant="outlined"
                 fullWidth
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, backgroundColor: "var(--interface-color)" }}
+                MenuProps={{
+                    PaperProps: {
+                        sx: {
+                            backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+                        }
+                    }
+                }}
             >
                 <MenuItem value="finalVelocity">Final Velocities</MenuItem>
                 <MenuItem value="momentum">Momentum (before collision)</MenuItem>

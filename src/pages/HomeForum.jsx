@@ -4,6 +4,7 @@ import axios from "axios";
 import PostCard from "../components/forum/PostCard";
 import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import { API_URL } from "../shared";
+import "../AppStyles.css";
 
 const HomeForum = () => {
     const [forums, setForums] = useState([]);
@@ -24,7 +25,7 @@ const HomeForum = () => {
 
     return (
         <div className="forum-page">
-            <h1>All Forums</h1>
+            <h1 style={{justifyContent: "center"}}>All Forums</h1>
             <div className="forum-list">
                 {forums.map((forum) => (
                     <Link 
@@ -40,6 +41,8 @@ const HomeForum = () => {
                                 "&:hover": {
                                     boxShadow: 3,
                                 },
+                                width: 1250,
+                                backgroundColor: "var(--interface-color)",
                             }}
                         >
                             <CardContent>
@@ -47,10 +50,10 @@ const HomeForum = () => {
                                     {forum.name}
                                 </Typography>
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    description
+                                    {forum.description}
                                 </Typography>
                                 <Typography variant="subtitle2" color="text.secondary">
-                                    number of posts
+                                    {forum.numOfPosts} Posts
                                 </Typography>
                             </CardContent>
                         </Card>

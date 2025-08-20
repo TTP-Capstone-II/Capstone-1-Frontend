@@ -5,6 +5,7 @@ import Matter from "matter-js";
 import { Engine, Render, Bodies, World, Runner, Mouse, MouseConstraint } from "matter-js";
 import { Button } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import "../AppStyles.css";
 
 const Friction = ({ user }) => {
     const location = useLocation();
@@ -83,9 +84,16 @@ const Friction = ({ user }) => {
             }
         }
 
+        const wallsCanvasColor = getComputedStyle(document.documentElement)
+            .getPropertyValue('--walls-canvas')
+            .trim();
+
         const slope = Matter.Bodies.rectangle(slopeCenterX, slopeCenterY, slopeLength, 20, {
             angle: slopeAngle,
             isStatic: true,
+            render: {
+                fillStyle: wallsCanvasColor,
+            },
         });
         World.add(world, slope);
 

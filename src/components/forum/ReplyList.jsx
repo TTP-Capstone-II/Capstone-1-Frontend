@@ -5,8 +5,9 @@ import ReplyCard from "./ReplyCard";
 import { Box } from "@mui/material";
 import axios from "axios";
 import { API_URL } from "../../shared";
+import "../../AppStyles.css";
 
-const ReplyList = ({ postId, userId }) => {
+const ReplyList = ({ postId, userId, replies: propReplies, onReplyAdded }) => {
   const [replies, setReplies] = useState([]);
 
   const fetchReplies = async () => {
@@ -20,10 +21,12 @@ const ReplyList = ({ postId, userId }) => {
   };
 
   useEffect(() => {
-    if (postId) {
+    if (postId && !propReplies) {
       fetchReplies();
     }
-  }, [postId]);
+  }, [postId, propReplies]);
+
+  const currentReplies = propReplies || replies;
 
   const sampleReplies = [
     {
@@ -49,17 +52,17 @@ const ReplyList = ({ postId, userId }) => {
   return (
     <Box
       sx={{
-        width: 700,
+        width: 1150,
         borderRadius: 1,
       }}
     >
-      {replies.map((reply) => (
+      {currentReplies.map((reply) => (
         <ReplyCard
           key={reply.id}
           reply={reply}
           userId={userId}
           numOflikes={reply?.likes}
-          onReplyAdded={fetchReplies}
+          onReplyAdded={onReplyAdded}
         />
       ))}
     </Box>

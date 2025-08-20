@@ -9,27 +9,92 @@ import {
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../shared";
 import axios from "axios";
+<<<<<<< Updated upstream
+import socket from "../socket";
+=======
+import "../AppStyles.css";
+>>>>>>> Stashed changes
 
-const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
+const ReplyForm = ({
+  postId,
+  userId,
+  parentId = null,
+  autoClose = true,
+  onReplyAdded,
+}) => {
   const [content, setContent] = useState("");
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/post/${postId}/reply`, {
-        content,
-        userId,
-        postId,
-        parentId,
+      const { data: newReply } = await axios.post(
+        `${API_URL}/api/post/${postId}/reply`,
+        {
+          content,
+          userId,
+          postId,
+          parentId,
+        }
+      );
+      
+      socket.emit("new-reply", {
+        ...newReply,
+        room: `post_${postId}`,
       });
+
       setContent("");
-      if (onReplyAdded) onReplyAdded();
+      if (autoClose) setIsOpen(false);
+
+      //if (onReplyAdded) onReplyAdded();
     } catch (error) {
       console.error("error posting reply", error);
     }
   };
 
   return (
+<<<<<<< Updated upstream
+    isOpen && (
+      <div className="reply-page">
+        <FormControl>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              maxWidth: 600,
+            }}
+          >
+            <Box>
+              <TextareaAutosize
+                minRows={2}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                style={{
+                  width: "100%",
+                  fontSize: "1rem",
+                  padding: "10px",
+                  borderColor: "#c4c4c4",
+                  borderRadius: "4px",
+                  resize: "vertical",
+                }}
+              />
+            </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!content.trim()}
+            >
+              Reply
+            </Button>
+          </Box>
+        </FormControl>
+      </div>
+    )
+=======
     <div className="reply-page">
       <FormControl>
         <Box
@@ -53,18 +118,30 @@ const ReplyForm = ({ postId, userId, parentId = null, onReplyAdded }) => {
                 width: "100%",
                 fontSize: "1rem",
                 padding: "10px",
-                borderColor: "#c4c4c4",
-                borderRadius: "4px",
+                backgroundColor: "var(--interface-box)",
                 resize: "vertical",
+                border: "1px solid var(--buttons)",
+                borderRadius: "2px",
+                outline: "none",
+                marginLeft: "5px",
+              }}
+              onFocus={(e) => {
+                e.target.style.border = "1px solid var(--buttons)";
+                e.target.style.boxShadow = "0 0 0 2px var(--buttons-hover)";
+              }}
+              onBlur={(e) => {
+                e.target.style.border = "1px solid var(--buttons)";
+                e.target.style.boxShadow = "none";
               }}
             />
           </Box>
-          <Button type="submit" variant="contained" color="primary" disabled={!content.trim()}>
+          <Button type="submit" variant="contained" sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} disabled={!content.trim()}>
             Reply
           </Button>
         </Box>
       </FormControl>
     </div>
+>>>>>>> Stashed changes
   );
 };
 

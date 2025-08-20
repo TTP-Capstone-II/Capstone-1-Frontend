@@ -2,14 +2,18 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import Dropdown from "./Dropdown.jsx";
 import "./NavBarStyles.css";
+import { Button } from "@mui/material";
 
-const NavBar = ({ user, onLogout, checkingAuth }) => {
-  console.log("Navbar user:", user);
+const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
+  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
   return (
-    <nav className="navbar" style={{ backgroundColor: "#F19648" }}>
+    <nav className="navbar">
       <div className="nav-brand">
         <NavLink to="/">Capstone II</NavLink>
       </div>
+      <Button onClick={toggleTheme} className="nav-link" style={{ marginLeft: "1rem" }}>
+        {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+      </Button>
 
       <div className="nav-links">
         {checkingAuth ? (

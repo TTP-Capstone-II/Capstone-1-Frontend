@@ -5,8 +5,36 @@
   font-family: "Raleway", sans-serif;
 }
 
+:root {
+  --background-color: #eae8e4;
+  --walls-canvas: #4c5559ff;
+  --background-canvas: #ddd8cfff;
+  --buttons: #6B7B84;
+  --buttons-hover: #58656c;
+  --navbar-color: #29435eff;
+  --navbar-color-hover: #25415e;
+  --navbar-text: #899ca8;
+  --navbar-text-hover: #58656c;
+  --interface-color: #f9e4bc;
+  --interface-box: #e6cc9bff;
+}
+
+[data-theme="dark"] {
+  --background-color: #888685;
+  --walls-canvas: #333333;
+  --background-canvas: #444444;
+  --buttons: #555555;
+  --buttons-hover: #666666;
+  --navbar-color: #090F15;
+  --navbar-color-hover: #0f1923;
+  --navbar-text: #cccccc;
+  --navbar-text-hover: #ffffff;
+  --interface-color: #4c4949;
+  --interface-box: #333333;
+}
+
 body {
-  background-color: #ECECD1;
+  background-color: var(--background-color);
 }
 
 .title {
@@ -29,6 +57,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -38,4 +67,46 @@ body {
   width: 100px;
   height: 100px;
   animation: spin 15s linear infinite;
+}
+
+.whiteboard-page {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 80px;
+  /* Push center content down to avoid overlapping with title */
+}
+
+/* Top-left back link */
+.top-left {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.back-link {
+  text-decoration: underline;
+  color: var(--navbar-color);
+}
+
+/* Title at top center */
+.page-title {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+/* Centered content below title */
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }

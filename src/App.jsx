@@ -105,9 +105,16 @@ const App = () => {
     }
   };
 
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
     <div>
-      <NavBar user={user} onLogout={handleLogout} checkingAuth={checkingAuth} />
+      <NavBar user={user} onLogout={handleLogout} checkingAuth={checkingAuth} theme={theme} setTheme={setTheme}/>
       <div className="app">
         <Routes>"
           <Route path="/login" element={<Login setUser={setUser} />} />
@@ -119,7 +126,7 @@ const App = () => {
           <Route path="/friction" element={<Friction user={user} />} />
           <Route path="/inertia" element={<Inertia user={user} />} />
           <Route path="/sandbox" element={<Sandbox user={user} />} />
-          <Route exact path="/" element={<Home user={user}/>} />
+          <Route exact path="/" element={<Home user={user} />} />
           <Route path="/forum" element={<HomeForum />} />
           <Route path="/forum/:forumId/posts" element={<IndividualForum />} />
           <Route path="landing-page" element={<LandingPage />} />

@@ -7,7 +7,12 @@ import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
 
 const IndividualForum = () => {
+<<<<<<< Updated upstream
   const {forumId} = useParams();
+  const [forumName, setForumName] = useState(""); 
+=======
+  const { forumId } = useParams();
+>>>>>>> Stashed changes
   const [posts, setPosts] = useState([]);
 
   const navigate = useNavigate();
@@ -19,7 +24,8 @@ const IndividualForum = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/forum/${forumId}/posts`);
-      setPosts(response.data);
+      setForumName(response.data.forumName);
+      setPosts(response.data.posts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -31,13 +37,17 @@ const IndividualForum = () => {
 
   return (
     <div className="forum-page">
-      <h1>Forum Posts</h1>
+      <h1>{forumName} Posts</h1>
       <div className="post-list">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      <Button variant="contained" color="success" onClick={handleClick}>
+      <Button variant="contained" sx={{
+        backgroundColor: "var(--buttons)",
+        color: "#fff",
+        '&:hover': { backgroundColor: "var(--buttons-hover)" },
+      }} onClick={handleClick}>
         New Post
       </Button>
     </div>

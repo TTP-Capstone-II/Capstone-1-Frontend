@@ -6,6 +6,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 import { API_URL } from "../../shared";
 import ReplyForm from "../../forms/ReplyForm";
+import "../../AppStyles.css";
 
 //Function for timestamps
 function timeAgo(date) {
@@ -80,7 +81,7 @@ const ReplyCard = ({ reply, userId, onReplyAdded, depth = 0 }) => {
 
 return (
   <>
-    <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4 }}>
+    <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4, backgroundColor: "var(--interface-box)" }}>
       <CardContent>
         <Typography color="text.secondary">
           {author} - {new Date(createdAt).toLocaleDateString()}
@@ -98,7 +99,7 @@ return (
         <Button
           size="small"
           onClick={() => setShowReplyForm(!showReplyForm)}
-          sx={{ ml: 2 }}
+          sx={{ ml: 2, color: "var(--buttons)" }}
         >
           {showReplyForm ? "Cancel" : "Reply"}
         </Button>
