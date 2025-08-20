@@ -10,10 +10,13 @@ import {
   Typography,
   Modal,
   Box,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import { Friction } from "../topics/Friction";
 import { API_URL } from "../shared";
 import axios from "axios";
+import FrictionFormulaDisplay from "../../utils/frictionFormulaDisplay";
 
 const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
@@ -21,6 +24,8 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [forum, setForum] = useState("");
+  const [showFormulas, setShowFormulas] = useState(false);
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -158,7 +163,7 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         inputProps={{ step: "0.01" }} //change soon
         slotProps={{
           input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+            endAdornment: <InputAdornment position="end">m/s²</InputAdornment>,
           },
         }}
         onChange={handleInputChange}
@@ -253,23 +258,39 @@ const FrictionInterface = ({ userInput, setUserInput, user, simulation }) => {
         <MenuItem value="all">All</MenuItem>
       </Select>
 
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showFormulas}
+            onChange={() => setShowFormulas(!showFormulas)}
+            color="primary"
+          />
+        }
+        label="Show Formulas"
+      />
       <Typography variant="h6" sx={{ mt: 2 }}>
         Results:
       </Typography>
-      <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-        {results
-          ? JSON.stringify(
-            results,
-            (key, value) => {
-              if (typeof value === "number") {
-                return Number(value.toFixed(2));
-              }
-              return value;
-            },
-            2
-          )
-          : "No results yet"}
-      </pre>
+      {showFormulas && results && userInput?.target && (
+        <FrictionFormulaDisplay
+          topic="friction"
+          target={userInput.target}
+          results={results}
+          userInput={userInput}
+        />
+      )}
+      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+        <Typography variant="subtitle1">Calculated Results:</Typography>
+        <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+          {results
+            ? JSON.stringify(
+                results,
+                (key, value) => (typeof value === "number" ? Number(value.toFixed(2)) : value),
+                2
+              )
+            : "No results yet"}
+        </pre>
+      </Box>
     </Paper>
   );
 };
