@@ -9,8 +9,8 @@ const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <NavLink to="/">Name</NavLink>
-      </div>
+        <NavLink to="/">Newton's Playground</NavLink>
+      </div> 
 
       <div className="nav-links">
         {checkingAuth ? (
