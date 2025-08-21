@@ -18,7 +18,7 @@ const NewPostPage = ({ user }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${API_URL}/api/forum/${forumId}/post`, {
+            const response = await axios.post(`${API_URL}/api/forum/${forumId}/posts`, {
                 title,
                 userId: user.id,
                 content,
