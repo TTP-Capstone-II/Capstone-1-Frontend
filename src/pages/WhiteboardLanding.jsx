@@ -35,17 +35,17 @@ const WhiteboardLanding = () => {
     <div className="whiteboard-page">
       {/* Top-left back link */}
       <div className="top-left">
-        <Link to="/" className="back-link">
+        <Link style={{color: "var(--text)"}} to="/" className="back-link">
           ⬅ Back to Home
         </Link>
       </div>
 
       {/* Top-center title */}
-      <h1 className="page-title">Collaborative Whiteboard</h1>
+      <h1 className="page-title" style={{ color: "var(--text)"}}>Collaborative Whiteboard</h1>
 
       {/* Centered content (below title) */}
       <div className="center-content">
-        <Typography>
+        <Typography sx={{ mb: 2, color: "var(--text)" }}>
           Create a new whiteboard room or join an existing one.
         </Typography>
 
@@ -62,7 +62,7 @@ const WhiteboardLanding = () => {
           Create New Room
         </Button>
 
-        <Typography>OR</Typography>
+        <Typography sx={{ color: "var(--text)"}}>OR</Typography>
 
         <div style={{ marginTop: "10px" }}>
           <input

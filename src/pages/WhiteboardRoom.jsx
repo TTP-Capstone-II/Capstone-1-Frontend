@@ -8,8 +8,6 @@ const WhiteboardRoom = ({user}) => {
 
   return (
     <div style={{ padding: "1rem" }}>
-      <h1 style={{color: "var(--buttons-hover)"}}>Whiteboard</h1>
-
       <Link to="/" style={{ textDecoration: "underline", color: "var(--buttons)" }}>
         ⬅ Back to Home
       </Link>

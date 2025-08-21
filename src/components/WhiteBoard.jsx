@@ -179,72 +179,124 @@ const WhiteBoard = ({ roomId, user }) => {
   };
 
   return (
-    <div>
-      <h2 style={{color: "var(--buttons-hover)"}}>Room Code: {roomId}</h2>
-      <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleCopyLink}>Copy Invite Link</Button>
-      <VoiceChannel roomId={roomId} mySocketID={socketID} />
-      {joinMessage && <p>{joinMessage}</p>}
-      <div className="ColorPicker">
-        <label style={{color: "var(--buttons-hover)"}}>Pen Color: </label>
-        <input
-          type="color"
-          id="penColor"
-          value={penColor}
-          onChange={(e) => {
-            setPenColor(e.target.value);
-            contextRef.current.strokeStyle = e.target.value; // Update the stroke color
+    <div className="whiteboard-container">
 
-            socket.emit("pen-color-change", {
-              userId: socket.id,
-              penColor: e.target.value,
-            });
-          }}
-        />
-      </div>
-      <div className="PenSizePicker">
-        <label style={{color: "var(--buttons-hover)"}}>Pen Size: </label>
-        <input
-          type="range"
-          min="1"
-          max="10"
-          value={penSize}
-          onChange={(e) => {
-            setPenSize(e.target.value);
-            contextRef.current.lineWidth = e.target.value; // Update the line width
-          }}
-        />
-      </div>
-      <div className="EraseButton">
-        <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={erase}>
-          {isErasing ? "Eraser : on" : "Eraser : off"}
-        </Button>
-      </div>
-      <div className="participants">
-        <span>{usersInRoom.length} online</span>
-        <div className="user-list">
-          {usersInRoom.map((u) => (
-            <div
-              key={u.userId}
-              className="user-avatar"
-              style={{ backgroundColor: u.penColor }}
-              title={u.username}
-            >
-              <span>{u.username[0].toUpperCase()}</span>
-            </div>
-          ))}
+      {/* Pen Toolbar (Top Left) */}
+      <div className="pen-toolbar">
+        <div className="ColorPicker">
+          <label>Pen Color:</label>
+          <input
+            type="color"
+            id="penColor"
+            value={penColor}
+            onChange={(e) => {
+              setPenColor(e.target.value);
+              contextRef.current.strokeStyle = e.target.value;
+              socket.emit("pen-color-change", {
+                userId: socket.id,
+                penColor: e.target.value,
+              });
+            }}
+          />
+        </div>
+
+        <div className="PenSizePicker">
+          <label>Pen Size:</label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={penSize}
+            onChange={(e) => {
+              setPenSize(e.target.value);
+              contextRef.current.lineWidth = e.target.value;
+            }}
+          />
+        </div>
+
+        <div className="EraseButton">
+          <Button onClick={erase}>
+            {isErasing ? "Eraser: ON" : "Eraser: OFF"}
+          </Button>
+        </div>
+
+        <div className="ClearCanvas">
+          <Button onClick={clearCanvas}>Clear Canvas</Button>
         </div>
       </div>
+
+      {/* Blue Border Below Pen Tools */}
+      <div className="canvas-top-border" />
+
+      {/* Room Info & Users (Top Right) */}
+      <div className="top-right">
+        <div style={{ textAlign: "right" }}>
+          <h2 style={{ color: "var(--buttons-hover)", margin: 0 }}>
+            Room Code: {roomId}
+          </h2>
+          <Button
+            sx={{
+              backgroundColor: "var(--buttons)",
+              color: "#fff",
+              mt: 1,
+              '&:hover': { backgroundColor: "var(--buttons-hover)" },
+            }}
+            onClick={handleCopyLink}
+          >
+            Copy Invite Link
+          </Button>
+        </div>
+
+        <div className="top-right-header">
+          <span style={{ color: "var(--buttons-hover)" }}>
+            {usersInRoom.length} online
+          </span>
+          <div className="user-list">
+            {usersInRoom.map((u) => (
+              <div
+                key={u.userId}
+                className="user-avatar"
+                style={{ backgroundColor: u.penColor }}
+                title={u.username}
+              >
+                <span>{u.username[0].toUpperCase()}</span>
+              </div>
+            ))}
+          </div>
+          <VoiceChannel roomId={roomId} mySocketID={socketID} />
+        </div>
+      </div>
+
+      {/* Join Message */}
+      {joinMessage && (
+        <p
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            zIndex: 20,
+          }}
+        >
+          {joinMessage}
+        </p>
+      )}
+
+      {/* Drawing Canvas */}
       <canvas
-        ref={canvasRef} // Reference to the canvas element
+        ref={canvasRef}
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseLeave={stopDrawing}
-        style={{ border: "1px solid black", cursor: "crosshair" }}
       />
-      <Button sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={clearCanvas}>Clear Canvas</Button>
     </div>
   );
+
 };
 
 function throttle(callback, delay) {

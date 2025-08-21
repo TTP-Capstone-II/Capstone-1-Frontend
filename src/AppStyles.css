@@ -5,10 +5,17 @@
   font-family: "Raleway", sans-serif;
 }
 
+canvas {
+  display: block;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --background-color: #eae8e4;
-  --walls-canvas: #4c5559ff;
-  --background-canvas: #ddd8cfff;
+  --walls-canvas: #4c5559;
+  --background-canvas: #DDD8CF;
   --buttons: #6B7B84;
   --buttons-hover: #58656c;
   --navbar-color: #29435eff;
@@ -17,20 +24,22 @@
   --navbar-text-hover: #58656c;
   --interface-color: #E97451;
   --interface-box: #CC5500;
+  --text: #000000;
 }
 
 [data-theme="dark"] {
-  --background-color: #888685;
-  --walls-canvas: #333333;
-  --background-canvas: #444444;
-  --buttons: #555555;
-  --buttons-hover: #666666;
+  --background-color: #15171b;
+  --walls-canvas: #b3aaa6;
+  --background-canvas: #222730;
+  --buttons: #94847b;
+  --buttons-hover: #a79a93;
   --navbar-color: #090F15;
   --navbar-color-hover: #0f1923;
-  --navbar-text: #cccccc;
-  --navbar-text-hover: #ffffff;
-  --interface-color: #4c4949;
-  --interface-box: #333333;
+  --navbar-text: #766357;
+  --navbar-text-hover: #a79a93;
+  --interface-color: #168bae;
+  --interface-box: #33aaff;
+  --text: #ffffff;
 }
 
 body {

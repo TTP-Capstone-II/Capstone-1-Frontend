@@ -5,6 +5,7 @@ import PostCard from "../components/forum/PostCard";
 import { Card, CardContent, Typography, Button, Paper } from "@mui/material";
 import { API_URL } from "../shared";
 import { useNavigate } from "react-router-dom";
+import "../AppStyles.css";
 
 const IndividualForum = () => {
   const {forumId} = useParams();
@@ -33,7 +34,7 @@ const IndividualForum = () => {
 
   return (
     <div className="forum-page">
-      <h1>{forumName} Posts</h1>
+      <h1 style={{color: "var(--text)"}}>{forumName} Posts</h1>
       <div className="post-list">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Button, MenuItem, Popper, Paper, Fade } from "@mui/material";
 import "./NavBarStyles.css";
+import "../AppStyles.css";
 
 export default function Dropdown() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -27,11 +28,11 @@ export default function Dropdown() {
   const open = Boolean(anchorEl);
 
   const menuItemStyles = {
-    color: "#899ca8",
-    backgroundColor: "#29435eff",
+    color: "var(--navbar-color)",
+    backgroundColor: "#var(--navbar-color)",
     "&:hover": {
-      backgroundColor: "#899ca8",
-      color: "#1e2f41",
+      backgroundColor: "var(--navbar-color)",
+      color: "var(--navbar-text)",
     },
   };
 
@@ -48,7 +49,7 @@ export default function Dropdown() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         className="nav-link"
-        sx={{ textTransform: "none", color: "#899ca8", fontSize: "1rem" }}
+        sx={{ textTransform: "none", color: "var(--navbar-text)", fontSize: "1rem" }}
       >
         Simulation Topics
       </Button>
@@ -67,6 +68,7 @@ export default function Dropdown() {
               sx={{
                 position: "relative",
                 zIndex: 1500,
+                backgroundColor: "var(--navbar-text)",
               }}
             >
               <MenuItem

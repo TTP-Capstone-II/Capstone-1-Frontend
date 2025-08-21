@@ -1,35 +1,118 @@
 @import "../AppStyles.css";
 
 .participants {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8f8f8;
-    padding: 5px 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .user-list {
-    display: flex;
-    gap: 5px;
-  }
-  
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f8f8;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-list {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.whiteboard-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f8f8f8;
+  overflow: hidden;
+}
+
+.pen-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Increased spacing */
+  padding: 15px 20px;
+  background-color: #f8f8f8;
+  z-index: 10;
+}
+
+.pen-toolbar label {
+  font-weight: bold;
+  color: var(--buttons-hover);
+  margin-bottom: 3px;
+}
+
+.pen-toolbar input[type="range"] {
+  width: 150px;
+}
+
+.pen-toolbar button,
+.pen-toolbar .MuiButton-root {
+  background-color: var(--buttons);
+  color: #fff;
+}
+
+.pen-toolbar .MuiButton-root:hover {
+  background-color: var(--buttons-hover);
+}
+
+.canvas-top-border {
+  width: 100%;
+  height: 5px;
+  background-color: var(--navbar-color);
+  position: absolute;
+  top: 230px;
+  left: 0;
+  z-index: 10;
+}
+
+.whiteboard-container canvas {
+  position: absolute;
+  top: 235px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 235px);
+  cursor: crosshair;
+}
+
+.top-right {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  z-index: 10;
+  text-align: right;
+}
+
+.top-right .user-list {
+  margin-top: 5px;
+}
+
+.top-right-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  text-align: right;
+}

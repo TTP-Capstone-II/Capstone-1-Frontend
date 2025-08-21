@@ -9,11 +9,8 @@ const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <NavLink to="/">Capstone II</NavLink>
+        <NavLink to="/">Name</NavLink>
       </div>
-      <Button onClick={toggleTheme} className="nav-link" style={{ marginLeft: "1rem" }}>
-        {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-      </Button>
 
       <div className="nav-links">
         {checkingAuth ? (
@@ -34,6 +31,9 @@ const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
             <button onClick={onLogout} className="logout-btn">
               Logout
             </button>
+            <Button onClick={toggleTheme} className="nav-link">
+              {theme === "light" ? "🌙" : "☀️"}
+            </Button>
           </div>
         ) : (
           <div className="auth-links">
@@ -43,6 +43,9 @@ const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
             <NavLink to="/signup" className="nav-link">
               Sign Up
             </NavLink>
+            <Button onClick={toggleTheme} className="nav-link">
+              {theme === "light" ? "🌙" : "☀️"}
+            </Button>
           </div>
         )}
       </div>

@@ -127,7 +127,7 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 backgroundColor: "var(--interface-color)",
             }}
         >
-            <Button onClick={handleOpen}>Save</Button>
+            <Button variant="contained" sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleOpen}>Save</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -140,12 +140,12 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     width: 400,
-                    bgcolor: 'background.paper',
+                    backgroundColor: 'var(--interface-color)',
                     border: '2px solid #000',
                     boxShadow: 24,
                     p: 4,
                 }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Typography id="modal-modal-title" variant="h6" component="h2" color="var(--text)">
                         Are you sure you want to save this simulation?
                     </Typography>
                     <TextField
@@ -153,8 +153,19 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                         value={forum}
                         onChange={(e) => setForum(e.target.value)}
                         fullWidth
+                        InputProps={{
+                            style: {
+                                color: "var(--text)",
+                                backgroundColor: "var(--interface-color)",
+                            },
+                        }}
+                        InputLabelProps={{
+                            style: {
+                                color: "var(--text)",
+                            },
+                        }}
                     />
-                    <Button id="modal-modal-description" sx={{ mt: 2 }} onClick={handleSaveOrUpdate}>
+                    <Button id="modal-modal-description" sx={{ mt: 2, backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleSaveOrUpdate}>
                         {simulation ? "Update Simulation" : "Save Simulation"}
                     </Button>
                 </Box>
@@ -165,11 +176,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="gravity"
                 value={userInput.gravity}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -180,11 +204,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square1_mass"
                 value={userInput.square1_mass}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">kg</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -195,11 +232,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square1_initialAcceleration"
                 value={userInput.square1_initialAcceleration}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -210,11 +260,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square1_initialPosition"
                 value={userInput.square1_initialPosition}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -225,11 +288,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square2_mass"
                 value={userInput.square2_mass}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">kg</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -240,11 +316,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square2_initialAcceleration"
                 value={userInput.square2_initialAcceleration}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -255,11 +344,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 name="square2_initialPosition"
                 value={userInput.square2_initialPosition}
                 variant="outlined"
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -271,11 +373,24 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 value={userInput.time}
                 variant="outlined"
                 fullWidth
-                inputProps={{ step: "0.01" }} //change soon
-                slotProps={{
-                    input: {
-                        endAdornment: <InputAdornment position="end">s</InputAdornment>,
+                inputProps={{
+                    step: "0.01",
+                    style: {
+                        color: "var(--text)",
+                        backgroundColor: "var(--interface-color)",
                     },
+                }}
+                InputLabelProps={{
+                    style: {
+                        color: "var(--text)",
+                    },
+                }}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <span style={{ color: 'var(--text)' }}>s</span>
+                        </InputAdornment>
+                    ),
                 }}
                 onChange={handleInputChange}
             />
@@ -291,11 +406,12 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
                 onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
                 variant="outlined"
                 fullWidth
-                sx={{ mb: 2, backgroundColor: "var(--interface-color)" }}
+                sx={{ mb: 2, backgroundColor: "var(--interface-color)", color: "var(--text)" }}
                 MenuProps={{
                     PaperProps: {
                         sx: {
-                            backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+                            backgroundColor: "var(--interface-color)",
+                            color: "var(--text)",
                         }
                     }
                 }}
@@ -309,84 +425,90 @@ const InertiaInterface = ({ userInput, setUserInput, user, simulation }) => {
             </Select>
 
             <FormControlLabel
-        control={
-          <Switch
-            checked={showFormulas}
-            onChange={() => setShowFormulas(!showFormulas)}
-            color="primary"
-          />
-        }
-        label="Show Formulas"
-      />
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        Results:
-      </Typography>
-      {showFormulas && results && userInput?.target && (
-        <InertiaFormulaDisplay
-          topic="inertia"
-          target={userInput.target}
-          results={results}
-          userInput={userInput}
-        />
-      )}
-      <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-        <Typography variant="subtitle1">Calculated Results:</Typography>
-        {results ? (
-          <>
-            {results.v1Final && (
-              <Typography variant="body2">
-                Final Velocity (Square 1): {Number(results.v1Final).toFixed(2)} m/s
-              </Typography>
+                control={
+                    <Switch
+                        checked={showFormulas}
+                        onChange={() => setShowFormulas(!showFormulas)}
+                        color="primary"
+                    />
+                }
+                sx={{
+                    color: 'var(--text)',
+                    '& .MuiSwitch-root': {
+                        color: 'var(--text)',
+                    },
+                }}
+                label="Show Formulas"
+            />
+            <Typography variant="h6" sx={{ mt: 2 }}>
+                Results:
+            </Typography>
+            {showFormulas && results && userInput?.target && (
+                <InertiaFormulaDisplay
+                    topic="inertia"
+                    target={userInput.target}
+                    results={results}
+                    userInput={userInput}
+                />
             )}
-            {results.v2Final && (
-              <Typography variant="body2">
-                Final Velocity (Square 2): {Number(results.v2Final).toFixed(2)} m/s
-              </Typography>
-            )}
-            {results.momentum1 && (
-              <Typography variant="body2">
-                Momentum (Square 1): {Number(results.momentum1).toFixed(2)} kg·m/s
-              </Typography>
-            )}
-            {results.momentum2 && (
-              <Typography variant="body2">
-                Momentum (Square 2): {Number(results.momentum2).toFixed(2)} kg·m/s
-              </Typography>
-            )}
-            {results.kineticEnergy1 && (
-              <Typography variant="body2">
-                Kinetic Energy (Square 1): {Number(results.kineticEnergy1).toFixed(2)} J
-              </Typography>
-            )}
-            {results.kineticEnergy2 && (
-              <Typography variant="body2">
-                Kinetic Energy (Square 2): {Number(results.kineticEnergy2).toFixed(2)} J
-              </Typography>
-            )}
-            {results.timeToCollision && Number.isFinite(Number(results.timeToCollision)) && (
-              <Typography variant="body2">
-                Time to Collision: {Number(results.timeToCollision).toFixed(2)} s
-              </Typography>
-            )}
-            {results.position1 && (
-              <Typography variant="body2">
-                Position (Square 1): {Number(results.position1).toFixed(2)} m
-              </Typography>
-            )}
-            {results.position2 && (
-              <Typography variant="body2">
-                Position (Square 2): {Number(results.position2).toFixed(2)} m
-              </Typography>
-            )}
-            {!Object.keys(results).length && (
-              <Typography variant="body2">No valid results</Typography>
-            )}
-          </>
-        ) : (
-          <Typography variant="body2">No results yet</Typography>
-        )}
-      </Box>
-    </Paper>
+            <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+                <Typography variant="subtitle1">Calculated Results:</Typography>
+                {results ? (
+                    <>
+                        {results.v1Final && (
+                            <Typography variant="body2">
+                                Final Velocity (Square 1): {Number(results.v1Final).toFixed(2)} m/s
+                            </Typography>
+                        )}
+                        {results.v2Final && (
+                            <Typography variant="body2">
+                                Final Velocity (Square 2): {Number(results.v2Final).toFixed(2)} m/s
+                            </Typography>
+                        )}
+                        {results.momentum1 && (
+                            <Typography variant="body2">
+                                Momentum (Square 1): {Number(results.momentum1).toFixed(2)} kg·m/s
+                            </Typography>
+                        )}
+                        {results.momentum2 && (
+                            <Typography variant="body2">
+                                Momentum (Square 2): {Number(results.momentum2).toFixed(2)} kg·m/s
+                            </Typography>
+                        )}
+                        {results.kineticEnergy1 && (
+                            <Typography variant="body2">
+                                Kinetic Energy (Square 1): {Number(results.kineticEnergy1).toFixed(2)} J
+                            </Typography>
+                        )}
+                        {results.kineticEnergy2 && (
+                            <Typography variant="body2">
+                                Kinetic Energy (Square 2): {Number(results.kineticEnergy2).toFixed(2)} J
+                            </Typography>
+                        )}
+                        {results.timeToCollision && Number.isFinite(Number(results.timeToCollision)) && (
+                            <Typography variant="body2">
+                                Time to Collision: {Number(results.timeToCollision).toFixed(2)} s
+                            </Typography>
+                        )}
+                        {results.position1 && (
+                            <Typography variant="body2">
+                                Position (Square 1): {Number(results.position1).toFixed(2)} m
+                            </Typography>
+                        )}
+                        {results.position2 && (
+                            <Typography variant="body2">
+                                Position (Square 2): {Number(results.position2).toFixed(2)} m
+                            </Typography>
+                        )}
+                        {!Object.keys(results).length && (
+                            <Typography variant="body2">No valid results</Typography>
+                        )}
+                    </>
+                ) : (
+                    <Typography variant="body2">No results yet</Typography>
+                )}
+            </Box>
+        </Paper>
     );
 };
 

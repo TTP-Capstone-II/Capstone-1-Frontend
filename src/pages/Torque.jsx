@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 import { toRadians } from "../../utils/formulas";
 import { useLocation } from "react-router-dom";
 
-const Torque = () => {
+const Torque = ({ user }) => {
   const location = useLocation();
   const simulation = location.state?.simulation;
   const [userInput, setUserInput] = useState(
@@ -180,7 +180,7 @@ const Torque = () => {
       className="simulation-page"
       style={{ display: "flex", height: "700px" }}
     >
-      <TorqueInterface userInput={userInput} setUserInput={setUserInput} />
+      <TorqueInterface userInput={userInput} setUserInput={setUserInput} user={user} simulation={simulation}/>
       <BaseSimulation onEngineReady={handleEngineReady} />
     </div>
   );

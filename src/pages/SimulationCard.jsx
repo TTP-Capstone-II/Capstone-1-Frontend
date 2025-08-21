@@ -32,10 +32,10 @@ const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) =
       }}
     >
       <CardContent>
-        <Typography variant="h6">
+        <Typography variant="h6" color="var(--text)">
           {forumTitle}
         </Typography>
-        <Typography variant="caption">
+        <Typography variant="caption" color="var(--text)">
           {topic}
         </Typography>
 
@@ -43,11 +43,12 @@ const SimulationCard = ({ simulation, username, forumTitle, topic, onDelete }) =
           variant="body2"
           sx={{
             whiteSpace: "pre-wrap",
+            color: "var(--text)",
             wordBreak: "break-word",
             mt: 1,
           }}
         >
-          {JSON.stringify(simulation.storedValues, null, 2)}
+          Created by: {username}
         </Typography>
 
         <Button

@@ -74,6 +74,7 @@ const ReplyForm = ({
                 fontSize: "1rem",
                 padding: "10px",
                 backgroundColor: "var(--background-canvas)",
+                color: "var(--text)",
                 resize: "vertical",
                 border: "1px solid var(--buttons)",
                 borderRadius: "2px",

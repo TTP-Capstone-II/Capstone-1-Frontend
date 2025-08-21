@@ -61,13 +61,13 @@ const PostCard = ({ post }) => {
       onClick={handleClick}
     >
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography variant="h6" color="var(--text)" component="div">
           {post.title}
         </Typography>
-        <Typography color="text.secondary">
+        <Typography color="var(--text)">
           {post.user?.username} - {new Date(post.createdAt).toLocaleDateString()}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="var(--text)">
           {post.likes} likes - {timeAgo(new Date(post.createdAt))}
         </Typography>
       </CardContent>

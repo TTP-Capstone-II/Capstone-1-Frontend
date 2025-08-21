@@ -25,7 +25,7 @@ const HomeForum = () => {
 
     return (
         <div className="forum-page">
-            <h1 style={{justifyContent: "center"}}>All Forums</h1>
+            <h1 style={{justifyContent: "center", color: "var(--text)"}}>All Forums</h1>
             <div className="forum-list">
                 {forums.map((forum) => (
                     <Link 
@@ -46,13 +46,13 @@ const HomeForum = () => {
                             }}
                         >
                             <CardContent>
-                                <Typography variant="h5" component="div">
+                                <Typography variant="h5" color="var(--text)" component="div">
                                     {forum.name}
                                 </Typography>
-                                <Typography variant="subtitle1" color="text.secondary">
+                                <Typography variant="subtitle1" color="var(--text)">
                                     {forum.description}
                                 </Typography>
-                                <Typography variant="subtitle2" color="text.secondary">
+                                <Typography variant="subtitle2" color="var(--text)">
                                     {forum.numOfPosts} Posts
                                 </Typography>
                             </CardContent>
