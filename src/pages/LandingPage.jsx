@@ -147,7 +147,7 @@ const LandingPage = ({ user }) => {
     return (
         <div style={{ padding: "20px" }}>
             <Typography variant="h4" gutterBottom sx={{ color: "var(--text)" }}>
-                Welcome to ꟼP!
+                Welcome to Newton's Playground!
             </Typography>
             <div style={{ display: "flex", alignItems: "flex-start" }}>
                 <div ref={sceneRef} style={{ flexShrink: 0, marginLeft: "0px" }} />

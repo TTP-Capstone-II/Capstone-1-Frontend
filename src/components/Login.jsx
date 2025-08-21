@@ -5,6 +5,7 @@ import { API_URL } from "../shared";
 import "./AuthStyles.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "@mui/material/Button";
+
 const Login = ({ setUser }) => {
   const { loginWithRedirect } = useAuth0();
   const [formData, setFormData] = useState({

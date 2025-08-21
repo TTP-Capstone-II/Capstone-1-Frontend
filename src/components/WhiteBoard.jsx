@@ -115,37 +115,50 @@ const WhiteBoard = ({ roomId, user }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     isDrawing.current = true;
-    const { offsetX, offsetY } = nativeEvent; // Get the mouse position relative to the canvas
-    contextRef.current.beginPath(); // Start a new path
-    contextRef.current.moveTo(offsetX, offsetY); // Move the path to the starting point
-    prevPoint.current = { x: offsetX, y: offsetY }; // Store the starting point
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    const x = nativeEvent.clientX - rect.left;
+    const y = nativeEvent.clientY - rect.top;
+
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(x, y);
+    prevPoint.current = { x, y };
   };
+
 
   const draw = throttle(({ nativeEvent }) => {
     if (!isDrawing.current) return;
-    const { offsetX, offsetY } = nativeEvent;
-    const { x: x0, y: y0 } = prevPoint.current;
-    const x1 = offsetX;
-    const y1 = offsetY;
 
-    contextRef.current.lineTo(x1, y1); // Draw a line to the current mouse position
-    contextRef.current.stroke(); // Render the stroke
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    const x = nativeEvent.clientX - rect.left;
+    const y = nativeEvent.clientY - rect.top;
+
+    const { x: x0, y: y0 } = prevPoint.current;
+
+    contextRef.current.lineTo(x, y);
+    contextRef.current.stroke();
 
     socket.emit("draw", {
       roomId,
       line: {
         x0,
         y0,
-        x1,
-        y1,
+        x1: x,
+        y1: y,
         color: isErasing ? "erase" : penColor,
         size: penSize,
         erasing: isErasing,
       },
-    }); // Emit the drawing event to the server
+    });
 
-    prevPoint.current = { x: offsetX, y: offsetY }; // Update the previous point
+    prevPoint.current = { x, y };
   }, 10);
+
+
+
 
   const stopDrawing = () => {
     isDrawing.current = false;
