@@ -9,7 +9,6 @@
   z-index: 100;
   background-color: var(--navbar-color);
   padding: 1rem 2rem;
-  border-bottom: 1px solid #e9ecef;
 }
 
 .nav-brand a {

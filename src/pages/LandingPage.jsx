@@ -146,19 +146,34 @@ const LandingPage = ({ user }) => {
 
     return (
         <div style={{ padding: "20px" }}>
-            <Typography variant="h4" gutterBottom>
-                Welcome to *name*!
+            <Typography variant="h4" gutterBottom sx={{ color: "var(--text)" }}>
+                Welcome to ꟼP!
             </Typography>
             <div style={{ display: "flex", alignItems: "flex-start" }}>
                 <div ref={sceneRef} style={{ flexShrink: 0, marginLeft: "0px" }} />
 
                 <Paper elevation={3} style={{ marginLeft: "20px", padding: "20px", maxWidth: "450px", height: "600px", display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "var(--interface-color)" }}>
                     <div>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                             About This Project
                         </Typography>
-                        <Typography variant="body1">
-                            This simulation uses Matter.js to demonstrate physics interactions. You can drag and interact with the objects on the canvas.
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
+                            This simulation uses Matter.js to demonstrate physics interactions.
+                            You can drag and interact with the objects on the canvas.
+                            This simulation is only an example and not a fully interactive one.
+                        </Typography>
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
+                            After creating an account you will be sent to the sandbox, where you can create objects,
+                            interact with them by moving them with your mouse or change the position in the interface,
+                            make them static, change their color and more!
+                        </Typography>
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
+                            In the navbar, you can access all the interactive simulations, your profile page, the whiteboard and the forum.
+                            Every interactive simulation can be saved to your profile and used as the sandbox.
+                        </Typography>
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
+                            The forums and the whiteboard are collaborative tools where you can post questions, help others,
+                            and work together in real-time responses using the forum replies or the whiteboard drawing tools and voice chat.
                         </Typography>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>

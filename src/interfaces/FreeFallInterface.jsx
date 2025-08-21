@@ -124,7 +124,7 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         backgroundColor: "var(--interface-color)",
       }}
     >
-      <Button onClick={handleOpen}>Save</Button>
+      <Button variant="contained" sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleOpen}>Save</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -137,12 +137,12 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: 400,
-          bgcolor: 'background.paper',
+          backgroundColor: 'var(--interface-color)',
           border: '2px solid #000',
           boxShadow: 24,
           p: 4,
         }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h6" component="h2" color="var(--text)">
             Are you sure you want to save this simulation?
           </Typography>
           <TextField
@@ -150,8 +150,19 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
             value={forum}
             onChange={(e) => setForum(e.target.value)}
             fullWidth
+            InputProps={{
+              style: {
+                color: "var(--text)",
+                backgroundColor: "var(--interface-color)",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color: "var(--text)",
+              },
+            }}
           />
-          <Button id="modal-modal-description" sx={{ mt: 2 }} onClick={handleSaveOrUpdate}>
+          <Button id="modal-modal-description" sx={{ mt: 2, backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleSaveOrUpdate}>
             {simulation ? "Update Simulation" : "Save Simulation"}
           </Button>
         </Box>
@@ -162,11 +173,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         name="gravity"
         value={userInput.gravity}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -177,11 +201,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         name="initialVelocity"
         value={userInput.initialVelocity}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -192,11 +229,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         name="finalVelocity"
         value={userInput.finalVelocity}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m/s</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -207,11 +257,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         name="initialHeight"
         value={userInput.initialHeight}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -222,11 +285,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         name="finalHeight"
         value={userInput.finalHeight}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -238,11 +314,24 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         value={userInput.time}
         variant="outlined"
         fullWidth
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">s</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -258,11 +347,12 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mb: 2, backgroundColor: "var(--interface-color)" }}
+        sx={{ mb: 2, backgroundColor: "var(--interface-color)", color: "var(--text)" }}
         MenuProps={{
           PaperProps: {
             sx: {
-              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+              backgroundColor: "var(--interface-color)",
+              color: "var(--text)",
             }
           }
         }}
@@ -284,6 +374,12 @@ const FreeFallInterface = ({ userInput, setUserInput, user, simulation }) => {
             color="primary"
           />
         }
+        sx={{
+          color: 'var(--text)',
+          '& .MuiSwitch-root': {
+            color: 'var(--text)',
+          },
+        }}
         label="Show Formulas"
       />
       <Typography variant="h6" sx={{ mt: 2 }}>

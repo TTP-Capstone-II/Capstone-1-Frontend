@@ -14,12 +14,63 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { Torque } from "../topics/Torque";
+import axios from "axios";
+import { API_URL } from "../shared";
 import TorqueFormulaDisplay from "../../utils/TorqueFormulaDisplay";
 import "../AppStyles.css";
 
-const TorqueInterface = ({ userInput, setUserInput }) => {
+const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
   const [results, setResults] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [forum, setForum] = useState("");
   const [showFormulas, setShowFormulas] = useState(false);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/api/simulation`, {
+        userId: user.id,
+        forumTitle: forum,
+        topic: "torque",
+        storedValues: userInput,
+      });
+
+      const savedSim = response.data;
+      console.log("Simulation saved:", savedSim);
+
+      setForum("");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error saving simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handlePatch = async () => {
+    try {
+      const response = await axios.patch(`${API_URL}/api/simulation/${simulation.id}`, {
+        storedValues: userInput,
+        forumTitle: forum,
+        topic: "torque",
+      });
+
+      console.log("Simulation updated:", response.data);
+      setOpen(false);
+    } catch (error) {
+      console.error("Error updating simulation:", error.response?.data || error.message);
+    }
+  };
+
+  const handleSaveOrUpdate = (e) => {
+    e.preventDefault();
+
+    if (simulation) {
+      handlePatch();
+    } else {
+      handleSave(e);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +81,9 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
   };
 
   useEffect(() => {
+    if (simulation) {
+      setForum(simulation.forumTitle || "");
+    }
     if (!userInput.target) return;
 
     const calculations = Torque({
@@ -69,17 +123,73 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         backgroundColor: "var(--interface-color)",
       }}
     >
+      <Button variant="contained" sx={{ backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleOpen}>Save</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          backgroundColor: 'var(--interface-color)',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" color="var(--text)">
+            Are you sure you want to save this simulation?
+          </Typography>
+          <TextField
+            label="Simulation title"
+            value={forum}
+            onChange={(e) => setForum(e.target.value)}
+            fullWidth
+            InputProps={{
+              style: {
+                color: "var(--text)",
+                backgroundColor: "var(--interface-color)",
+              },
+            }}
+            InputLabelProps={{
+              style: {
+                color: "var(--text)",
+              },
+            }}
+          />
+          <Button id="modal-modal-description" sx={{ mt: 2, backgroundColor: "var(--buttons)", color: "#fff", '&:hover': { backgroundColor: "var(--buttons-hover)" }, }} onClick={handleSaveOrUpdate}>
+            {simulation ? "Update Simulation" : "Save Simulation"}
+          </Button>
+        </Box>
+      </Modal>
       <TextField
         label="Torque"
         type="number"
         name="torque"
         value={userInput.torque}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">N·m</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -90,13 +200,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="inertia"
         value={userInput.inertia}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">kg*m^2</InputAdornment>
-            ),
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -107,11 +228,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="angularAcceleration"
         value={userInput.angularAcceleration}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m/s^2</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -122,11 +256,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="distanceFromPivot"
         value={userInput.distanceFromPivot}
         variant="outlined"
-        inputProps={{ step: "10" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -137,11 +284,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="length"
         value={userInput.length}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">m</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -152,11 +312,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="angle"
         value={userInput.angle}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">°</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -167,11 +340,24 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         name="force"
         value={userInput.force}
         variant="outlined"
-        inputProps={{ step: "0.01" }} //change soon
-        slotProps={{
-          input: {
-            endAdornment: <InputAdornment position="end">N</InputAdornment>,
+        inputProps={{
+          step: "0.01",
+          style: {
+            color: "var(--text)",
+            backgroundColor: "var(--interface-color)",
           },
+        }}
+        InputLabelProps={{
+          style: {
+            color: "var(--text)",
+          },
+        }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <span style={{ color: 'var(--text)' }}>s</span>
+            </InputAdornment>
+          ),
         }}
         onChange={handleInputChange}
       />
@@ -184,11 +370,12 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
         onChange={(e) => setUserInput({ ...userInput, target: e.target.value })}
         variant="outlined"
         fullWidth
-        sx={{ mt: 2, backgroundColor: "var(--interface-color)" }}
+        sx={{ mt: 2, backgroundColor: "var(--interface-color)", color: "var(--text)" }}
         MenuProps={{
           PaperProps: {
             sx: {
-              backgroundColor: "var(--interface-color)", // 🎯 dropdown background
+              backgroundColor: "var(--interface-color)",
+              color: "var(--text)",
             }
           }
         }}
@@ -209,6 +396,12 @@ const TorqueInterface = ({ userInput, setUserInput }) => {
             color="primary"
           />
         }
+        sx={{
+          color: 'var(--text)',
+          '& .MuiSwitch-root': {
+            color: 'var(--text)',
+          },
+        }}
         label="Show Formulas"
       />
       <Typography variant="h6" sx={{ mt: 2 }}>

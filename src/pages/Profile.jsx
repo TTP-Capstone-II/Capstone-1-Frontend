@@ -122,7 +122,7 @@ const Profile = ({ user }) => {
                     width: '100%',
                     height: '100%',
                 }}>
-                    <Typography align="center">{user?.username}</Typography>
+                    <Typography align="center" style={{color: "var(--text)"}}>{user?.username}</Typography>
                     <input
                         type="file"
                         accept="image/*"
@@ -140,9 +140,9 @@ const Profile = ({ user }) => {
                 </CardContent>
             </Card>
 
-            <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogContent>
-                    <Box display="flex" justifyContent="center">
+            <Dialog open={open} onClose={() => setOpen(false)} backgroundColor="var(--buttons)">
+                <DialogContent backgroundColor="var(--buttons)">
+                    <Box backgroundColor="var(--buttons)" display="flex" justifyContent="center">
                         <Avatar
                             alt="profile_picture"
                             src={preview || user?.profile_image}
@@ -151,7 +151,7 @@ const Profile = ({ user }) => {
                     </Box>
                 </DialogContent>
                 <DialogActions
-                    sx={{ justifyContent: "center", flexDirection: "column" }}
+                    sx={{ justifyContent: "center", flexDirection: "column", backgroundColor:"var(--buttons)" }}
                 >
                     <Button variant="outlined" onClick={handleChangePicture}>
                         Change Picture
@@ -169,7 +169,7 @@ const Profile = ({ user }) => {
             </Dialog>
 
             <Box sx={{ p: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2 }}>
+                <Typography variant="h6" sx={{ mb: 2, color: "var(--text)" }}>
                     My Simulations
                 </Typography>
 

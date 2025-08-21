@@ -83,15 +83,17 @@ return (
   <>
     <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4, backgroundColor: "var(--background-canvas)" }}>
       <CardContent>
-        <Typography color="text.secondary">
+        <Typography color="var(--text)">
           {userId.username} - {new Date(createdAt).toLocaleDateString()}
         </Typography>
-        {content}
+        <Typography variant="body1" color="var(--text)" sx={{ whiteSpace: "pre-wrap", mt: 1, mb: 2 }}> 
+          {content}
+        </Typography>
       </CardContent>
         <IconButton aria-label="ThumbUp" onClick={handleClick}>
           <ThumbUpIcon></ThumbUpIcon>
-          <Typography color="text.secondary">{numOflikes}</Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography color="var(--text)">{numOflikes}</Typography>
+          <Typography variant="body2" color="var(--text)">
             &emsp; {timeAgo(new Date(createdAt))}
           </Typography>
         </IconButton>
