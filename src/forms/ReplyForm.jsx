@@ -43,7 +43,7 @@ const ReplyForm = ({
       setContent("");
       if (autoClose) setIsOpen(false);
 
-      //if (onReplyAdded) onReplyAdded();
+      if (onReplyAdded) onReplyAdded();
     } catch (error) {
       console.error("error posting reply", error);
     }

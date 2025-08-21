@@ -7,7 +7,7 @@ import axios from "axios";
 import { API_URL } from "../../shared";
 import "../../AppStyles.css";
 
-const ReplyList = ({ postId, userId, replies: propReplies, onReplyAdded }) => {
+const ReplyList = ({ postId, userId, username, replies: propReplies, onReplyAdded }) => {
   const [replies, setReplies] = useState([]);
 
   const fetchReplies = async () => {

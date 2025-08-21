@@ -84,7 +84,7 @@ return (
     <Card sx={{ marginBottom: 2, cursor: "pointer", "&:hover": { boxShadow: 3 }, ml: depth * 4, backgroundColor: "var(--background-canvas)" }}>
       <CardContent>
         <Typography color="var(--text)">
-          {userId.username} - {new Date(createdAt).toLocaleDateString()}
+          {user?.username || "Loading..."} - {new Date(createdAt).toLocaleDateString()}
         </Typography>
         <Typography variant="body1" color="var(--text)" sx={{ whiteSpace: "pre-wrap", mt: 1, mb: 2 }}> 
           {content}
