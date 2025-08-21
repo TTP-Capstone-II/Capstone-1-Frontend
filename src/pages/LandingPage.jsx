@@ -176,13 +176,13 @@ const LandingPage = ({ user }) => {
                             and work together in real-time responses using the forum replies or the whiteboard drawing tools and voice chat.
                         </Typography>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex" }}>
                         <Button
                             variant="contained"
                             component={NavLink}
                             to="/signup"
                             sx={{
-                                width: "200px",
+                                width: "400px",
                                 height: "45px",
                                 fontSize: "1.1rem",
                                 backgroundColor: "var(--buttons)",
@@ -197,27 +197,6 @@ const LandingPage = ({ user }) => {
                             }}
                         >
                             Get Started
-                        </Button>
-                        <Button
-                            variant="contained"
-                            component={NavLink}
-                            to="/demo"
-                            sx={{
-                                width: "200px",
-                                height: "45px",
-                                fontSize: "1.1rem",
-                                backgroundColor: "var(--buttons)",
-                                color: "#fff",
-                                '&:hover': {
-                                    backgroundColor: "var(--buttons-hover)"
-                                },
-                                textDecoration: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            DEMO
                         </Button>
                     </div>
                 </Paper>
