@@ -28,9 +28,9 @@ const NavBar = ({ user, onLogout, checkingAuth, theme, setTheme }) => {
             <NavLink to="/profile" className="nav-link">
               Profile
             </NavLink>
-            <button onClick={onLogout} className="logout-btn">
+            <NavLink to="/" onClick={onLogout} style={{ textDecoration: "none" }} className="logout-btn">
               Logout
-            </button>
+            </NavLink>
             <Button onClick={toggleTheme} className="nav-link">
               {theme === "light" ? "🌙" : "☀️"}
             </Button>
