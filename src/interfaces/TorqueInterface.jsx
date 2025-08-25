@@ -187,7 +187,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>N·m</span>
             </InputAdornment>
           ),
         }}
@@ -215,7 +215,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>kg·m²</span>
             </InputAdornment>
           ),
         }}
@@ -243,7 +243,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>rad/s²</span>
             </InputAdornment>
           ),
         }}
@@ -271,7 +271,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>m</span>
             </InputAdornment>
           ),
         }}
@@ -299,7 +299,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>m</span>
             </InputAdornment>
           ),
         }}
@@ -327,7 +327,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>°</span>
             </InputAdornment>
           ),
         }}
@@ -355,7 +355,7 @@ const TorqueInterface = ({ userInput, setUserInput, user, simulation }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <span style={{ color: 'var(--text)' }}>s</span>
+              <span style={{ color: 'var(--text)' }}>N</span>
             </InputAdornment>
           ),
         }}

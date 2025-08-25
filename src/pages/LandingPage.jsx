@@ -154,26 +154,25 @@ const LandingPage = ({ user }) => {
 
                 <Paper elevation={3} style={{ marginLeft: "20px", padding: "20px", maxWidth: "450px", height: "600px", display: "flex", flexDirection: "column", justifyContent: "space-between", backgroundColor: "var(--interface-color)" }}>
                     <div>
-                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                            About This Project
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
+                            Bring Physics to Life
                         </Typography>
-                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
-                            This simulation uses Matter.js to demonstrate physics interactions.
-                            You can drag and interact with the objects on the canvas.
-                            This simulation is only an example and not a fully interactive one.
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 3 }}>
+                            Plug in your values, watch them simulated in real time,
+                            calculate unknowns with step-by-step formulas, and save your simulations.
                         </Typography>
-                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
-                            After creating an account you will be sent to the sandbox, where you can create objects,
-                            interact with them by moving them with your mouse or change the position in the interface,
-                            make them static, change their color and more!
+                        <Typography variant="h6" sx={{ display: 'flex', mb: 3, fontWeight: 'bold' }}>
+                            Your Personal Sandbox
                         </Typography>
-                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
-                            In the navbar, you can access all the interactive simulations, your profile page, the whiteboard and the forum.
-                            Every interactive simulation can be saved to your profile and used as the sandbox.
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 3 }}>
+                            Create custom simulations—adjust objects, change properties, and experiment freely.
                         </Typography>
-                        <Typography variant="body1" sx={{ display: 'flex', mb: 2 }}>
-                            The forums and the whiteboard are collaborative tools where you can post questions, help others,
-                            and work together in real-time responses using the forum replies or the whiteboard drawing tools and voice chat.
+                        <Typography variant="h6" sx={{ display: 'flex', mb: 3, fontWeight: 'bold' }}>
+                            Learn Together
+                        </Typography>
+                        <Typography variant="body1" sx={{ display: 'flex', mb: 3 }}>
+                            Collaborate through the forum and whiteboard: ask questions,
+                            share solutions, and work in real time with drawing tools and voice chat.
                         </Typography>
                     </div>
                     <div style={{ display: "flex" }}>
